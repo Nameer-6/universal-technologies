@@ -255,9 +255,82 @@ function HeroFloatingCards({
   )
 }
 
-export function ScrollHero() {
+// The scroll-scrubbed version below drives every layer's opacity off scroll
+// progress, so with prefers-reduced-motion active it would otherwise render
+// every phase (copy, cards, swarm, globe, stats panel) at opacity 1 at once —
+// permanently overlapping. Respect the preference properly instead: skip the
+// scroll-jacking and render one static, readable stack.
+function StaticHero() {
+  return (
+    <section className="scroll-hero" aria-label="Universal product story">
+      <div className="scroll-hero-sticky">
+        <div className="scroll-hero-stage">
+          <div className="scroll-hero-copy">
+            <p className="eyebrow">Software · Quality · Growth</p>
+            <h1>
+              Every product,
+              <br />
+              fully executed
+            </h1>
+            <p className="lede">
+              Universal Technologies is the delivery layer that designs, builds, tests, and
+              launches web, mobile, and cloud products — so shipping stops depending on who
+              happens to remember the next step.
+            </p>
+            <div className="hero-actions">
+              <a className="btn btn-ink" href="#contact">
+                Get Started <span aria-hidden>→</span>
+              </a>
+              <a className="btn btn-ghost-ink" href="#how">
+                How it works
+              </a>
+            </div>
+          </div>
+
+          <div className="scroll-hero-visual">
+            <div className="hero-floaters" aria-hidden>
+              {cards.map((card, index) => (
+                <article
+                  key={card.id}
+                  className={`hero-floater hero-floater-${index} tone-${card.tone}`}
+                >
+                  <div className="floater-head">
+                    <span className="floater-mark">{card.mark}</span>
+                    <strong>{card.title}</strong>
+                  </div>
+                  <p className="floater-copy">{card.subtitle}</p>
+                  <div className="floater-chips">
+                    {card.chips.map((chip) => (
+                      <span key={chip}>{chip}</span>
+                    ))}
+                  </div>
+                </article>
+              ))}
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div className="hero-backbone-static">
+        <div className="backbone-panel-inner">
+          <h2>The delivery backbone for product growth</h2>
+          <div className="backbone-stats">
+            {metrics.map((item) => (
+              <div key={item.label}>
+                <strong>{item.value}</strong>
+                <span>{item.label}</span>
+              </div>
+            ))}
+          </div>
+        </div>
+      </div>
+    </section>
+  )
+}
+
+function FullScrollHero() {
   const ref = useRef<HTMLElement>(null)
-  const reduceMotion = Boolean(useReducedMotion())
+  const reduceMotion = false
   const tiles = useMemo(() => buildTiles(), [])
 
   const { scrollYProgress } = useScroll({
@@ -352,4 +425,9 @@ export function ScrollHero() {
       </div>
     </section>
   )
+}
+
+export function ScrollHero() {
+  const reduceMotion = Boolean(useReducedMotion())
+  return reduceMotion ? <StaticHero /> : <FullScrollHero />
 }

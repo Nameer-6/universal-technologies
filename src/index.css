@@ -104,13 +104,27 @@ button {
   top: 0;
   z-index: 50;
   height: var(--nav-h);
-  background: color-mix(in srgb, var(--paper) 78%, transparent);
-  backdrop-filter: blur(16px);
   border-bottom: 1px solid transparent;
 }
 
-.nav.scrolled {
+/* The frosted background lives on a pseudo-element rather than directly on
+   .nav: backdrop-filter (like filter/transform) turns its element into the
+   containing block for position: fixed descendants — which was silently
+   capping the full-screen mobile menu's height to .nav's own 72px. */
+.nav::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  z-index: -1;
+  background: color-mix(in srgb, var(--paper) 78%, transparent);
+  backdrop-filter: blur(16px);
+}
+
+.nav.scrolled::before {
   background: color-mix(in srgb, var(--paper) 94%, transparent);
+}
+
+.nav.scrolled {
   border-bottom-color: var(--line);
   box-shadow: 0 10px 30px rgba(12, 15, 20, 0.04);
 }
@@ -490,6 +504,12 @@ button {
   pointer-events: none;
 }
 
+.hero-backbone-static {
+  display: grid;
+  place-items: center;
+  padding: 0.5rem 0 2.5rem;
+}
+
 .backbone-panel-inner {
   width: min(860px, 90vw);
   border-radius: 36px;
@@ -604,6 +624,28 @@ button {
   color: var(--brand);
 }
 
+.stats-row {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 1rem;
+  margin-top: 2.75rem;
+  text-align: center;
+}
+
+.stats-row strong {
+  display: block;
+  font-family: var(--font-display);
+  font-size: clamp(1.7rem, 3vw, 2.3rem);
+  letter-spacing: -0.02em;
+}
+
+.stats-row span {
+  display: block;
+  margin-top: 0.3rem;
+  font-size: 0.84rem;
+  color: var(--muted);
+}
+
 .section-title {
   margin: 0;
   font-family: var(--font-display);
@@ -624,6 +666,9 @@ button {
 .timeline {
   display: grid;
   gap: 2.5rem;
+  /* Rows slide in from ±48px pre-reveal; clip that transient offset here
+     (not on html/body, which would break position: sticky elsewhere). */
+  overflow-x: hidden;
 }
 
 .timeline-row {
@@ -1098,60 +1143,64 @@ button {
 }
 
 @media (max-width: 760px) {
-  .scroll-hero {
-    height: auto;
-  }
-
-  .scroll-hero-sticky {
-    position: relative;
-    height: auto;
-    padding: 2rem 0 3rem;
-  }
-
+  /* Keep the same pinned, scroll-scrubbed hero as desktop — just stack the
+     copy above a shorter card stage so both fit inside one pinned screen. */
   .scroll-hero-stage {
     grid-template-columns: 1fr;
-    min-height: auto;
+    align-content: center;
+    gap: 0.75rem;
+  }
+
+  .scroll-hero-copy .lede {
+    margin-top: 1rem;
+  }
+
+  .hero-actions {
+    margin-top: 1.25rem;
   }
 
   .scroll-hero-visual {
     max-width: none;
     margin-left: 0;
-    min-height: 420px;
-    height: 440px;
+    min-height: 280px;
+    height: 300px;
   }
 
   .hero-floater {
-    width: min(200px, 46vw);
+    width: min(172px, 42vw);
+    padding: 0.75rem 0.85rem;
   }
 
+  /* A gentler diagonal fan than the desktop pile — each card's title stays
+     legible instead of stacking almost fully behind its neighbors. */
   .hero-floater-0 {
     top: 0;
-    right: 0;
+    right: 2%;
   }
 
   .hero-floater-1 {
-    top: 6%;
+    top: 9%;
     left: 0;
   }
 
   .hero-floater-2 {
-    top: 30%;
-    left: 14%;
+    top: 27%;
+    left: 24%;
   }
 
   .hero-floater-3 {
-    bottom: 16%;
-    left: 0;
+    top: 45%;
+    left: 2%;
   }
 
   .hero-floater-4 {
-    bottom: 2%;
+    bottom: 0;
     right: 0;
   }
 
   .hero-floater-5 {
-    top: 48%;
-    right: 10%;
+    top: 58%;
+    right: 22%;
   }
 
   .section-head.split,
@@ -1161,6 +1210,11 @@ button {
   .footer-grid,
   .service-grid {
     grid-template-columns: 1fr;
+  }
+
+  .stats-row {
+    grid-template-columns: repeat(2, 1fr);
+    gap: 1.5rem 1rem;
   }
 
   .timeline-row {
@@ -1190,19 +1244,33 @@ button {
   }
 
   .nav-links {
-    position: fixed;
-    inset: calc(var(--topbar-h) + var(--nav-h)) 0 0;
-    background: color-mix(in srgb, var(--paper) 98%, transparent);
+    /* Anchored to .nav (position: sticky, so it's this panel's containing
+       block) instead of position: fixed on the viewport — top: 100% always
+       sits right below the navbar whether it's pinned or in normal flow, so
+       there's no gap once the topbar has scrolled away and only nav remains. */
+    position: absolute;
+    top: 100%;
+    left: 0;
+    right: 0;
+    height: 100vh;
+    /* Fully solid: the 98%-opacity desktop navbar tint reads as visibly
+       see-through once it's a full-screen panel over busy page content. */
+    background: var(--paper);
     flex-direction: column;
     align-items: stretch;
     padding: 1.5rem;
     gap: 0.35rem;
-    transform: translateX(100%);
-    transition: transform 0.3s ease;
+    /* clip-path (not transform) keeps this panel's box inside the viewport at all
+       times while closed — a translated-offscreen box was inflating the page's
+       scrollable width and also risked confusing position: sticky ancestors. */
+    clip-path: inset(0 0 0 100%);
+    pointer-events: none;
+    transition: clip-path 0.3s ease;
   }
 
   .nav.open .nav-links {
-    transform: translateX(0);
+    clip-path: inset(0 0 0 0%);
+    pointer-events: auto;
   }
 
   .nav-links a {
