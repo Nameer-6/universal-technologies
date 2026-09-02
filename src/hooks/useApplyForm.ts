@@ -1,9 +1,8 @@
 import { useCallback, useState, type FormEvent } from 'react'
-import { WEB3FORMS_ACCESS_KEY } from '../data'
 
 type Status = 'idle' | 'submitting' | 'success' | 'error'
 
-export function useApplyForm(jobTitle: string) {
+export function useApplyForm() {
   const [status, setStatus] = useState<Status>('idle')
   const [errorMessage, setErrorMessage] = useState('')
 
@@ -17,47 +16,37 @@ export function useApplyForm(jobTitle: string) {
     setErrorMessage(message)
   }, [])
 
-  const onSubmit = async (event: FormEvent<HTMLFormElement>) => {
-    event.preventDefault()
-    const form = event.currentTarget
-    const data = new FormData(form)
+  // FormSubmit needs a genuine multipart form POST to accept a file on its
+  // free tier — a fetch()-built FormData works for text fields but not
+  // attachments there. So this only runs client-side validation and, if it
+  // passes, lets the browser's native submission proceed (into the hidden
+  // target iframe rendered by ApplyModal) instead of intercepting it.
+  const onSubmit = (event: FormEvent<HTMLFormElement>) => {
+    const data = new FormData(event.currentTarget)
 
-    // Honeypot: real visitors never fill this hidden field.
-    if (String(data.get('botcheck') || '')) return
-
-    const resume = data.get('resume')
-    if (!(resume instanceof File) || resume.size === 0) {
-      setStatus('error')
-      setErrorMessage('Attach your resume before submitting.')
+    // Honeypot: real visitors never check this hidden checkbox.
+    if (data.get('_honey')) {
+      event.preventDefault()
       return
     }
 
-    data.set('access_key', WEB3FORMS_ACCESS_KEY)
-    data.set('subject', `Application: ${jobTitle}`)
-    data.set('from_name', 'Universal Technologies Careers')
+    const resume = data.get('attachment')
+    if (!(resume instanceof File) || resume.size === 0) {
+      event.preventDefault()
+      setError('Attach your resume before submitting.')
+      return
+    }
 
     setStatus('submitting')
     setErrorMessage('')
-
-    try {
-      const response = await fetch('https://api.web3forms.com/submit', {
-        method: 'POST',
-        body: data,
-        headers: { Accept: 'application/json' },
-      })
-      const result = await response.json()
-      if (result.success) {
-        setStatus('success')
-        form.reset()
-      } else {
-        setStatus('error')
-        setErrorMessage(result.message || 'Something went wrong. Please try again.')
-      }
-    } catch {
-      setStatus('error')
-      setErrorMessage('Network error — please try again.')
-    }
   }
 
-  return { status, errorMessage, onSubmit, reset, setError }
+  // The hidden iframe's load event fires once the POST round-trips —
+  // cross-origin content can't be read, but the load event itself still
+  // fires, which is all the "did it send" signal we need.
+  const onFrameLoad = useCallback(() => {
+    setStatus((current) => (current === 'submitting' ? 'success' : current))
+  }, [])
+
+  return { status, errorMessage, onSubmit, onFrameLoad, reset, setError }
 }

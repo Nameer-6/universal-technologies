@@ -9,14 +9,6 @@ export type Service = {
 export const CONTACT_EMAIL = 'contact@universal-technologies.com'
 export const HR_EMAIL = 'hr@universal-technologies.com'
 
-/**
- * Web3Forms access key that powers the job-application popup (name, email,
- * message, resume upload) — get a free one at https://web3forms.com by
- * entering hr@universal-technologies.com, then paste it in here. Submissions
- * won't send anywhere until this is replaced.
- */
-export const WEB3FORMS_ACCESS_KEY = 'REPLACE_WITH_YOUR_WEB3FORMS_ACCESS_KEY'
-
 export const services: Service[] = [
   {
     id: 'software-development',

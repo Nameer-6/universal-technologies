@@ -1,5 +1,6 @@
-import { useEffect, useRef, useState, type DragEvent } from 'react'
+import { useEffect, useId, useRef, useState, type DragEvent } from 'react'
 import { AnimatePresence, motion } from 'framer-motion'
+import { HR_EMAIL } from '../data'
 import { useApplyForm } from '../hooks/useApplyForm'
 
 const MAX_FILE_BYTES = 5 * 1024 * 1024
@@ -77,7 +78,7 @@ function ResumeDropzone({
       <input
         ref={inputRef}
         type="file"
-        name="resume"
+        name="attachment"
         accept={ACCEPTED_TYPES}
         className="apply-dropzone-input"
         tabIndex={-1}
@@ -152,8 +153,9 @@ export function ApplyModal({
   open: boolean
   onClose: () => void
 }) {
-  const { status, errorMessage, onSubmit, reset, setError } = useApplyForm(jobTitle)
+  const { status, errorMessage, onSubmit, onFrameLoad, reset, setError } = useApplyForm()
   const dialogRef = useRef<HTMLDivElement>(null)
+  const frameName = useId().replace(/[^a-zA-Z0-9]/g, '') + '-apply-frame'
 
   useEffect(() => {
     if (!open) return
@@ -200,6 +202,18 @@ export function ApplyModal({
               ×
             </button>
 
+            {/* Submission target: keeps FormSubmit's real multipart POST off
+                the visible page. We can't read its cross-origin content, but
+                the load event still tells us the round trip finished. */}
+            <iframe
+              name={frameName}
+              title="Application submission"
+              className="apply-target-frame"
+              tabIndex={-1}
+              aria-hidden="true"
+              onLoad={onFrameLoad}
+            />
+
             {status === 'success' ? (
               <div className="apply-success">
                 <h2>Application sent</h2>
@@ -212,15 +226,29 @@ export function ApplyModal({
                 </button>
               </div>
             ) : (
-              <form onSubmit={onSubmit} noValidate>
+              <form
+                action={`https://formsubmit.co/${HR_EMAIL}`}
+                method="POST"
+                encType="multipart/form-data"
+                target={frameName}
+                onSubmit={onSubmit}
+                noValidate
+              >
                 <h2 id="apply-modal-title">Apply for {jobTitle}</h2>
                 <p className="apply-lede">
                   Tell us a bit about you and attach your resume — we'll take it from there.
                 </p>
 
+                <input type="hidden" name="_subject" value={`Application: ${jobTitle}`} />
+                <input type="hidden" name="_template" value="table" />
+                {/* Our hidden target iframe can't see or solve FormSubmit's
+                    captcha challenge, so it has to stay off — the checkbox
+                    honeypot below is the spam guard instead. */}
+                <input type="hidden" name="_captcha" value="false" />
+
                 <input
-                  type="text"
-                  name="botcheck"
+                  type="checkbox"
+                  name="_honey"
                   tabIndex={-1}
                   autoComplete="off"
                   aria-hidden="true"
@@ -258,6 +286,7 @@ export function ApplyModal({
                   className="btn btn-ink apply-submit"
                   disabled={status === 'submitting'}
                 >
+                  {status === 'submitting' && <span className="apply-spinner" aria-hidden />}
                   {status === 'submitting' ? 'Sending…' : 'Submit application'}
                 </button>
               </form>
