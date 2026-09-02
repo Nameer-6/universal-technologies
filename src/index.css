@@ -1001,6 +1001,277 @@ button {
   color: var(--muted);
 }
 
+/* Apply modal */
+.apply-overlay {
+  position: fixed;
+  inset: 0;
+  z-index: 200;
+  display: grid;
+  place-items: center;
+  padding: 1.5rem;
+  background: rgba(12, 15, 20, 0.55);
+  backdrop-filter: blur(4px);
+}
+
+.apply-dialog {
+  position: relative;
+  width: min(480px, 100%);
+  max-height: 90vh;
+  /* Both axes must be set explicitly — leaving overflow-x unset makes it
+     resolve to auto per spec, which showed a stray horizontal scrollbar
+     whenever the unstyled file input ran wider than the dialog. */
+  overflow-x: hidden;
+  overflow-y: auto;
+  background: var(--surface);
+  border-radius: 24px;
+  padding: 2rem;
+  box-shadow: 0 40px 90px rgba(0, 0, 0, 0.35);
+}
+
+.apply-close {
+  position: absolute;
+  top: 1rem;
+  right: 1rem;
+  width: 2.25rem;
+  height: 2.25rem;
+  display: grid;
+  place-items: center;
+  border-radius: 50%;
+  border: 1px solid var(--line);
+  font-size: 1.4rem;
+  line-height: 1;
+  color: var(--muted);
+}
+
+.apply-close:hover {
+  color: var(--brand);
+  border-color: rgba(227, 28, 35, 0.35);
+}
+
+.apply-dialog h2 {
+  margin: 0;
+  padding-right: 2.5rem;
+  font-family: var(--font-display);
+  font-size: 1.5rem;
+  letter-spacing: -0.02em;
+  color: var(--text);
+}
+
+.apply-lede {
+  margin: 0.6rem 0 1.5rem;
+  color: var(--muted);
+}
+
+.apply-dialog form {
+  display: grid;
+  gap: 1rem;
+}
+
+.apply-dialog label {
+  display: grid;
+  gap: 0.4rem;
+  font-size: 0.85rem;
+  font-weight: 600;
+  color: var(--ink-soft);
+}
+
+.apply-dialog input[type='text'],
+.apply-dialog input[type='email'],
+.apply-dialog textarea {
+  width: 100%;
+  border: 1px solid var(--line);
+  border-radius: 12px;
+  padding: 0.75rem 0.9rem;
+  background: var(--paper);
+  color: var(--text);
+  font-family: inherit;
+  font-size: 0.95rem;
+}
+
+.apply-dialog input[type='text']:focus,
+.apply-dialog input[type='email']:focus,
+.apply-dialog textarea:focus {
+  outline: 2px solid rgba(227, 28, 35, 0.25);
+  border-color: rgba(227, 28, 35, 0.4);
+}
+
+.apply-dropzone-input {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  overflow: hidden;
+  opacity: 0;
+  pointer-events: none;
+}
+
+.apply-dropzone {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0.4rem;
+  text-align: center;
+  border: 1.5px dashed var(--line);
+  border-radius: 16px;
+  padding: 1.5rem 1rem;
+  cursor: pointer;
+  background: var(--paper);
+  transition: border-color 0.2s ease, background 0.2s ease;
+}
+
+.apply-dropzone:hover,
+.apply-dropzone:focus-visible {
+  border-color: rgba(227, 28, 35, 0.4);
+  outline: none;
+}
+
+.apply-dropzone.is-dragover {
+  border-color: var(--brand);
+  border-style: solid;
+  background: rgba(227, 28, 35, 0.05);
+}
+
+.apply-dropzone.has-file {
+  cursor: default;
+  padding: 0.75rem;
+  border-style: solid;
+  border-color: var(--line);
+}
+
+.apply-dropzone-icon {
+  width: 2rem;
+  height: 2rem;
+  display: grid;
+  place-items: center;
+  border-radius: 50%;
+  background: rgba(227, 28, 35, 0.1);
+  color: var(--brand);
+}
+
+.apply-dropzone-icon svg {
+  width: 1.1rem;
+  height: 1.1rem;
+}
+
+.apply-dropzone-text {
+  font-size: 0.9rem;
+  color: var(--ink-soft);
+}
+
+.apply-dropzone-text strong {
+  color: var(--brand);
+  font-weight: 700;
+}
+
+.apply-dropzone-hint {
+  font-size: 0.76rem;
+  color: var(--muted);
+}
+
+.apply-file-chip {
+  width: 100%;
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  text-align: left;
+}
+
+.apply-file-icon {
+  flex-shrink: 0;
+  width: 2.25rem;
+  height: 2.25rem;
+  display: grid;
+  place-items: center;
+  border-radius: 10px;
+  background: rgba(227, 28, 35, 0.1);
+  color: var(--brand);
+}
+
+.apply-file-icon svg {
+  width: 1.15rem;
+  height: 1.15rem;
+}
+
+.apply-file-meta {
+  flex: 1;
+  min-width: 0;
+  display: grid;
+  gap: 0.15rem;
+}
+
+.apply-file-meta strong {
+  font-size: 0.86rem;
+  font-weight: 600;
+  color: var(--text);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.apply-file-meta em {
+  font-style: normal;
+  font-size: 0.76rem;
+  color: var(--muted);
+}
+
+.apply-file-remove {
+  flex-shrink: 0;
+  width: 1.8rem;
+  height: 1.8rem;
+  display: grid;
+  place-items: center;
+  border-radius: 50%;
+  font-size: 1.2rem;
+  line-height: 1;
+  color: var(--muted);
+}
+
+.apply-file-remove:hover {
+  color: var(--brand);
+  background: rgba(227, 28, 35, 0.08);
+}
+
+.apply-honeypot {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  overflow: hidden;
+  opacity: 0;
+  pointer-events: none;
+}
+
+.apply-error {
+  margin: 0;
+  font-size: 0.86rem;
+  color: #b3261e;
+}
+
+.apply-submit {
+  width: 100%;
+  margin-top: 0.4rem;
+}
+
+.apply-submit:disabled {
+  opacity: 0.65;
+  cursor: default;
+  transform: none;
+}
+
+.apply-success {
+  display: grid;
+  gap: 0.9rem;
+  justify-items: start;
+}
+
+.apply-success h2 {
+  padding-right: 0;
+}
+
+.apply-success p {
+  margin: 0;
+  color: var(--muted);
+}
+
 .stack-row {
   display: flex;
   flex-wrap: wrap;

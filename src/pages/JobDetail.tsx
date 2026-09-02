@@ -1,6 +1,7 @@
+import { useState } from 'react'
 import { motion, useReducedMotion } from 'framer-motion'
 import { Link, Navigate, useParams } from 'react-router-dom'
-import { HR_EMAIL } from '../data'
+import { ApplyModal } from '../components/ApplyModal'
 import { jobOpenings, perks } from '../pagesData'
 
 const ease = [0.22, 1, 0.36, 1] as const
@@ -24,6 +25,8 @@ export default function JobDetail() {
   const { id } = useParams<{ id: string }>()
   const reduceMotion = Boolean(useReducedMotion())
 
+  const [applyOpen, setApplyOpen] = useState(false)
+
   const job = jobOpenings.find((item) => item.id === id)
 
   if (!job) {
@@ -31,9 +34,6 @@ export default function JobDetail() {
   }
 
   const otherJobs = jobOpenings.filter((item) => item.id !== job.id)
-  const applyHref = `mailto:${HR_EMAIL}?subject=${encodeURIComponent(
-    `Application: ${job.title}`,
-  )}`
 
   const reveal = reduceMotion
     ? {}
@@ -66,9 +66,9 @@ export default function JobDetail() {
               <span>{job.team}</span>
             </div>
             <div className="hero-actions" style={{ justifyContent: 'center' }}>
-              <a className="btn btn-ink" href={applyHref}>
+              <button type="button" className="btn btn-ink" onClick={() => setApplyOpen(true)}>
                 Apply for this role <span aria-hidden>→</span>
-              </a>
+              </button>
               <Link className="btn btn-ghost-ink" to="/careers">
                 All openings
               </Link>
@@ -195,11 +195,13 @@ export default function JobDetail() {
             <h2 id="job-cta-title">Ready to apply?</h2>
             <p>Send your resume and a note on what you'd want to own first.</p>
           </motion.div>
-          <a className="btn btn-light" href={applyHref}>
+          <button type="button" className="btn btn-light" onClick={() => setApplyOpen(true)}>
             Apply for this role <span aria-hidden>→</span>
-          </a>
+          </button>
         </div>
       </section>
+
+      <ApplyModal jobTitle={job.title} open={applyOpen} onClose={() => setApplyOpen(false)} />
     </>
   )
 }
