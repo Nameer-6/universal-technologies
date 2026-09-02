@@ -1,7 +1,13 @@
 import { Fragment } from 'react'
 import { motion, useReducedMotion } from 'framer-motion'
 import { Link } from 'react-router-dom'
-import { howItWorks, outcomes, services } from '../data'
+import { Sparkline } from '../components/Sparkline'
+import { howItWorks, industries, outcomes, services } from '../data'
+
+const ROLLBACK_TREND =
+  '0,5.6 10.9,10.2 21.8,15.2 32.7,13.5 43.6,19 54.5,17.3 65.4,22.8 76.3,21.1 87.2,26.6 98.1,24.9 109,29.9 119.9,27.4'
+
+const MARQUEE_LIST = [...industries, ...industries]
 
 const ease = [0.22, 1, 0.36, 1] as const
 
@@ -122,16 +128,27 @@ export default function Services() {
 
                 <div className="svc-pipeline-stats">
                   <div>
+                    <Sparkline />
                     <strong>180</strong>
                     <span>Deploys / wk</span>
                   </div>
                   <div>
+                    <Sparkline points={ROLLBACK_TREND} />
                     <strong>0.6%</strong>
                     <span>Rollback rate</span>
                   </div>
                 </div>
               </div>
             </motion.div>
+          </div>
+
+          <p className="svc-marquee-label">Built for teams across</p>
+          <div className="svc-marquee" aria-label="Industries we support">
+            <div className={`svc-marquee-track${reduceMotion ? ' paused' : ''}`}>
+              {MARQUEE_LIST.map((name, index) => (
+                <span key={`${name}-${index}`}>{name}</span>
+              ))}
+            </div>
           </div>
         </div>
       </section>

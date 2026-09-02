@@ -71,9 +71,35 @@ export type JobOpening = {
   location: string
   type: string
   summary: string
+  /** Shown as the highlighted role at the top of the openings list. */
+  featured?: boolean
+  responsibilities: string[]
+  requirements: string[]
 }
 
 export const jobOpenings: JobOpening[] = [
+  {
+    id: 'senior-bidder',
+    title: 'Senior Bidder — Upwork & Freelancer',
+    team: 'Business Development',
+    location: 'Remote (Global)',
+    type: 'Full-time',
+    summary:
+      'Win new development projects for Universal Technologies by bidding and closing deals on Upwork and Freelancer.',
+    featured: true,
+    responsibilities: [
+      'Write and submit winning proposals for development projects on Upwork and Freelancer daily.',
+      'Qualify inbound leads and match client requirements to the right service line before bidding.',
+      'Run first client calls and translate scope into a proposal our engineers can actually deliver.',
+      'Keep the bidding pipeline and win-rate numbers current so leadership can see what\'s working.',
+    ],
+    requirements: [
+      '3+ years bidding and closing software development projects on Upwork, Freelancer, or similar platforms.',
+      'A proposal win rate you can talk through with real numbers.',
+      'Enough technical fluency to scope a dev project without over-promising.',
+      'Excellent written English — the proposal is the client\'s first impression of us.',
+    ],
+  },
   {
     id: 'sr-fullstack',
     title: 'Senior Full-Stack Engineer',
@@ -81,6 +107,18 @@ export const jobOpenings: JobOpening[] = [
     location: 'Remote (Americas)',
     type: 'Full-time',
     summary: 'Own features end to end across a React/Node stack for client products in production.',
+    responsibilities: [
+      'Own features end to end — schema, API, and UI — for client products already in production.',
+      'Pair directly with QA and delivery leads instead of throwing work over a wall.',
+      'Review PRs and set technical direction on the codebases you touch.',
+      'Join client demos and speak to trade-offs firsthand, not through a middleman.',
+    ],
+    requirements: [
+      '5+ years building production web applications end to end.',
+      'Comfortable in a typed language across the stack (TypeScript/Node preferred).',
+      'Have shipped and supported features in production, not just in a sandbox.',
+      'Write PR descriptions and docs someone else can actually follow.',
+    ],
   },
   {
     id: 'qa-automation',
@@ -89,6 +127,18 @@ export const jobOpenings: JobOpening[] = [
     location: 'Remote (EMEA)',
     type: 'Full-time',
     summary: 'Build and maintain Playwright/Cypress suites that gate merges before customers feel the risk.',
+    responsibilities: [
+      'Design and maintain Playwright/Cypress suites that gate merges, not just document bugs after the fact.',
+      'Partner with engineers to make flaky tests someone else\'s problem — yours to fix, once.',
+      'Run exploratory testing on the journeys that would actually cost a client users.',
+      'Keep CI feedback fast enough that engineers don\'t start ignoring it.',
+    ],
+    requirements: [
+      '3+ years in test automation, with at least one production CI suite you built or owned.',
+      'Fluent in Playwright or Cypress; comfortable reading the app code you\'re testing.',
+      'Know the difference between a test that catches bugs and one that just adds runtime.',
+      'API testing experience (Postman, REST-assured, or similar).',
+    ],
   },
   {
     id: 'devops',
@@ -97,6 +147,18 @@ export const jobOpenings: JobOpening[] = [
     location: 'Remote (Global)',
     type: 'Full-time',
     summary: 'Harden CI/CD pipelines and observability for a growing portfolio of client infrastructure.',
+    responsibilities: [
+      'Harden CI/CD pipelines so deploys are routine, not an event.',
+      'Own infrastructure as code across a growing portfolio of client environments.',
+      'Build the observability that lets an on-call engineer diagnose an incident in minutes, not hours.',
+      'Right-size infrastructure so cost doesn\'t creep past what traffic actually needs.',
+    ],
+    requirements: [
+      '4+ years running production infrastructure on AWS or GCP.',
+      'Hands-on with Terraform, Docker, and Kubernetes — not just the docs.',
+      'Have carried an on-call rotation and can talk through an incident you fixed.',
+      'Comfortable working across several unrelated client stacks in the same week.',
+    ],
   },
   {
     id: 'delivery-lead',
@@ -105,6 +167,18 @@ export const jobOpenings: JobOpening[] = [
     location: 'Remote (Americas)',
     type: 'Full-time',
     summary: 'Be the single accountable owner for two to three client engagements at a time.',
+    responsibilities: [
+      'Own two to three client engagements end to end — scope, staffing, and delivery.',
+      'Run the weekly rhythm that keeps engineering, QA, and the client on the same page.',
+      'Flag risk early enough that it\'s a conversation, not a surprise.',
+      'Be the one person a client can always reach for a straight answer.',
+    ],
+    requirements: [
+      '4+ years leading delivery on client-facing software engagements.',
+      'Technical enough to read a sprint board and push back on a bad estimate.',
+      'Comfortable owning a hard conversation about scope, timeline, or risk.',
+      'Written and verbal communication a client stakeholder trusts.',
+    ],
   },
   {
     id: 'product-designer',
@@ -113,6 +187,18 @@ export const jobOpenings: JobOpening[] = [
     location: 'Remote (Global)',
     type: 'Contract',
     summary: 'Take products from rough brief to shippable UI, working directly with engineering.',
+    responsibilities: [
+      'Take products from a rough brief to shippable UI, working directly with engineering.',
+      'Run lightweight user research to ground decisions instead of guessing.',
+      'Build and maintain design systems that keep new features consistent.',
+      'Hand off specs an engineer can build from without a follow-up meeting.',
+    ],
+    requirements: [
+      '4+ years designing shipped software products, not just concepts.',
+      'Fluent in Figma, including components, variants, and design tokens.',
+      'A portfolio that shows the messy middle, not just polished final screens.',
+      'Comfortable presenting and defending decisions directly to engineers and clients.',
+    ],
   },
 ]
 

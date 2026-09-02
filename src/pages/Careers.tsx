@@ -1,5 +1,6 @@
 import { motion, useReducedMotion } from 'framer-motion'
-import { CONTACT_EMAIL } from '../data'
+import { Link } from 'react-router-dom'
+import { HR_EMAIL } from '../data'
 import { jobOpenings, perks } from '../pagesData'
 
 const ease = [0.22, 1, 0.36, 1] as const
@@ -21,6 +22,8 @@ const stagger = {
 
 export default function Careers() {
   const reduceMotion = Boolean(useReducedMotion())
+  const featuredJob = jobOpenings.find((job) => job.featured) ?? jobOpenings[0]
+  const otherJobs = jobOpenings.filter((job) => job.id !== featuredJob?.id)
   const reveal = reduceMotion
     ? {}
     : {
@@ -86,13 +89,42 @@ export default function Careers() {
             <div>
               <p className="section-label">Open roles</p>
               <h2 className="section-title" id="openings-title">
-                Five openings this quarter
+                {jobOpenings.length} openings this quarter
               </h2>
             </div>
             <p className="section-lead">
-              Don't see your role? Email {CONTACT_EMAIL} — we read every note.
+              Don't see your role? Email {HR_EMAIL} — we read every note.
             </p>
           </motion.div>
+
+          {featuredJob && (
+            <motion.div
+              initial={reduceMotion ? false : { opacity: 0, y: 24 }}
+              whileInView={{ opacity: 1, y: 0 }}
+              viewport={{ once: true, amount: 0.3 }}
+              transition={{ duration: 0.65, ease }}
+            >
+              <Link to={`/careers/${featuredJob.id}`} className="job-featured">
+                <span className="job-featured-badge">Featured role</span>
+                <div className="job-featured-body">
+                  <div>
+                    <h3>{featuredJob.title}</h3>
+                    <p>{featuredJob.summary}</p>
+                  </div>
+                  <div className="job-featured-meta">
+                    <div className="stack-row">
+                      <span>{featuredJob.team}</span>
+                      <span>{featuredJob.location}</span>
+                      <span>{featuredJob.type}</span>
+                    </div>
+                    <span className="job-featured-cta">
+                      View role <span aria-hidden>→</span>
+                    </span>
+                  </div>
+                </div>
+              </Link>
+            </motion.div>
+          )}
 
           <motion.div
             className="service-grid"
@@ -101,7 +133,7 @@ export default function Careers() {
             whileInView={reduceMotion ? undefined : 'show'}
             viewport={{ once: true, amount: 0.12 }}
           >
-            {jobOpenings.map((job) => (
+            {otherJobs.map((job) => (
               <motion.article
                 key={job.id}
                 className="service-card"
@@ -110,15 +142,17 @@ export default function Careers() {
                   reduceMotion ? undefined : { y: -8, transition: { duration: 0.25, ease } }
                 }
               >
-                <div className="service-top">
-                  <span>{job.team}</span>
-                  <h3>{job.title}</h3>
-                </div>
-                <p>{job.summary}</p>
-                <div className="stack-row">
-                  <span>{job.location}</span>
-                  <span>{job.type}</span>
-                </div>
+                <Link to={`/careers/${job.id}`} className="service-card-link">
+                  <div className="service-top">
+                    <span>{job.team}</span>
+                    <h3>{job.title}</h3>
+                  </div>
+                  <p>{job.summary}</p>
+                  <div className="stack-row">
+                    <span>{job.location}</span>
+                    <span>{job.type}</span>
+                  </div>
+                </Link>
               </motion.article>
             ))}
           </motion.div>
@@ -136,7 +170,7 @@ export default function Careers() {
             <h2 id="careers-cta-title">Don't see the right role?</h2>
             <p>Send us your resume anyway — we keep a shortlist for the next opening.</p>
           </motion.div>
-          <a className="btn btn-light" href={`mailto:${CONTACT_EMAIL}`}>
+          <a className="btn btn-light" href={`mailto:${HR_EMAIL}`}>
             Email your resume <span aria-hidden>→</span>
           </a>
         </div>

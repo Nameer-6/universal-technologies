@@ -865,6 +865,142 @@ button {
   color: var(--muted);
 }
 
+.service-card-link {
+  display: block;
+  color: inherit;
+}
+
+.job-featured {
+  display: block;
+  position: relative;
+  background: var(--surface);
+  border: 1px solid rgba(227, 28, 35, 0.28);
+  border-radius: 24px;
+  padding: 1.75rem 2rem;
+  margin-bottom: 1.25rem;
+  color: inherit;
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
+
+.job-featured:hover {
+  transform: translateY(-6px);
+  box-shadow: 0 22px 48px rgba(12, 15, 20, 0.1);
+}
+
+.job-featured-badge {
+  display: inline-flex;
+  margin-bottom: 0.9rem;
+  padding: 0.28rem 0.7rem;
+  border-radius: 999px;
+  background: rgba(227, 28, 35, 0.1);
+  color: var(--brand);
+  font-size: 0.72rem;
+  font-weight: 800;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+}
+
+.job-featured-body {
+  display: grid;
+  grid-template-columns: 1.4fr 1fr;
+  gap: 1.5rem;
+  align-items: end;
+}
+
+.job-featured-body h3 {
+  margin: 0;
+  font-family: var(--font-display);
+  font-size: 1.6rem;
+  letter-spacing: -0.02em;
+}
+
+.job-featured-body p {
+  margin: 0.7rem 0 0;
+  color: var(--muted);
+}
+
+.job-featured-meta {
+  display: grid;
+  gap: 0.9rem;
+  justify-items: start;
+}
+
+.job-featured-cta {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.35rem;
+  font-weight: 700;
+  color: var(--brand);
+}
+
+.job-list {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: grid;
+  gap: 0.9rem;
+  max-width: 46rem;
+}
+
+.job-list li {
+  display: flex;
+  align-items: baseline;
+  gap: 0.7rem;
+  color: var(--muted);
+  line-height: 1.6;
+}
+
+.job-list li::before {
+  content: '';
+  width: 6px;
+  height: 6px;
+  flex-shrink: 0;
+  border-radius: 50%;
+  background: var(--brand);
+  transform: translateY(-3px);
+}
+
+.related-jobs-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+  gap: 0.85rem;
+}
+
+.related-job-card {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+  background: var(--surface);
+  border: 1px solid var(--line);
+  border-radius: 18px;
+  padding: 1.1rem 1.1rem 1.25rem;
+  transition: transform 0.3s ease, box-shadow 0.3s ease, border-color 0.3s ease;
+}
+
+.related-job-card:hover {
+  transform: translateY(-6px);
+  box-shadow: 0 18px 40px rgba(12, 15, 20, 0.08);
+  border-color: rgba(227, 28, 35, 0.22);
+}
+
+.related-job-card span {
+  font-family: var(--font-display);
+  font-weight: 800;
+  font-size: 0.82rem;
+  color: var(--brand);
+}
+
+.related-job-card strong {
+  font-family: var(--font-display);
+  font-size: 1rem;
+  letter-spacing: -0.02em;
+}
+
+.related-job-card em {
+  font-style: normal;
+  color: var(--muted);
+}
+
 .stack-row {
   display: flex;
   flex-wrap: wrap;
@@ -2085,6 +2221,18 @@ button {
   border-top: 1px solid var(--svc-console-border-soft);
 }
 
+.svc-pipeline-stats div {
+  display: flex;
+  flex-direction: column;
+  gap: 0.2rem;
+}
+
+.svc-pipeline-stats .svc-sparkline {
+  width: 90px;
+  height: 1.6rem;
+  margin: 0 0 0.15rem;
+}
+
 .svc-pipeline-stats div strong {
   display: block;
   font-family: var(--font-display);
@@ -2095,6 +2243,47 @@ button {
 .svc-pipeline-stats div span {
   font-size: 0.8rem;
   color: var(--svc-console-muted);
+}
+
+.svc-marquee-label {
+  margin: 2.5rem 0 0;
+  text-align: center;
+  font-size: 0.76rem;
+  font-weight: 700;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: var(--svc-muted);
+}
+
+.svc-marquee {
+  margin-top: 1rem;
+  overflow: hidden;
+  mask-image: linear-gradient(90deg, transparent, #000 8%, #000 92%, transparent);
+  border-top: 1px solid var(--svc-line);
+  border-bottom: 1px solid var(--svc-line);
+  padding: 1rem 0;
+}
+
+.svc-marquee-track {
+  display: flex;
+  gap: 0.75rem;
+  width: max-content;
+  animation: marquee-scroll 32s linear infinite;
+}
+
+.svc-marquee-track.paused {
+  animation: none;
+}
+
+.svc-marquee-track span {
+  flex-shrink: 0;
+  padding: 0.5rem 1rem;
+  border-radius: 999px;
+  border: 1px solid var(--svc-line);
+  background: var(--svc-surface-2);
+  font-size: 0.84rem;
+  font-weight: 700;
+  color: var(--svc-muted);
 }
 
 /* Why choose us */
@@ -2711,6 +2900,14 @@ button {
   .form-row,
   .backbone-stats {
     grid-template-columns: 1fr;
+  }
+
+  .job-featured-body {
+    grid-template-columns: 1fr;
+  }
+
+  .job-featured-meta {
+    justify-items: start;
   }
 
   .footer-bottom {

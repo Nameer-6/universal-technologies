@@ -7,6 +7,7 @@ export type Service = {
 }
 
 export const CONTACT_EMAIL = 'contact@universal-technologies.com'
+export const HR_EMAIL = 'hr@universal-technologies.com'
 
 export const services: Service[] = [
   {

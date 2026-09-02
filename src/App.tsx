@@ -3,6 +3,7 @@ import { Layout } from './components/Layout'
 import Home from './pages/Home'
 import About from './pages/About'
 import Careers from './pages/Careers'
+import JobDetail from './pages/JobDetail'
 import Services from './pages/Services'
 import ServiceDetail from './pages/ServiceDetail'
 import Products from './pages/Products'
@@ -15,6 +16,7 @@ export default function App() {
         <Route index element={<Home />} />
         <Route path="about" element={<About />} />
         <Route path="careers" element={<Careers />} />
+        <Route path="careers/:id" element={<JobDetail />} />
         <Route path="services" element={<Services />} />
         <Route path="services/:id" element={<ServiceDetail />} />
         <Route path="products" element={<Products />} />
