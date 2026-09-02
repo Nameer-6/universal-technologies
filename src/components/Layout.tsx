@@ -2,11 +2,13 @@ import { useEffect, useState } from 'react'
 import { Link, Outlet, useLocation } from 'react-router-dom'
 import { motion, useReducedMotion, useScroll, useSpring, useTransform } from 'framer-motion'
 import { CONTACT_EMAIL, services } from '../data'
+import { useTheme } from '../hooks/useTheme'
 
 export function Layout() {
   const [scrolled, setScrolled] = useState(false)
   const [menuOpen, setMenuOpen] = useState(false)
   const reduceMotion = Boolean(useReducedMotion())
+  const { theme, toggleTheme } = useTheme()
   const { scrollYProgress } = useScroll()
   const progress = useSpring(scrollYProgress, { stiffness: 120, damping: 28, mass: 0.3 })
   const progressWidth = useTransform(progress, [0, 1], ['0%', '100%'])
@@ -51,7 +53,7 @@ export function Layout() {
       <header className={`nav${scrolled || menuOpen ? ' scrolled' : ''}${menuOpen ? ' open' : ''}`}>
         <div className="container nav-inner">
           <Link className="brand" to="/" onClick={closeMenu} aria-label="Universal Technologies home">
-            <img src="/logo.png" alt="Universal Technologies" />
+            <img src={theme === 'dark' ? '/logo-dark.png' : '/logo.png'} alt="Universal Technologies" />
           </Link>
 
           <nav className="nav-links" aria-label="Primary">
@@ -70,6 +72,37 @@ export function Layout() {
             <Link to="/contact" onClick={closeMenu}>
               Contact
             </Link>
+            <button
+              type="button"
+              className="theme-toggle"
+              aria-label={theme === 'dark' ? 'Switch to light mode' : 'Switch to dark mode'}
+              aria-pressed={theme === 'dark'}
+              onClick={toggleTheme}
+            >
+              {theme === 'dark' ? (
+                <svg viewBox="0 0 24 24" fill="none" aria-hidden>
+                  <circle cx="12" cy="12" r="4.5" stroke="currentColor" strokeWidth="1.6" />
+                  <path
+                    stroke="currentColor"
+                    strokeWidth="1.6"
+                    strokeLinecap="round"
+                    d="M12 2.5v2M12 19.5v2M4.2 4.2l1.4 1.4M18.4 18.4l1.4 1.4M2.5 12h2M19.5 12h2M4.2 19.8l1.4-1.4M18.4 5.6l1.4-1.4"
+                  />
+                </svg>
+              ) : (
+                <svg viewBox="0 0 24 24" fill="none" aria-hidden>
+                  <path
+                    stroke="currentColor"
+                    strokeWidth="1.6"
+                    strokeLinejoin="round"
+                    d="M20.5 14.2A8.5 8.5 0 1 1 9.8 3.5a6.8 6.8 0 0 0 10.7 10.7Z"
+                  />
+                </svg>
+              )}
+              <span className="theme-toggle-label">
+                {theme === 'dark' ? 'Light mode' : 'Dark mode'}
+              </span>
+            </button>
             <Link className="btn btn-ink nav-cta" to="/contact" onClick={closeMenu}>
               Get Started
             </Link>
@@ -96,7 +129,7 @@ export function Layout() {
       <footer className="footer">
         <div className="container footer-grid">
           <div>
-            <img src="/logo.png" alt="Universal Technologies" />
+            <img src="/logo-dark.png" alt="Universal Technologies" />
             <p>
               Product engineering, quality, cloud, and growth — staffed as one delivery team.
             </p>
@@ -104,7 +137,7 @@ export function Layout() {
           <div>
             <h4>Services</h4>
             {services.slice(0, 4).map((s) => (
-              <Link key={s.id} to="/services">
+              <Link key={s.id} to={`/services/${s.id}`}>
                 {s.title}
               </Link>
             ))}
