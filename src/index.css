@@ -1241,9 +1241,14 @@ button {
 }
 
 .apply-target-frame {
+  /* Real (if tiny) dimensions on purpose — some browsers silently skip
+     processing a file upload that navigates a zero-area iframe. Off-screen
+     positioning keeps it invisible without zeroing it out. */
   position: absolute;
-  width: 0;
-  height: 0;
+  top: -9999px;
+  left: -9999px;
+  width: 1px;
+  height: 1px;
   border: 0;
   opacity: 0;
   pointer-events: none;
