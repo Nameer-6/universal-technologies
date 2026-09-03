@@ -18,6 +18,8 @@
 
   --brand: #e31c23;
   --brand-deep: #9b1218;
+  --danger: #b3261e;
+  --success: #147a3f;
   --radius: 18px;
   --nav-h: 72px;
   --topbar-h: 40px;
@@ -34,6 +36,8 @@
   --paper: #0b0c0f;
   --paper-2: #121317;
   --shadow: 0 20px 50px rgba(0, 0, 0, 0.45);
+  --danger: #ff6b6b;
+  --success: #4ade80;
 }
 
 *,
@@ -524,6 +528,7 @@ button {
 .swarm-tile.tone-light {
   background: #fff;
   border: 1px solid rgba(12, 15, 20, 0.08);
+  color: #0c0f14;
 }
 .swarm-tile.tone-dark {
   background: #171c24;
@@ -1257,7 +1262,7 @@ button {
 .apply-error {
   margin: 0;
   font-size: 0.86rem;
-  color: #b3261e;
+  color: var(--danger);
 }
 
 .apply-submit {
@@ -1390,7 +1395,7 @@ button {
   padding: 0.5rem 1rem;
   border-radius: 999px;
   border: 1px solid var(--line);
-  background: rgba(255, 255, 255, 0.75);
+  background: var(--surface);
   font-size: 0.84rem;
   font-weight: 700;
   color: var(--ink-soft);
@@ -1580,7 +1585,7 @@ button {
 }
 
 .form-note.success {
-  color: #147a3f;
+  color: var(--success);
 }
 
 .footer {

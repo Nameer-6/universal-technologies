@@ -1,27 +1,31 @@
+import { lazy, Suspense } from 'react'
 import { Route, Routes } from 'react-router-dom'
 import { Layout } from './components/Layout'
 import Home from './pages/Home'
-import About from './pages/About'
-import Careers from './pages/Careers'
-import JobDetail from './pages/JobDetail'
-import Services from './pages/Services'
-import ServiceDetail from './pages/ServiceDetail'
-import Products from './pages/Products'
-import Contact from './pages/Contact'
+
+const About = lazy(() => import('./pages/About'))
+const Careers = lazy(() => import('./pages/Careers'))
+const JobDetail = lazy(() => import('./pages/JobDetail'))
+const Services = lazy(() => import('./pages/Services'))
+const ServiceDetail = lazy(() => import('./pages/ServiceDetail'))
+const Products = lazy(() => import('./pages/Products'))
+const Contact = lazy(() => import('./pages/Contact'))
 
 export default function App() {
   return (
-    <Routes>
-      <Route element={<Layout />}>
-        <Route index element={<Home />} />
-        <Route path="about" element={<About />} />
-        <Route path="careers" element={<Careers />} />
-        <Route path="careers/:id" element={<JobDetail />} />
-        <Route path="services" element={<Services />} />
-        <Route path="services/:id" element={<ServiceDetail />} />
-        <Route path="products" element={<Products />} />
-        <Route path="contact" element={<Contact />} />
-      </Route>
-    </Routes>
+    <Suspense fallback={null}>
+      <Routes>
+        <Route element={<Layout />}>
+          <Route index element={<Home />} />
+          <Route path="about" element={<About />} />
+          <Route path="careers" element={<Careers />} />
+          <Route path="careers/:id" element={<JobDetail />} />
+          <Route path="services" element={<Services />} />
+          <Route path="services/:id" element={<ServiceDetail />} />
+          <Route path="products" element={<Products />} />
+          <Route path="contact" element={<Contact />} />
+        </Route>
+      </Routes>
+    </Suspense>
   )
 }

@@ -53,7 +53,12 @@ export function Layout() {
       <header className={`nav${scrolled || menuOpen ? ' scrolled' : ''}${menuOpen ? ' open' : ''}`}>
         <div className="container nav-inner">
           <Link className="brand" to="/" onClick={closeMenu} aria-label="Universal Technologies home">
-            <img src={theme === 'dark' ? '/logo-dark.png' : '/logo.png'} alt="Universal Technologies" />
+            <img
+              src={theme === 'dark' ? '/logo-dark.png' : '/logo.png'}
+              alt="Universal Technologies"
+              width={449}
+              height={164}
+            />
           </Link>
 
           <nav className="nav-links" aria-label="Primary">
@@ -129,7 +134,7 @@ export function Layout() {
       <footer className="footer">
         <div className="container footer-grid">
           <div>
-            <img src="/logo-dark.png" alt="Universal Technologies" />
+            <img src="/logo-dark.png" alt="Universal Technologies" width={451} height={164} />
             <p>
               Product engineering, quality, cloud, and growth — staffed as one delivery team.
             </p>
