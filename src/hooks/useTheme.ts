@@ -4,9 +4,9 @@ type Theme = 'light' | 'dark'
 
 function readStoredTheme(): Theme {
   try {
-    return localStorage.getItem('theme') === 'dark' ? 'dark' : 'light'
+    return localStorage.getItem('theme') === 'light' ? 'light' : 'dark'
   } catch {
-    return 'light'
+    return 'dark'
   }
 }
 

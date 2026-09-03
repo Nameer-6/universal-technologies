@@ -1,7 +1,7 @@
 import { AnimatePresence, motion, useReducedMotion } from 'framer-motion'
 import { ScrollHero } from '../components/ScrollHero'
 import { useContactForm } from '../hooks/useContactForm'
-import { CONTACT_EMAIL, engagements, howItWorks, industries, outcomes, services } from '../data'
+import { CONTACT_EMAIL, clients, engagements, howItWorks, outcomes, services } from '../data'
 
 const ease = [0.22, 1, 0.36, 1] as const
 
@@ -20,7 +20,7 @@ const stagger = {
   show: { transition: { staggerChildren: 0.09, delayChildren: 0.06 } },
 }
 
-const marqueeList = [...industries, ...industries]
+const marqueeList = [...clients, ...clients]
 
 export default function Home() {
   const reduceMotion = Boolean(useReducedMotion())
@@ -189,7 +189,7 @@ export default function Home() {
             ))}
           </motion.div>
 
-          <div className="marquee" aria-label="Industries we support">
+          <div className="marquee" aria-label="Clients we've worked with">
             <div className={`marquee-track${reduceMotion ? ' paused' : ''}`}>
               {marqueeList.map((name, index) => (
                 <span key={`${name}-${index}`}>{name}</span>
