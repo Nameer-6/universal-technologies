@@ -248,6 +248,15 @@ export const products: Product[] = [
       'A mobile app for crews working with unreliable connectivity — jobs sync the moment a signal comes back.',
     tags: ['Mobile', 'Offline sync', 'Logistics'],
   },
+  {
+    id: 'postit-ai',
+    mark: '05',
+    name: 'postit.ai',
+    tagline: 'One window, every channel',
+    description:
+      'An AI scheduling tool that plans and publishes company posts to LinkedIn, Instagram, and Facebook from a single dashboard — draft once, tailor per platform, and queue it all on one shared calendar.',
+    tags: ['Social scheduling', 'AI', 'LinkedIn + Instagram + Facebook'],
+  },
 ]
 
 export const officeLocations = [

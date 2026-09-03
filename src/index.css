@@ -1020,7 +1020,7 @@ button {
 
 .apply-dialog {
   position: relative;
-  width: min(480px, 100%);
+  width: min(720px, 100%);
   max-height: 90vh;
   /* Both axes must be set explicitly — leaving overflow-x unset makes it
      resolve to auto per spec, which showed a stray horizontal scrollbar
@@ -1586,6 +1586,10 @@ button {
 
 .form-note.success {
   color: var(--success);
+}
+
+.form-note.error {
+  color: var(--danger);
 }
 
 .footer {

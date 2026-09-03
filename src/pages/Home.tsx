@@ -24,7 +24,7 @@ const marqueeList = [...industries, ...industries]
 
 export default function Home() {
   const reduceMotion = Boolean(useReducedMotion())
-  const { sent, onSubmit } = useContactForm()
+  const { status, onSubmit } = useContactForm()
 
   const reveal = reduceMotion
     ? {}
@@ -318,16 +318,25 @@ export default function Home() {
               Project details
               <textarea name="message" required rows={5} />
             </label>
+            <input
+              type="checkbox"
+              name="_honey"
+              tabIndex={-1}
+              autoComplete="off"
+              aria-hidden="true"
+              className="apply-honeypot"
+            />
             <motion.button
               className="btn btn-ink"
               type="submit"
+              disabled={status === 'submitting'}
               whileHover={reduceMotion ? undefined : { scale: 1.02 }}
               whileTap={reduceMotion ? undefined : { scale: 0.98 }}
             >
-              {sent ? 'Opening email…' : 'Email our team'} <span aria-hidden>→</span>
+              {status === 'submitting' ? 'Sending…' : 'Email our team'} <span aria-hidden>→</span>
             </motion.button>
             <AnimatePresence>
-              {sent && (
+              {status === 'success' && (
                 <motion.p
                   key="ok"
                   className="form-note success"
@@ -335,7 +344,18 @@ export default function Home() {
                   animate={{ opacity: 1, y: 0 }}
                   exit={{ opacity: 0 }}
                 >
-                  Draft ready. If nothing opened, write {CONTACT_EMAIL}.
+                  Message sent — we'll reply within a business day.
+                </motion.p>
+              )}
+              {status === 'error' && (
+                <motion.p
+                  key="err"
+                  className="form-note error"
+                  initial={{ opacity: 0, y: 6 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  exit={{ opacity: 0 }}
+                >
+                  Something went wrong. Please email us directly at {CONTACT_EMAIL}.
                 </motion.p>
               )}
             </AnimatePresence>
