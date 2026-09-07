@@ -1,5 +1,6 @@
 import { motion, useReducedMotion } from 'framer-motion'
 import { Link } from 'react-router-dom'
+import { Seo } from '../components/Seo'
 import { HR_EMAIL } from '../data'
 import { jobOpenings, perks } from '../pagesData'
 
@@ -36,6 +37,12 @@ export default function Careers() {
 
   return (
     <>
+      <Seo
+        title="Careers | Universal Technologies"
+        description="Open roles in engineering, QA, DevOps, design, and delivery at a remote-first team of 40+ across 18 countries. See open roles and apply."
+        path="/careers"
+      />
+
       <section className="section" aria-labelledby="careers-title">
         <div className="container">
           <motion.div className="section-head center" {...reveal}>

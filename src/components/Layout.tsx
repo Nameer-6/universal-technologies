@@ -1,8 +1,21 @@
 import { useEffect, useState } from 'react'
 import { Link, Outlet, useLocation } from 'react-router-dom'
 import { motion, useReducedMotion, useScroll, useSpring, useTransform } from 'framer-motion'
+import { Helmet } from 'react-helmet-async'
 import { CONTACT_EMAIL, services } from '../data'
 import { useTheme } from '../hooks/useTheme'
+import { SITE_URL } from './Seo'
+
+const organizationJsonLd = {
+  '@context': 'https://schema.org',
+  '@type': 'Organization',
+  name: 'Universal Technologies',
+  url: SITE_URL,
+  logo: `${SITE_URL}/logo.png`,
+  email: CONTACT_EMAIL,
+  description:
+    'Remote-first product engineering partner delivering software development, QA automation, UI/UX, DevOps & cloud, cybersecurity, and AI solutions.',
+}
 
 export function Layout() {
   const [scrolled, setScrolled] = useState(false)
@@ -37,6 +50,10 @@ export function Layout() {
 
   return (
     <>
+      <Helmet>
+        <script type="application/ld+json">{JSON.stringify(organizationJsonLd)}</script>
+      </Helmet>
+
       {!reduceMotion && (
         <motion.div className="scroll-progress" style={{ width: progressWidth }} aria-hidden />
       )}
@@ -157,6 +174,10 @@ export function Layout() {
         </div>
         <div className="container footer-bottom">
           <span>© {new Date().getFullYear()} Universal Technologies</span>
+          <span className="footer-legal">
+            <Link to="/privacy-policy">Privacy Policy</Link>
+            <Link to="/terms">Terms of Service</Link>
+          </span>
           <span>Ship with one accountable partner</span>
         </div>
       </footer>

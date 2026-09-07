@@ -1,6 +1,7 @@
 import { Fragment } from 'react'
 import { motion, useReducedMotion } from 'framer-motion'
 import { Link } from 'react-router-dom'
+import { Seo } from '../components/Seo'
 import { Sparkline } from '../components/Sparkline'
 import { howItWorks, industries, outcomes, services } from '../data'
 
@@ -60,6 +61,12 @@ export default function Services() {
 
   return (
     <div className="svc-page">
+      <Seo
+        title="Services | Universal Technologies"
+        description="Software development, QA & test automation, UI/UX design, DevOps & cloud, cybersecurity, and AI & generative solutions — delivered by one accountable engineering team."
+        path="/services"
+      />
+
       <section className="svc-section svc-hero" aria-labelledby="services-title">
         <div className="container">
           <motion.div

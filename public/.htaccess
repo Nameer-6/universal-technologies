@@ -1,21 +1,36 @@
-# Single Page App routing — send any request that isn't a real file or
-# directory to index.html so React Router can handle the path client-side.
-# Fixes "This page does not exist" / 404 on reload or direct link for
-# routes like /services/web or /careers/senior-bidder.
+# Single Page App routing — send requests for known app routes to
+# index.html so React Router can handle the path client-side. Fixes
+# "This page does not exist" / 404 on reload or direct link for routes
+# like /services/web or /careers/senior-bidder.
+#
+# Unknown paths fall through to a real 404 status instead of silently
+# returning 200 for every URL — ErrorDocument still serves index.html as
+# the body so React Router's own not-found page renders, but the status
+# code search engines see is correct.
 
 Options -MultiViews -Indexes
+
+ErrorDocument 404 /index.html
 
 <IfModule mod_rewrite.c>
   RewriteEngine On
   RewriteBase /
+
+  # Canonical host: redirect www to the bare domain.
+  RewriteCond %{HTTP_HOST} ^www\.universal-technologies\.com$ [NC]
+  RewriteRule ^ https://universal-technologies.com%{REQUEST_URI} [L,R=301]
 
   # Let requests for real files/directories pass through untouched.
   RewriteCond %{REQUEST_FILENAME} -f [OR]
   RewriteCond %{REQUEST_FILENAME} -d
   RewriteRule ^ - [L]
 
-  # Everything else falls back to the app shell.
-  RewriteRule ^ index.html [L]
+  # Known app routes fall back to the SPA shell.
+  RewriteRule ^(about|careers|services|products|contact|privacy-policy|terms)(/.*)?$ index.html [L]
+  RewriteRule ^$ index.html [L]
+
+  # Anything else is a real 404, not a silent 200.
+  RewriteRule ^ - [R=404,L]
 </IfModule>
 
 # Never cache the app shell — it references the current hashed asset

@@ -1,5 +1,6 @@
 import { motion, useReducedMotion } from 'framer-motion'
 import { Link } from 'react-router-dom'
+import { Seo } from '../components/Seo'
 import { companyValues, leadership, milestones } from '../pagesData'
 
 const ease = [0.22, 1, 0.36, 1] as const
@@ -28,6 +29,12 @@ export default function About() {
 
   return (
     <>
+      <Seo
+        title="About Us | Universal Technologies"
+        description="Founded in 2016, Universal Technologies is a remote-first delivery team of 40+ engineers, testers, and designers across 18 countries who stay accountable past launch."
+        path="/about"
+      />
+
       <section className="section" aria-labelledby="about-title">
         <div className="container">
           <motion.div className="section-head center" {...reveal}>
@@ -36,9 +43,9 @@ export default function About() {
               A delivery team that stays accountable after launch
             </h1>
             <p className="section-lead">
-              Universal Technologies started as three engineers tired of watching good products
-              stall between handoffs. We're now the delivery layer for teams who'd rather ship
-              than coordinate. (Placeholder copy — replace with your real story.)
+              Universal Technologies started in 2016 as three engineers tired of watching good
+              products stall between handoffs. We're now a remote-first team of 40+ across 18
+              countries — the delivery layer for teams who'd rather ship than coordinate.
             </p>
           </motion.div>
 
@@ -97,7 +104,10 @@ export default function About() {
             <h2 className="section-title" id="leadership-title">
               The people accountable for delivery
             </h2>
-            <p className="section-lead">Placeholder team bios — swap in your real leadership.</p>
+            <p className="section-lead">
+              The people a client can actually name when they ask who's accountable for their
+              release.
+            </p>
           </motion.div>
 
           <motion.div

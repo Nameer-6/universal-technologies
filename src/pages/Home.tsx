@@ -1,5 +1,6 @@
 import { AnimatePresence, motion, useReducedMotion } from 'framer-motion'
 import { ScrollHero } from '../components/ScrollHero'
+import { Seo } from '../components/Seo'
 import { useContactForm } from '../hooks/useContactForm'
 import { CONTACT_EMAIL, clients, engagements, howItWorks, outcomes, services } from '../data'
 
@@ -38,6 +39,12 @@ export default function Home() {
 
   return (
     <>
+      <Seo
+        title="Universal Technologies — Software Engineering Partner"
+        description="Universal Technologies is a remote-first product engineering partner delivering software development, QA automation, UI/UX, DevOps & cloud, cybersecurity, and AI solutions — accountable from build through launch."
+        path="/"
+      />
+
       <ScrollHero />
 
       <section className="section how" id="how" aria-labelledby="how-title">

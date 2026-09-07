@@ -1,5 +1,6 @@
 import { motion, useReducedMotion } from 'framer-motion'
 import { Link } from 'react-router-dom'
+import { Seo } from '../components/Seo'
 import { products } from '../pagesData'
 
 const ease = [0.22, 1, 0.36, 1] as const
@@ -33,6 +34,12 @@ export default function Products() {
 
   return (
     <>
+      <Seo
+        title="Products | Universal Technologies"
+        description="Pulse, Ledgerline, Triagebot, Fieldsync, and postit.ai — internal tools Universal Technologies built to run its own delivery work, then productized once other teams asked for them."
+        path="/products"
+      />
+
       <section className="section" aria-labelledby="products-title">
         <div className="container">
           <motion.div className="section-head center" {...reveal}>
@@ -41,8 +48,8 @@ export default function Products() {
               A few things we've built and kept running
             </h1>
             <p className="section-lead">
-              Internal tools we productized after using them on client engagements. (Placeholder
-              copy — replace with your real product lineup.)
+              Internal tools we built to solve real problems on client engagements, then
+              productized once other teams asked for them.
             </p>
           </motion.div>
 

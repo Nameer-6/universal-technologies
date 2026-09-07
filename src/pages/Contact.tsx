@@ -1,4 +1,5 @@
 import { AnimatePresence, motion, useReducedMotion } from 'framer-motion'
+import { Seo } from '../components/Seo'
 import { useContactForm } from '../hooks/useContactForm'
 import { CONTACT_EMAIL, services } from '../data'
 import { officeLocations } from '../pagesData'
@@ -25,6 +26,12 @@ export default function Contact() {
 
   return (
     <>
+      <Seo
+        title="Contact | Universal Technologies"
+        description="Talk to Universal Technologies about your next project. Reach us by form or email — a real person replies within a day, from offices in Austin, Lisbon, and Bengaluru."
+        path="/contact"
+      />
+
       <section className="section" aria-labelledby="contact-title">
         <div className="container">
           <motion.div className="section-head center" {...reveal}>

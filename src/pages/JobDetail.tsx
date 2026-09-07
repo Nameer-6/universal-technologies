@@ -2,6 +2,7 @@ import { useState } from 'react'
 import { motion, useReducedMotion } from 'framer-motion'
 import { Link, Navigate, useParams } from 'react-router-dom'
 import { ApplyModal } from '../components/ApplyModal'
+import { Seo } from '../components/Seo'
 import { jobOpenings, perks } from '../pagesData'
 
 const ease = [0.22, 1, 0.36, 1] as const
@@ -47,6 +48,12 @@ export default function JobDetail() {
 
   return (
     <>
+      <Seo
+        title={`${job.title} | Careers at Universal Technologies`}
+        description={job.summary}
+        path={`/careers/${job.id}`}
+      />
+
       <section className="section" aria-labelledby="job-title">
         <div className="container">
           <motion.div

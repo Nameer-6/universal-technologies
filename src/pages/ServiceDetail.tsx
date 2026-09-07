@@ -1,6 +1,7 @@
 import { useEffect, useState, type ReactNode } from 'react'
 import { motion, useReducedMotion } from 'framer-motion'
 import { Link, Navigate, useParams } from 'react-router-dom'
+import { Seo, SITE_URL } from '../components/Seo'
 import { Sparkline } from '../components/Sparkline'
 import { howItWorks, outcomes, serviceDetails, services } from '../data'
 
@@ -189,6 +190,24 @@ export default function ServiceDetail() {
 
   return (
     <div className="svc-page">
+      <Seo
+        title={`${service.title} | Universal Technologies`}
+        description={service.summary}
+        path={`/services/${service.id}`}
+        jsonLd={{
+          '@context': 'https://schema.org',
+          '@type': 'Service',
+          serviceType: service.title,
+          name: service.title,
+          description: service.summary,
+          provider: {
+            '@type': 'Organization',
+            name: 'Universal Technologies',
+            url: SITE_URL,
+          },
+        }}
+      />
+
       <section className="svc-section svc-hero" aria-labelledby="service-detail-title">
         <div className="container">
           <motion.div
