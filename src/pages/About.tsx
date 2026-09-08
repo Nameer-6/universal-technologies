@@ -30,8 +30,8 @@ export default function About() {
   return (
     <>
       <Seo
-        title="About Us | Universal Technologies"
-        description="Founded in 2016, Universal Technologies is a remote-first delivery team of 40+ engineers, testers, and designers across 18 countries who stay accountable past launch."
+        title="About Universal Technologies"
+        description="Universal Technologies is a senior, full-stack delivery team behind 120+ shipped products across fintech, healthcare, and SaaS — remote-first, 40+ people, 18 countries."
         path="/about"
       />
 
@@ -40,12 +40,14 @@ export default function About() {
           <motion.div className="section-head center" {...reveal}>
             <p className="section-label">About us</p>
             <h1 className="section-title" id="about-title">
-              A delivery team that stays accountable after launch
+              We got tired of watching good ideas die in handoffs.
             </h1>
             <p className="section-lead">
-              Universal Technologies started in 2016 as three engineers tired of watching good
-              products stall between handoffs. We're now a remote-first team of 40+ across 18
-              countries — the delivery layer for teams who'd rather ship than coordinate.
+              Most software problems aren't technical, they're organizational: the designer hands
+              off to an engineer who hands off to a tester who hands off to an ops team, and every
+              handoff loses context. Universal Technologies started in 2016 to close that gap —
+              one team, now 40+ people across 18 countries, carries a project from the first
+              sketch to production and stays close to it after launch instead of disappearing.
             </p>
           </motion.div>
 
@@ -66,7 +68,7 @@ export default function About() {
             <div>
               <p className="section-label">What we believe</p>
               <h2 className="section-title" id="values-title">
-                Principles we actually enforce
+                What we actually enforce
               </h2>
             </div>
             <p className="section-lead">

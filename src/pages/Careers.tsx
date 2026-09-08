@@ -39,7 +39,7 @@ export default function Careers() {
     <>
       <Seo
         title="Careers | Universal Technologies"
-        description="Open roles in engineering, QA, DevOps, design, and delivery at a remote-first team of 40+ across 18 countries. See open roles and apply."
+        description="Open roles in AI, automation, QA, DevOps, and engineering at Universal Technologies. Remote-first, senior ownership from day one."
         path="/careers"
       />
 
@@ -48,11 +48,12 @@ export default function Careers() {
           <motion.div className="section-head center" {...reveal}>
             <p className="section-label">Careers</p>
             <h1 className="section-title" id="careers-title">
-              Build the delivery layer, from the inside
+              Own something real, from your first week.
             </h1>
             <p className="section-lead">
-              We hire senior people and give them real ownership. (Placeholder copy — replace with
-              your real careers pitch.)
+              We hire senior people and hand them real ownership: their own features, their own
+              client conversations, and a real say in how the team works — not a seat on someone
+              else's roadmap.
             </p>
           </motion.div>
         </div>

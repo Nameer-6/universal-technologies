@@ -266,16 +266,17 @@ function StaticHero() {
       <div className="scroll-hero-sticky">
         <div className="scroll-hero-stage">
           <div className="scroll-hero-copy">
-            <p className="eyebrow">Software · Quality · Growth</p>
+            <p className="eyebrow">Software · Automation · AI</p>
             <h1>
-              Every product,
+              Build it right. Automate what's manual.
               <br />
-              fully executed
+              Let AI carry the busywork.
             </h1>
             <p className="lede">
-              Universal Technologies is the delivery layer that designs, builds, tests, and
-              launches web, mobile, and cloud products — so shipping stops depending on who
-              happens to remember the next step.
+              Universal Technologies is a full-stack delivery partner for teams who are done
+              juggling five vendors. One team designs your product, automates the workflows
+              around it, builds the AI agents that run inside it, and keeps the infrastructure
+              underneath it healthy, long after launch day.
             </p>
             <div className="hero-actions">
               <a className="btn btn-ink" href="#contact">
@@ -364,16 +365,17 @@ function FullScrollHero() {
       <div className="scroll-hero-sticky">
         <div className="scroll-hero-stage">
           <motion.div className="scroll-hero-copy" style={{ opacity: copyOpacity, y: copyY }}>
-            <p className="eyebrow">Software · Quality · Growth</p>
+            <p className="eyebrow">Software · Automation · AI</p>
             <h1>
-              Every product,
+              Build it right. Automate what's manual.
               <br />
-              fully executed
+              Let AI carry the busywork.
             </h1>
             <p className="lede">
-              Universal Technologies is the delivery layer that designs, builds, tests, and
-              launches web, mobile, and cloud products — so shipping stops depending on who
-              happens to remember the next step.
+              Universal Technologies is a full-stack delivery partner for teams who are done
+              juggling five vendors. One team designs your product, automates the workflows
+              around it, builds the AI agents that run inside it, and keeps the infrastructure
+              underneath it healthy, long after launch day.
             </p>
             <div className="hero-actions">
               <a className="btn btn-ink" href="#contact">

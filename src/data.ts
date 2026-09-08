@@ -11,52 +11,52 @@ export const HR_EMAIL = 'hr@universal-technologies.com'
 
 export const services: Service[] = [
   {
-    id: 'software-development',
-    title: 'Software Development',
+    id: 'ai-agents',
+    title: 'AI Agents',
     mark: '01',
     summary:
-      'Web, mobile, and SaaS products built and modernized by engineers who work inside your roadmap — not a separate delivery track.',
-    stacks: ['React', 'Next.js', 'React Native', 'Node.js', 'GraphQL'],
+      'Autonomous and human-in-the-loop agents wired into your real tools and data, built with guardrails so they stay inside their lane.',
+    stacks: ['Anthropic', 'OpenAI', 'LangChain', 'LangGraph', 'Pinecone'],
+  },
+  {
+    id: 'workflow-automation',
+    title: 'Workflow Automation',
+    mark: '02',
+    summary:
+      "Manual, repetitive processes across your CRM, support desk, and back office, rebuilt as automated pipelines your team doesn't babysit.",
+    stacks: ['Zapier', 'n8n', 'Temporal', 'Node.js', 'REST'],
   },
   {
     id: 'qa',
     title: 'QA & Test Automation',
-    mark: '02',
+    mark: '03',
     summary:
-      'Ship faster with automated release gates, scalable test automation, and hands-on quality engineering.',
+      'Automated regression, exploratory testing, and CI-gated checks that catch problems before your customers do.',
     stacks: ['Playwright', 'Cypress', 'Selenium', 'Appium', 'Postman'],
   },
   {
-    id: 'ui-ux',
-    title: 'UI/UX Design',
-    mark: '03',
-    summary:
-      'Complex product requirements turned into clear user flows, prototypes, design systems, and development-ready interfaces.',
-    stacks: ['Figma', 'Framer', 'Design Tokens', 'Storybook', 'Maze'],
-  },
-  {
     id: 'devops',
-    title: 'DevOps & Cloud',
+    title: 'DevOps & Infrastructure',
     mark: '04',
     summary:
-      'Deployment speed, reliability, and visibility improved through CI/CD, cloud infrastructure, observability, and infrastructure automation.',
+      'CI/CD, cloud architecture, and observability sized to your actual traffic — not a diagram from a blog post.',
     stacks: ['AWS', 'Docker', 'Kubernetes', 'Terraform', 'GitHub Actions'],
   },
   {
-    id: 'cybersecurity',
-    title: 'Cybersecurity & Pen Testing',
+    id: 'saas',
+    title: 'SaaS-Based Applications',
     mark: '05',
     summary:
-      'Vulnerabilities found and fixed across web, mobile, APIs, cloud, and networks — before they become incidents.',
-    stacks: ['Burp Suite', 'OWASP ZAP', 'Nmap', 'Metasploit', 'Nessus'],
+      'Multi-tenant products architected for billing, permissions, and scale questions before they become emergencies.',
+    stacks: ['Next.js', 'Postgres', 'Stripe', 'Auth0', 'Redis'],
   },
   {
-    id: 'ai',
-    title: 'AI & Generative Solutions',
+    id: 'end-to-end-development',
+    title: 'End-to-End Development',
     mark: '06',
     summary:
-      'Production-ready LLM applications, RAG systems, copilots, and AI agents — shipped with evaluation, guardrails, and monitoring.',
-    stacks: ['OpenAI', 'LangChain', 'Pinecone', 'LlamaIndex', 'Anthropic'],
+      'Discovery through post-launch support, under one roof, so nothing falls into the gap between vendors.',
+    stacks: ['React', 'Next.js', 'React Native', 'Node.js', 'GraphQL'],
   },
 ]
 
@@ -88,65 +88,65 @@ export type ServiceDetail = {
 }
 
 export const serviceDetails: Record<string, ServiceDetail> = {
-  'software-development': {
+  'end-to-end-development': {
     stats: [
       { value: '8–12wk', label: 'MVP to launch' },
       { value: '99.9%', label: 'Uptime SLA' },
-      { value: '2', label: 'Platforms, one team' },
+      { value: '1', label: 'Accountable team' },
     ],
     capabilities: [
       {
-        tag: 'web & saas',
-        title: 'Web & SaaS platforms',
-        text: 'Customer-facing products and internal systems built around your users, workflows, and business requirements.',
+        tag: 'discovery',
+        title: 'Discovery & technical scoping',
+        text: 'A real plan before a real estimate — what exists, what\'s broken, and what "done" looks like.',
       },
       {
-        tag: 'mobile',
-        title: 'iOS & Android apps',
-        text: 'Native and cross-platform apps with shared logic, secure auth, and release trains that stay predictable.',
+        tag: 'design',
+        title: 'UX/UI design & prototyping',
+        text: 'Validated with real users before engineering commits to a direction.',
       },
       {
-        tag: 'apis',
-        title: 'APIs & integrations',
-        text: 'Typed services that connect your product to payments, CRMs, and the third-party platforms your workflows depend on.',
+        tag: 'engineering',
+        title: 'Full-stack engineering',
+        text: 'Web, mobile, and API work under one roadmap, not three separate vendors.',
       },
       {
-        tag: 'modernization',
-        title: 'Legacy modernization',
-        text: 'Aging architecture and codebases upgraded for maintainability, performance, and the ability to ship new features.',
+        tag: 'launch & support',
+        title: 'QA, deployment & post-launch support',
+        text: 'The part most vendors quietly stop billing for.',
       },
     ],
     valueProps: [
       {
-        title: 'Full-stack delivery, one team',
-        text: 'Web, mobile, and API work sit under one engineering team, so nothing gets lost translating between vendors.',
+        title: 'One accountable team',
+        text: 'One accountable team, not five vendors to coordinate between.',
         cards: [
-          { label: 'Shared repo', detail: 'One codebase, one team' },
-          { label: 'Typed contracts', detail: 'API and UI stay in sync' },
+          { label: 'Single team', detail: 'Design through delivery' },
+          { label: 'One point of contact', detail: 'No vendor handoffs' },
         ],
       },
       {
-        title: 'MVP to market in 8–12 weeks',
-        text: 'A thin, working slice ships first; scope grows from real usage, not guesswork.',
+        title: 'Weekly working software',
+        text: 'Weekly working software, not quarterly status decks.',
         cards: [
-          { label: 'Weekly demos', detail: 'Working software, not decks' },
+          { label: 'Weekly demos', detail: 'Working software, not slides' },
           { label: 'Usage-driven backlog', detail: 'Built on real signal' },
         ],
       },
       {
-        title: 'Your codebase, your standards',
-        text: 'We work inside your repositories, CI/CD, and engineering standards. Everything we build is documented and stays yours.',
+        title: 'Documentation from day one',
+        text: 'Documentation and handoff built in from the start, not bolted on at the end.',
         cards: [
           { label: 'Docs included', detail: 'Architecture, not just README' },
-          { label: 'No vendor lock-in', detail: 'Standard, portable stack' },
+          { label: 'Clean handoff', detail: 'Your team can run it' },
         ],
       },
       {
-        title: 'Quality built in from day one',
-        text: 'Testing is part of delivery from the start, not left until release — issues surface before users do.',
+        title: 'Support past launch day',
+        text: "Support doesn't end the day the app goes live.",
         cards: [
-          { label: 'CI gates', detail: 'Merge-ready checks' },
-          { label: 'Peer review', detail: 'Every change, every time' },
+          { label: 'Post-launch support', detail: "Launch isn't the finish line" },
+          { label: 'Monitoring included', detail: 'Issues caught early' },
         ],
       },
     ],
@@ -272,91 +272,91 @@ test("checkout completes", async ({ page }) => {
       ],
     },
   },
-  'ui-ux': {
+  'workflow-automation': {
     stats: [
-      { value: '92%', label: 'Usability score' },
-      { value: '3', label: 'Rounds user-tested' },
-      { value: '<1day', label: 'Handoff turnaround' },
+      { value: '70%', label: 'Fewer manual steps' },
+      { value: '<1wk', label: 'First automation live' },
+      { value: '0', label: 'Silent failures' },
     ],
     capabilities: [
       {
-        tag: 'ux research',
-        title: 'User & product research',
-        text: 'Interviews, flows, and usage data that ground design decisions in how people actually use your product.',
+        tag: 'process audit',
+        title: 'Process mapping & automation audit',
+        text: 'Finding where hours are lost to manual, repeatable steps.',
       },
       {
-        tag: 'prototyping',
-        title: 'Prototyping',
-        text: 'Clickable prototypes that de-risk direction before a single line of production code gets written.',
+        tag: 'integration',
+        title: 'Cross-tool integration',
+        text: 'CRM, support desk, finance, and internal systems wired to move data without a human relay.',
       },
       {
-        tag: 'ui design',
-        title: 'Interface design',
-        text: 'Development-ready screens with the states, edge cases, and responsive behavior engineers need to build without guessing.',
+        tag: 'approval logic',
+        title: 'Approval & exception logic',
+        text: 'Automations that know when to escalate to a person instead of guessing.',
       },
       {
-        tag: 'design systems',
-        title: 'Design systems',
-        text: 'Reusable component libraries that keep new features consistent instead of reinventing patterns each sprint.',
+        tag: 'monitoring',
+        title: 'Monitoring & alerting',
+        text: 'So a broken automation gets fixed before it fails silently for weeks.',
       },
     ],
     valueProps: [
       {
-        title: 'Research before pixels',
-        text: 'Every flow starts from how users actually behave, not a template pulled from a component library.',
+        title: 'Automated around your real process',
+        text: 'We automate the process you actually have, not a generic template.',
         cards: [
-          { label: 'User interviews', detail: 'Grounded in real behavior' },
-          { label: 'Flow maps', detail: 'Before any screen is drawn' },
+          { label: 'Process audit', detail: 'Grounded in your actual steps' },
+          { label: 'No generic templates', detail: 'Built around your tools' },
         ],
       },
       {
-        title: 'Prototypes that de-risk builds',
-        text: 'Clickable prototypes get tested with real users before engineering commits to a direction.',
+        title: 'Rolled out without breaking production',
+        text: 'Automations ship in stages, so nothing breaks in production on day one.',
         cards: [
-          { label: 'Clickable prototypes', detail: 'Validated pre-build' },
-          { label: 'Usability testing', detail: 'Real users, real tasks' },
+          { label: 'Staged rollout', detail: 'Nothing breaks on day one' },
+          { label: 'Fallback paths', detail: 'Manual override always available' },
         ],
       },
       {
-        title: 'Handoff engineers can build from',
-        text: 'Every screen ships with states, spacing, and responsive rules specified — no guessing at the missing edge case.',
+        title: 'Documented well enough to own',
+        text: 'Documented well enough that your own team can maintain it.',
         cards: [
-          { label: 'Dev-ready specs', detail: 'States and spacing included' },
-          { label: 'Figma handoff', detail: 'Inspectable, not just pretty' },
+          { label: 'Runbooks included', detail: 'Your team can maintain it' },
+          { label: 'Clear ownership', detail: 'No tribal knowledge' },
         ],
       },
       {
-        title: 'A system, not a one-off screen set',
-        text: 'Components and tokens are built to be reused, so the fifth feature looks as consistent as the first.',
+        title: 'Humans stay on judgment calls',
+        text: 'Humans stay in the loop on judgment calls, not data entry.',
         cards: [
-          { label: 'Component library', detail: 'Shared across the product' },
-          { label: 'Design tokens', detail: 'One source of truth' },
+          { label: 'Exception routing', detail: "Escalates, doesn't guess" },
+          { label: 'No busywork', detail: 'People handle judgment, not entry' },
         ],
       },
     ],
     console: {
-      repo: 'universal-design — main',
-      version: 'v1.6.3',
-      files: ['design/', 'tokens/theme.json', 'checkout-flow.fig'],
-      activeCount: 7,
-      activeDelta: '+2 this sprint',
-      snippet: `import { defineTokens } from "@universal/design"
+      repo: 'universal-workflows — main',
+      version: 'v2.3.1',
+      files: ['workflows/', 'reconcile.pipeline.ts', 'ci/gate.yml'],
+      activeCount: 34,
+      activeDelta: '+9 this sprint',
+      snippet: `import { defineWorkflow } from "@universal/flow"
 
-export const theme = defineTokens({
-  color: { brand: "#E31C23", ink: "#0C0F14" },
-  radius: { sm: 8, md: 14, lg: 22 },
-  // synced from Figma on every publish
-  spacing: scale(4),
+export const reconcile = defineWorkflow({
+  trigger: "payment.received",
+  // escalates only the exceptions
+  steps: [matchLedger, flagException, notify],
+  onError: (e) => escalate(e.severity),
 })`,
-      build: 'Figma sync #94',
+      build: 'pipeline #612',
       services: [
-        { name: 'design tokens', status: 'healthy' },
-        { name: 'storybook', status: 'healthy' },
-        { name: 'handoff docs', status: 'healthy' },
+        { name: 'ingest', status: 'healthy' },
+        { name: 'matcher', status: 'healthy' },
+        { name: 'notifier', status: 'healthy' },
       ],
-      latency: '92% usability score',
-      uptime: '3 rounds tested',
-      activity: ['12 screens updated', 'usability test #4 completed', 'tokens synced → storybook'],
+      latency: '2.1s p95',
+      uptime: '99.9% uptime',
+      activity: ['exception queue cleared', '1,204 records matched', 'automation #612 → production'],
     },
   },
   devops: {
@@ -450,95 +450,94 @@ export const theme = defineTokens({
       ],
     },
   },
-  cybersecurity: {
+  saas: {
     stats: [
-      { value: '0', label: 'Critical findings open' },
-      { value: '<24h', label: 'Critical triage time' },
-      { value: '4', label: 'Pen tests / year' },
+      { value: '<1wk', label: 'Tenant onboarding' },
+      { value: '99.9%', label: 'Uptime SLA' },
+      { value: '0', label: 'Rebuilds for billing changes' },
     ],
     capabilities: [
       {
-        tag: 'pen testing',
-        title: 'Penetration testing',
-        text: 'Manual, adversarial testing against your actual applications and infrastructure — not just an automated scan report.',
+        tag: 'architecture',
+        title: 'Multi-tenant architecture',
+        text: 'Data isolation and scaling decisions made before you need them.',
       },
       {
-        tag: 'api security',
-        title: 'API security',
-        text: 'Auth, rate limiting, and data-exposure review across every endpoint your product exposes.',
+        tag: 'billing',
+        title: 'Subscription billing & metering',
+        text: 'Plans, upgrades, and usage-based pricing wired in from the start.',
       },
       {
-        tag: 'vapt',
-        title: 'Vulnerability assessment',
-        text: 'Systematic scanning and manual verification that separates real risk from noise, ranked by actual impact.',
+        tag: 'access control',
+        title: 'Role-based access & permissions',
+        text: 'Enterprise-ready from your first enterprise conversation.',
       },
       {
-        tag: 'secure sdlc',
-        title: 'Secure SDLC',
-        text: 'Security gates built into your pipeline so vulnerabilities get caught before merge, not after a breach.',
+        tag: 'analytics',
+        title: 'Onboarding & usage analytics',
+        text: 'Instrumented so you know what customers actually use.',
       },
     ],
     valueProps: [
       {
-        title: 'Real attackers, not just scanners',
-        text: 'Manual penetration testing finds the chained, business-logic flaws that automated scanners miss entirely.',
+        title: 'Built for your growth curve',
+        text: 'Designed for your growth curve, not just your MVP demo.',
         cards: [
-          { label: 'Manual testing', detail: 'Beyond automated scans' },
-          { label: 'Chained exploits', detail: 'Real attack paths mapped' },
+          { label: 'Scales past MVP', detail: 'Built for your next 10x' },
+          { label: 'Tenant isolation', detail: 'Decided up front' },
         ],
       },
       {
-        title: 'Risk ranked by actual impact',
-        text: 'Findings come with severity, exploitability, and a fix path — not a report you have to triage yourself.',
+        title: 'Billing that grows with you',
+        text: 'Billing and plan changes handled without a rebuild.',
         cards: [
-          { label: 'Severity ranked', detail: 'CVSS + business context' },
-          { label: 'Fix guidance', detail: 'Not just a finding list' },
+          { label: 'Usage-based pricing', detail: 'Wired in from day one' },
+          { label: 'Plan changes', detail: 'No rebuild required' },
         ],
       },
       {
-        title: 'Security before merge, not after',
-        text: 'Pipeline-integrated checks catch dependency and code-level risk before it ships, not after an incident.',
+        title: 'Security boundaries, not retrofits',
+        text: 'Tenancy and security boundaries built in, not retrofitted under pressure.',
         cards: [
-          { label: 'CI security gates', detail: 'Blocks risky merges' },
-          { label: 'Dependency scanning', detail: 'Continuous, not annual' },
+          { label: 'RBAC included', detail: 'Enterprise-ready by default' },
+          { label: 'Isolation by design', detail: 'Not bolted on later' },
         ],
       },
       {
-        title: 'Compliance you can evidence',
-        text: 'Reports and remediation trails built to satisfy SOC 2, HIPAA, and customer security questionnaires.',
+        title: "You know what's working",
+        text: "You know what's working because it's measured from day one.",
         cards: [
-          { label: 'Audit-ready reports', detail: 'For SOC 2 / HIPAA asks' },
-          { label: 'Remediation tracking', detail: 'Proof issues got fixed' },
+          { label: 'Usage analytics', detail: 'Instrumented from launch' },
+          { label: 'Onboarding funnels', detail: 'Tracked, not guessed' },
         ],
       },
     ],
     console: {
-      repo: 'universal-security — main',
-      version: 'v1.3.0',
-      files: ['pentest/', 'reports/api-scan.json', 'ci/security-gate.yml'],
-      activeCount: 23,
-      activeDelta: 'findings tracked',
-      snippet: `import { scan } from "@universal/secops"
+      repo: 'universal-saas — main',
+      version: 'v5.0.2',
+      files: ['app/', 'billing.service.ts', 'tenants.repository.ts'],
+      activeCount: 11,
+      activeDelta: '+3 this sprint',
+      snippet: `import { defineTenant } from "@universal/saas"
 
-export const apiAudit = scan({
-  target: "api.client.com",
-  depth: "authenticated",
-  // OWASP API Top 10 coverage
-  rules: ["BOLA", "auth", "rate-limit", "injection"],
-  onFinding: (f) => triage(f.severity),
+export const workspace = defineTenant({
+  plan: "growth",
+  isolation: "schema",
+  // metered billing synced on every usage event
+  billing: { provider: "stripe", metering: true },
 })`,
-      build: 'scan run #340',
+      build: 'release #402',
       services: [
-        { name: 'api scan', status: 'healthy' },
-        { name: 'dependency check', status: 'healthy' },
-        { name: 'secrets scan', status: 'healthy' },
+        { name: 'tenants', status: 'healthy' },
+        { name: 'billing', status: 'healthy' },
+        { name: 'auth', status: 'healthy' },
       ],
-      latency: '0 critical open',
-      uptime: '22 findings resolved',
-      activity: ['scan #340 completed', '2 medium findings triaged', 'fix verified → closed'],
+      latency: '120ms p95',
+      uptime: '99.97% uptime',
+      activity: ['tenant #248 provisioned', 'plan upgraded → growth', 'usage synced → billing'],
     },
   },
-  ai: {
+  'ai-agents': {
     stats: [
       { value: '96%', label: 'Eval pass rate' },
       { value: '340ms', label: 'p50 latency' },
@@ -633,12 +632,12 @@ export const supportAgent = defineAgent({
 }
 
 const heroTitles: Record<string, string> = {
-  'software-development': 'Software development',
+  'ai-agents': 'AI agents',
+  'workflow-automation': 'Workflow automation',
   qa: 'QA automation',
-  'ui-ux': 'UI/UX design',
   devops: 'Cloud & DevOps',
-  cybersecurity: 'Cybersecurity',
-  ai: 'AI & agents',
+  saas: 'SaaS applications',
+  'end-to-end-development': 'End-to-end delivery',
 }
 
 const heroTones: Array<'light' | 'dark' | 'brand'> = [
@@ -665,7 +664,7 @@ export const swarmTiles = [
   'React Native',
   'AWS',
   'Playwright',
-  'Figma',
+  'Anthropic',
   'Kubernetes',
   'TypeScript',
   'OpenAI',
@@ -674,16 +673,16 @@ export const swarmTiles = [
   'LangChain',
   'GraphQL',
   'Terraform',
-  'Burp Suite',
+  'Temporal',
   'Node.js',
-  'Framer',
-  'Nmap',
-  'Storybook',
+  'n8n',
+  'Zapier',
+  'Stripe',
   'NestJS',
   'Azure',
   'Appium',
   'Pinecone',
-  'OWASP ZAP',
+  'Auth0',
   'CI/CD',
   'SEO',
   'REST',
@@ -693,7 +692,7 @@ export const swarmTiles = [
   'Vite',
   'Tailwind',
   'Jest',
-  'Metasploit',
+  'LangGraph',
   'Vercel',
   'GCP',
 ]

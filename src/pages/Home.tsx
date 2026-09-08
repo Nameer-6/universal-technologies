@@ -40,8 +40,8 @@ export default function Home() {
   return (
     <>
       <Seo
-        title="Universal Technologies — Software Engineering Partner"
-        description="Universal Technologies is a remote-first product engineering partner delivering software development, QA automation, UI/UX, DevOps & cloud, cybersecurity, and AI solutions — accountable from build through launch."
+        title="Universal Technologies — AI Agents, Automation & Software Delivery"
+        description="Engineering, automation, and AI, delivered as one accountable team: AI agents, workflow automation, QA, DevOps, SaaS builds, and full product delivery."
         path="/"
       />
 

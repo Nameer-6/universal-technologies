@@ -14,7 +14,7 @@ const organizationJsonLd = {
   logo: `${SITE_URL}/logo.png`,
   email: CONTACT_EMAIL,
   description:
-    'Remote-first product engineering partner delivering software development, QA automation, UI/UX, DevOps & cloud, cybersecurity, and AI solutions.',
+    'Remote-first delivery partner for AI agents, workflow automation, QA & test automation, DevOps & infrastructure, SaaS applications, and end-to-end software development.',
 }
 
 export function Layout() {

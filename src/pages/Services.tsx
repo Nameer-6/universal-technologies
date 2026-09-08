@@ -37,7 +37,7 @@ const WHY_US = [
   },
   {
     title: 'One accountable delivery partner',
-    text: 'Bring in one capability or combine software development, QA, design, DevOps, security, and AI under one team.',
+    text: 'Bring in one capability or combine AI agents, automation, QA, DevOps, and full-stack engineering under one team.',
     points: ['Single point of ownership', 'Cross-functional teams', 'Scale capabilities as needed'],
   },
   {
@@ -62,8 +62,8 @@ export default function Services() {
   return (
     <div className="svc-page">
       <Seo
-        title="Services | Universal Technologies"
-        description="Software development, QA & test automation, UI/UX design, DevOps & cloud, cybersecurity, and AI & generative solutions — delivered by one accountable engineering team."
+        title="AI Agents, Automation, QA, DevOps & SaaS Development Services | Universal Technologies"
+        description="Six service lines, one accountable delivery team: AI agents, workflow automation, QA & test automation, DevOps & infrastructure, SaaS application development, and end-to-end product delivery."
         path="/services"
       />
 
@@ -77,12 +77,12 @@ export default function Services() {
           >
             <p className="svc-eyebrow">Services</p>
             <h1 className="svc-hero-title" id="services-title">
-              Six engineering services. One accountable delivery partner
+              Six specialties. One team that talks to itself.
             </h1>
             <p className="svc-hero-subtitle">
-              Choose one capability or combine several across software development, QA
-              automation, UI/UX, DevOps, cybersecurity, and AI — brought together around the
-              outcome your business needs.
+              Every line is staffed by senior specialists and run through the same delivery
+              process, so picking three services doesn't mean coordinating three separate
+              vendors.
             </p>
             <div className="svc-hero-cta">
               <Link className="btn btn-svc-primary" to="/contact">

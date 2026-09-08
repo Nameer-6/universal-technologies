@@ -3,18 +3,18 @@
 export const companyValues = [
   {
     step: '01',
-    title: 'Ship with evidence',
-    text: 'Every roadmap bet is tied to a metric we actually track — not a slide we hoped would age well.',
+    title: 'Evidence over opinions',
+    text: 'Every decision is checked against a metric someone will actually look at again, not a hunch that sounded right in a meeting.',
   },
   {
     step: '02',
-    title: 'One team, one backlog',
-    text: 'Design, engineering, QA, and delivery sit in the same rituals so nothing gets lost in a handoff.',
+    title: 'One backlog, one team',
+    text: 'Design, engineering, QA, and delivery share the same rituals, so nothing gets lost in translation between them.',
   },
   {
     step: '03',
-    title: 'Boring on purpose',
-    text: "Runbooks, monitoring, and docs are part of \"done\" — not a favor we do if there's time left.",
+    title: "Documentation isn't optional",
+    text: "Runbooks and docs ship with the feature, not as a favor squeezed in if there's time left.",
   },
 ]
 
@@ -61,6 +61,12 @@ export const perks = [
     title: 'Growth budget',
     text: 'An annual learning stipend for courses, conferences, or certifications — spend it on what moves your career.',
     detail: 'Renews every 12 months.',
+  },
+  {
+    step: 'D',
+    title: 'Work that matters',
+    text: 'AI agents, automation pipelines, and production systems real customers depend on — not internal tooling nobody uses.',
+    detail: 'Real customers, real systems.',
   },
 ]
 
