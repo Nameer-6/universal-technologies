@@ -3,6 +3,7 @@ import { motion, useReducedMotion } from 'framer-motion'
 import { Link } from 'react-router-dom'
 import { Seo } from '../components/Seo'
 import { Sparkline } from '../components/Sparkline'
+import { pageMetadata } from '../seoData'
 import { howItWorks, industries, outcomes, services } from '../data'
 
 const ROLLBACK_TREND =
@@ -62,8 +63,8 @@ export default function Services() {
   return (
     <div className="svc-page">
       <Seo
-        title="AI Agents, Automation, QA, DevOps & SaaS Development Services | Universal Technologies"
-        description="Six service lines, one accountable delivery team: AI agents, workflow automation, QA & test automation, DevOps & infrastructure, SaaS application development, and end-to-end product delivery."
+        title={pageMetadata['/services'].title}
+        description={pageMetadata['/services'].description}
         path="/services"
       />
 

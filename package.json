@@ -5,9 +5,11 @@
   "type": "module",
   "scripts": {
     "dev": "vite",
-    "build": "tsc -b && vite build",
+    "build": "tsc -b && vite build && node scripts/prerender.mjs",
     "lint": "oxlint",
-    "preview": "vite preview"
+    "preview": "vite preview",
+    "start": "node scripts/serve.mjs",
+    "check:seo": "node scripts/check-seo.mjs"
   },
   "dependencies": {
     "framer-motion": "^13.1.1",

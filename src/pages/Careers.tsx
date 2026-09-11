@@ -2,6 +2,7 @@ import { motion, useReducedMotion } from 'framer-motion'
 import { Link } from 'react-router-dom'
 import { Seo } from '../components/Seo'
 import { HR_EMAIL } from '../data'
+import { pageMetadata } from '../seoData'
 import { jobOpenings, perks } from '../pagesData'
 
 const ease = [0.22, 1, 0.36, 1] as const
@@ -38,8 +39,8 @@ export default function Careers() {
   return (
     <>
       <Seo
-        title="Careers | Universal Technologies"
-        description="Open roles in AI, automation, QA, DevOps, and engineering at Universal Technologies. Remote-first, senior ownership from day one."
+        title={pageMetadata['/careers'].title}
+        description={pageMetadata['/careers'].description}
         path="/careers"
       />
 

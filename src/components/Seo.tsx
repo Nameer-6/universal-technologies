@@ -1,4 +1,3 @@
-import { useEffect } from 'react'
 import { Helmet } from 'react-helmet-async'
 
 export const SITE_URL = 'https://universal-technologies.com'
@@ -15,20 +14,6 @@ type SeoProps = {
   jsonLd?: object | object[]
 }
 
-/**
- * index.html ships a static <title> and <meta name="description"> so
- * non-JS clients and the pre-hydration paint have something real. React 19
- * hoists Helmet's own title/meta tags as new nodes rather than replacing
- * those static ones, so this mutates them in place instead of going
- * through Helmet for just these two tags.
- */
-function useDocumentHead(title: string, description: string) {
-  useEffect(() => {
-    document.title = title
-    document.querySelector('meta[name="description"]')?.setAttribute('content', description)
-  }, [title, description])
-}
-
 export function Seo({
   title,
   description,
@@ -38,13 +23,13 @@ export function Seo({
   noindex = false,
   jsonLd,
 }: SeoProps) {
-  useDocumentHead(title, description)
-
   const url = `${SITE_URL}${path}`
   const structuredData = jsonLd ? (Array.isArray(jsonLd) ? jsonLd : [jsonLd]) : []
 
   return (
     <Helmet>
+      <title>{title}</title>
+      <meta name="description" content={description} />
       <link rel="canonical" href={url} />
       {noindex && <meta name="robots" content="noindex, follow" />}
 

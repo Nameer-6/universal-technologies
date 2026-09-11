@@ -3,6 +3,8 @@ import { motion, useReducedMotion } from 'framer-motion'
 import { Link, Navigate, useParams } from 'react-router-dom'
 import { Seo, SITE_URL } from '../components/Seo'
 import { Sparkline } from '../components/Sparkline'
+import { pageMetadata } from '../seoData'
+import { serviceContent } from '../serviceContent'
 import { howItWorks, outcomes, serviceDetails, services } from '../data'
 
 const ease = [0.22, 1, 0.36, 1] as const
@@ -177,6 +179,8 @@ export default function ServiceDetail() {
   }
 
   const otherServices = services.filter((item) => item.id !== service.id)
+  const content = serviceContent[service.id]
+  const meta = pageMetadata[`/services/${service.id}`]
 
   const reveal = reduceMotion
     ? {}
@@ -188,24 +192,40 @@ export default function ServiceDetail() {
         transition: { duration: 0.7, ease },
       }
 
+  const jsonLd: object[] = [
+    {
+      '@context': 'https://schema.org',
+      '@type': 'Service',
+      serviceType: service.title,
+      name: service.title,
+      description: service.summary,
+      provider: {
+        '@type': 'Organization',
+        name: 'Universal Technologies',
+        url: SITE_URL,
+      },
+    },
+  ]
+
+  if (content) {
+    jsonLd.push({
+      '@context': 'https://schema.org',
+      '@type': 'FAQPage',
+      mainEntity: content.faqs.map((faq) => ({
+        '@type': 'Question',
+        name: faq.question,
+        acceptedAnswer: { '@type': 'Answer', text: faq.answer },
+      })),
+    })
+  }
+
   return (
     <div className="svc-page">
       <Seo
-        title={`${service.title} | Universal Technologies`}
-        description={service.summary}
+        title={meta.title}
+        description={meta.description}
         path={`/services/${service.id}`}
-        jsonLd={{
-          '@context': 'https://schema.org',
-          '@type': 'Service',
-          serviceType: service.title,
-          name: service.title,
-          description: service.summary,
-          provider: {
-            '@type': 'Organization',
-            name: 'Universal Technologies',
-            url: SITE_URL,
-          },
-        }}
+        jsonLd={jsonLd}
       />
 
       <section className="svc-section svc-hero" aria-labelledby="service-detail-title">
@@ -220,6 +240,7 @@ export default function ServiceDetail() {
               {service.title}
             </h1>
             <p className="svc-hero-subtitle">{service.summary}</p>
+            {content && <p className="svc-hero-subtitle">{content.opener}</p>}
             <div className="svc-hero-cta">
               <Link className="btn btn-svc-primary" to="/contact">
                 Start free audit <span aria-hidden>→</span>
@@ -518,6 +539,28 @@ export default function ServiceDetail() {
           </div>
         </div>
       </section>
+
+      {content && (
+        <section className="svc-section svc-faq-section" aria-labelledby="service-faq-title">
+          <div className="container">
+            <motion.div className="svc-head svc-head-center" {...reveal}>
+              <p className="svc-eyebrow">FAQ</p>
+              <h2 className="svc-title" id="service-faq-title">
+                Common questions
+              </h2>
+            </motion.div>
+
+            <div className="svc-faq">
+              {content.faqs.map((faq) => (
+                <details key={faq.question}>
+                  <summary>{faq.question}</summary>
+                  <p>{faq.answer}</p>
+                </details>
+              ))}
+            </div>
+          </div>
+        </section>
+      )}
 
       <section className="cta-band" aria-labelledby="service-cta-title">
         <div className="container cta-inner">

@@ -5,6 +5,12 @@ import { HelmetProvider } from 'react-helmet-async'
 import './index.css'
 import App from './App.tsx'
 
+// The prerendered/static HTML ships its own title, description, canonical,
+// social tags, and JSON-LD so crawlers and no-JS clients see real content.
+// Remove those static copies before Helmet mounts its own, so the two
+// don't end up duplicated in the live DOM.
+document.head.querySelectorAll('[data-prerender-head], title, meta[name="description"]').forEach(node => node.remove())
+
 createRoot(document.getElementById('root')!).render(
   <StrictMode>
     <HelmetProvider>

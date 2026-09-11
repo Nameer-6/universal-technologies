@@ -9,6 +9,8 @@ const JobDetail = lazy(() => import('./pages/JobDetail'))
 const Services = lazy(() => import('./pages/Services'))
 const ServiceDetail = lazy(() => import('./pages/ServiceDetail'))
 const Products = lazy(() => import('./pages/Products'))
+const Resources = lazy(() => import('./pages/Resources'))
+const ResourceDetail = lazy(() => import('./pages/ResourceDetail'))
 const Contact = lazy(() => import('./pages/Contact'))
 const PrivacyPolicy = lazy(() => import('./pages/PrivacyPolicy'))
 const Terms = lazy(() => import('./pages/Terms'))
@@ -26,6 +28,8 @@ export default function App() {
           <Route path="services" element={<Services />} />
           <Route path="services/:id" element={<ServiceDetail />} />
           <Route path="products" element={<Products />} />
+          <Route path="resources" element={<Resources />} />
+          <Route path="resources/:slug" element={<ResourceDetail />} />
           <Route path="contact" element={<Contact />} />
           <Route path="privacy-policy" element={<PrivacyPolicy />} />
           <Route path="terms" element={<Terms />} />

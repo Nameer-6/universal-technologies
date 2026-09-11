@@ -1,6 +1,7 @@
 import { motion, useReducedMotion } from 'framer-motion'
 import { Link } from 'react-router-dom'
 import { Seo } from '../components/Seo'
+import { pageMetadata } from '../seoData'
 import { companyValues, leadership, milestones } from '../pagesData'
 
 const ease = [0.22, 1, 0.36, 1] as const
@@ -30,8 +31,8 @@ export default function About() {
   return (
     <>
       <Seo
-        title="About Universal Technologies"
-        description="Universal Technologies is a senior, full-stack delivery team behind 120+ shipped products across fintech, healthcare, and SaaS — remote-first, 40+ people, 18 countries."
+        title={pageMetadata['/about'].title}
+        description={pageMetadata['/about'].description}
         path="/about"
       />
 

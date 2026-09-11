@@ -1,12 +1,13 @@
 import { Seo } from '../components/Seo'
 import { CONTACT_EMAIL } from '../data'
+import { pageMetadata } from '../seoData'
 
 export default function PrivacyPolicy() {
   return (
     <>
       <Seo
-        title="Privacy Policy | Universal Technologies"
-        description="How Universal Technologies collects, uses, and protects information submitted through our contact and careers forms."
+        title={pageMetadata['/privacy-policy'].title}
+        description={pageMetadata['/privacy-policy'].description}
         path="/privacy-policy"
       />
 
@@ -42,6 +43,14 @@ export default function PrivacyPolicy() {
             <p>
               We do not use tracking cookies, advertising pixels, or third-party analytics
               scripts on this site.
+            </p>
+
+            <h2>Fonts and local storage</h2>
+            <p>
+              This site loads typefaces from Google Fonts, which receives the request directly
+              from your browser (including your IP address) when a page loads. We also store a
+              single preference — your light/dark theme choice — in your browser's local storage;
+              this stays on your device and is never sent to us.
             </p>
 
             <h2>How we use it</h2>

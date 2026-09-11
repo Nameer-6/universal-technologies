@@ -1,12 +1,13 @@
 import { Seo } from '../components/Seo'
 import { CONTACT_EMAIL } from '../data'
+import { pageMetadata } from '../seoData'
 
 export default function Terms() {
   return (
     <>
       <Seo
-        title="Terms of Service | Universal Technologies"
-        description="The terms that govern use of the Universal Technologies website and the engagements described on it."
+        title={pageMetadata['/terms'].title}
+        description={pageMetadata['/terms'].description}
         path="/terms"
       />
 

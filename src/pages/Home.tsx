@@ -2,6 +2,7 @@ import { AnimatePresence, motion, useReducedMotion } from 'framer-motion'
 import { ScrollHero } from '../components/ScrollHero'
 import { Seo } from '../components/Seo'
 import { useContactForm } from '../hooks/useContactForm'
+import { pageMetadata } from '../seoData'
 import { CONTACT_EMAIL, clients, engagements, howItWorks, outcomes, services } from '../data'
 
 const ease = [0.22, 1, 0.36, 1] as const
@@ -40,8 +41,8 @@ export default function Home() {
   return (
     <>
       <Seo
-        title="Universal Technologies — AI Agents, Automation & Software Delivery"
-        description="Engineering, automation, and AI, delivered as one accountable team: AI agents, workflow automation, QA, DevOps, SaaS builds, and full product delivery."
+        title={pageMetadata['/'].title}
+        description={pageMetadata['/'].description}
         path="/"
       />
 

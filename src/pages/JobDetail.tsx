@@ -2,7 +2,8 @@ import { useState } from 'react'
 import { motion, useReducedMotion } from 'framer-motion'
 import { Link, Navigate, useParams } from 'react-router-dom'
 import { ApplyModal } from '../components/ApplyModal'
-import { Seo } from '../components/Seo'
+import { Seo, SITE_URL } from '../components/Seo'
+import { pageMetadata } from '../seoData'
 import { jobOpenings, perks } from '../pagesData'
 
 const ease = [0.22, 1, 0.36, 1] as const
@@ -35,6 +36,30 @@ export default function JobDetail() {
   }
 
   const otherJobs = jobOpenings.filter((item) => item.id !== job.id)
+  const meta = pageMetadata[`/careers/${job.id}`]
+
+  // datePosted and applicantLocationRequirements are omitted: Google requires
+  // both to be accurate for job rich-result eligibility, and we don't have a
+  // verified posting date or eligible-country list to publish yet.
+  const jobPostingJsonLd = {
+    '@context': 'https://schema.org',
+    '@type': 'JobPosting',
+    title: job.title,
+    description: `<p>${job.summary}</p><p>Responsibilities:</p><ul>${job.responsibilities
+      .map((item) => `<li>${item}</li>`)
+      .join('')}</ul><p>Requirements:</p><ul>${job.requirements
+      .map((item) => `<li>${item}</li>`)
+      .join('')}</ul>`,
+    identifier: { '@type': 'PropertyValue', name: 'Universal Technologies', value: job.id },
+    hiringOrganization: {
+      '@type': 'Organization',
+      name: 'Universal Technologies',
+      sameAs: SITE_URL,
+      logo: `${SITE_URL}/logo.png`,
+    },
+    employmentType: job.type === 'Contract' ? 'CONTRACTOR' : 'FULL_TIME',
+    jobLocationType: 'TELECOMMUTE',
+  }
 
   const reveal = reduceMotion
     ? {}
@@ -49,9 +74,10 @@ export default function JobDetail() {
   return (
     <>
       <Seo
-        title={`${job.title} | Careers at Universal Technologies`}
-        description={job.summary}
+        title={meta.title}
+        description={meta.description}
         path={`/careers/${job.id}`}
+        jsonLd={jobPostingJsonLd}
       />
 
       <section className="section" aria-labelledby="job-title">

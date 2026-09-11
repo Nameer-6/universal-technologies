@@ -1,6 +1,7 @@
 import { motion, useReducedMotion } from 'framer-motion'
 import { Link } from 'react-router-dom'
 import { Seo } from '../components/Seo'
+import { pageMetadata } from '../seoData'
 import { products } from '../pagesData'
 
 const ease = [0.22, 1, 0.36, 1] as const
@@ -35,8 +36,8 @@ export default function Products() {
   return (
     <>
       <Seo
-        title="Products | Universal Technologies"
-        description="Pulse, Ledgerline, Triagebot, Fieldsync, and postit.ai — internal tools Universal Technologies built to run its own delivery work, then productized once other teams asked for them."
+        title={pageMetadata['/products'].title}
+        description={pageMetadata['/products'].description}
         path="/products"
       />
 

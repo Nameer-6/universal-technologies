@@ -2,6 +2,7 @@ import { AnimatePresence, motion, useReducedMotion } from 'framer-motion'
 import { Seo } from '../components/Seo'
 import { useContactForm } from '../hooks/useContactForm'
 import { CONTACT_EMAIL, services } from '../data'
+import { pageMetadata } from '../seoData'
 import { officeLocations } from '../pagesData'
 
 const ease = [0.22, 1, 0.36, 1] as const
@@ -27,8 +28,8 @@ export default function Contact() {
   return (
     <>
       <Seo
-        title="Contact | Universal Technologies"
-        description="Talk to Universal Technologies about your next project. Reach us by form or email — a real person replies within a day, from offices in Austin, Lisbon, and Bengaluru."
+        title={pageMetadata['/contact'].title}
+        description={pageMetadata['/contact'].description}
         path="/contact"
       />
 

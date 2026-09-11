@@ -86,6 +86,21 @@
     <priority>0.6</priority>
   </url>
   <url>
+    <loc>https://universal-technologies.com/resources</loc>
+    <changefreq>weekly</changefreq>
+    <priority>0.6</priority>
+  </url>
+  <url>
+    <loc>https://universal-technologies.com/resources/choose-software-development-partner</loc>
+    <changefreq>monthly</changefreq>
+    <priority>0.5</priority>
+  </url>
+  <url>
+    <loc>https://universal-technologies.com/resources/staff-augmentation-vs-project-delivery</loc>
+    <changefreq>monthly</changefreq>
+    <priority>0.5</priority>
+  </url>
+  <url>
     <loc>https://universal-technologies.com/contact</loc>
     <changefreq>monthly</changefreq>
     <priority>0.7</priority>

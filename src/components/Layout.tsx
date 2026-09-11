@@ -168,6 +168,7 @@ export function Layout() {
             <h4>Company</h4>
             <Link to="/about">About</Link>
             <Link to="/careers">Careers</Link>
+            <Link to="/resources">Resources</Link>
             <Link to="/contact">Contact</Link>
             <a href={`mailto:${CONTACT_EMAIL}`}>{CONTACT_EMAIL}</a>
           </div>
