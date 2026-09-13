@@ -797,13 +797,13 @@ export const industries = [
 ]
 
 export const clients = [
-  'Talently',
-  'Peek Pro',
-  'Scopi',
-  'Teladoc Health',
-  'DigiKhata',
-  'iCeipts',
-  'InnoCaption',
-  'Ecwid',
-  'Dovetail',
+  { name: 'Talently', logo: '/clients/talently.svg' },
+  { name: 'Peek Pro', logo: '/clients/peek-pro.png' },
+  { name: 'Scopi', logo: '/clients/scopi.png' },
+  { name: 'Teladoc Health', logo: '/clients/teladoc-health.svg' },
+  { name: 'DigiKhata', logo: '/clients/digikhata.svg' },
+  { name: 'iCeipts', logo: '/clients/iceipts.png' },
+  { name: 'InnoCaption', logo: '/clients/innocaption.png' },
+  { name: 'Ecwid', logo: '/clients/ecwid.svg' },
+  { name: 'Dovetail', logo: '/clients/dovetail.svg' },
 ]
