@@ -3129,6 +3129,25 @@ button {
   }
 }
 
+@media (max-width: 980px) {
+  /* Tablets/small laptops (761–980px) fell through to the desktop 2-column
+     grid squeezed into a narrower stage, overlapping the floating cards.
+     Stack it the same way phones do; the 760px block below refines further
+     for phones and wins there since it comes later in the cascade. */
+  .scroll-hero-stage {
+    grid-template-columns: 1fr;
+    align-content: center;
+    gap: 1rem;
+  }
+
+  .scroll-hero-visual {
+    max-width: 520px;
+    margin-inline: auto;
+    min-height: 360px;
+    height: 42vh;
+  }
+}
+
 @media (max-width: 760px) {
   /* Keep the same pinned, scroll-scrubbed hero as desktop — just stack the
      copy above a shorter card stage so both fit inside one pinned screen. */
