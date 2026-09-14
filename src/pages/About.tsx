@@ -150,7 +150,7 @@ export default function About() {
             transition={{ duration: 0.65, ease }}
           >
             <h2 id="about-cta-title">Want to build with us?</h2>
-            <p>See open roles or send us a brief — either way, a real person replies tomorrow.</p>
+            <p>See open roles or send us a brief — either way, a real person replies immediately.</p>
           </motion.div>
           <Link className="btn btn-light" to="/careers">
             See open roles <span aria-hidden>→</span>

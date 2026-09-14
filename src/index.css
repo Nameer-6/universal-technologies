@@ -318,6 +318,15 @@ button {
   letter-spacing: -0.045em;
 }
 
+/* Small/laptop widths sit between the mobile stack and full desktop: the
+   two-column layout is already active here, but 6vw hits its 4.6rem cap as
+   early as ~1227px, oversizing the heading inside the narrower copy column. */
+@media (min-width: 761px) and (max-width: 1440px) {
+  .scroll-hero-copy h1 {
+    font-size: clamp(2.4rem, calc(1rem + 3vw), 3.4rem);
+  }
+}
+
 .scroll-hero-copy .lede {
   margin: 1.25rem 0 0;
   max-width: 38ch;
@@ -1391,14 +1400,24 @@ button {
 }
 
 .marquee-track span {
+  display: flex;
+  align-items: center;
+  justify-content: center;
   flex-shrink: 0;
-  padding: 0.5rem 1rem;
+  height: 2.75rem;
+  padding: 0.5rem 1.25rem;
   border-radius: 999px;
   border: 1px solid var(--line);
-  background: var(--surface);
-  font-size: 0.84rem;
-  font-weight: 700;
-  color: var(--ink-soft);
+  /* Fixed light chip regardless of theme: client logos are authored for a
+     light background, so the pill can't just follow --surface into dark mode. */
+  background: #ffffff;
+}
+
+.marquee-track span img {
+  height: 100%;
+  max-width: 8rem;
+  width: auto;
+  object-fit: contain;
 }
 
 @keyframes marquee-scroll {

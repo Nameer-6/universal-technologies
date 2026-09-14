@@ -45,7 +45,7 @@ export const pageMetadata: Record<string, { title: string; description: string }
   },
   "/contact": {
     "title": "Contact Universal Technologies | Get a Quote",
-    "description": "Talk to Universal Technologies about your next project. Share your scope and timeline by form or email. Our team aims to respond within one business day."
+    "description": "Talk to Universal Technologies about your next project. Share your scope and timeline by form or email. Our team replies immediately."
   },
   "/privacy-policy": {
     "title": "Privacy Policy | Universal Technologies",

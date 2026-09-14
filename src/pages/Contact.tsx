@@ -38,7 +38,7 @@ export default function Contact() {
           <motion.div className="section-head center" {...reveal}>
             <p className="section-label">Contact</p>
             <h1 className="section-title" id="contact-title">
-              Send the brief. We'll reply tomorrow.
+              Send the brief. We'll reply immediately.
             </h1>
             <p className="section-lead">
               Share context, timeline, and what "good" looks like. No pitch deck required.
@@ -126,7 +126,7 @@ export default function Contact() {
                     animate={{ opacity: 1, y: 0 }}
                     exit={{ opacity: 0 }}
                   >
-                    Message sent — we'll reply within a business day.
+                    Message sent — we'll reply immediately.
                   </motion.p>
                 )}
                 {status === 'error' && (
