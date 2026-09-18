@@ -3,9 +3,10 @@ import { motion, useReducedMotion } from 'framer-motion'
 import { Link, Navigate, useParams } from 'react-router-dom'
 import { Seo, SITE_URL } from '../components/Seo'
 import { Sparkline } from '../components/Sparkline'
+import { RELATED_SERVICES } from '../components/ServiceFlow'
 import { pageMetadata } from '../seoData'
 import { serviceContent } from '../serviceContent'
-import { howItWorks, outcomes, serviceDetails, services } from '../data'
+import { outcomes, serviceDetails, services } from '../data'
 
 const ease = [0.22, 1, 0.36, 1] as const
 
@@ -89,8 +90,8 @@ function TypedCode({ code }: { code: string }) {
       return
     }
 
-    const TYPE_SPEED = 38 // ms per character — slow, readable typewriter pace
-    const HOLD_AT_END = 2600 // ms to hold the finished snippet before looping
+    const TYPE_SPEED = 38
+    const HOLD_AT_END = 2600
     const PAUSE_BEFORE_RETYPE = 500
 
     let cancelled = false
@@ -178,7 +179,9 @@ export default function ServiceDetail() {
     return <Navigate to="/services" replace />
   }
 
-  const otherServices = services.filter((item) => item.id !== service.id)
+  const related = (RELATED_SERVICES[service.id] ?? [])
+    .map((relatedId) => services.find((item) => item.id === relatedId))
+    .filter((item): item is (typeof services)[number] => Boolean(item))
   const content = serviceContent[service.id]
   const meta = pageMetadata[`/services/${service.id}`]
 
@@ -243,8 +246,11 @@ export default function ServiceDetail() {
             {content && <p className="svc-hero-subtitle">{content.opener}</p>}
             <div className="svc-hero-cta">
               <Link className="btn btn-svc-primary" to="/contact">
-                Start free audit <span aria-hidden>→</span>
+                Talk to our team <span aria-hidden>→</span>
               </Link>
+              <a className="btn btn-ghost-ink" href="#capabilities">
+                See how we deliver
+              </a>
             </div>
           </motion.div>
 
@@ -371,17 +377,17 @@ export default function ServiceDetail() {
         </div>
       </section>
 
-      <section className="svc-section svc-band-alt" aria-labelledby="service-capabilities-title">
+      <section
+        className="svc-section svc-band-alt"
+        id="capabilities"
+        aria-labelledby="service-capabilities-title"
+      >
         <div className="container">
           <motion.div className="svc-head svc-head-center" {...reveal}>
             <p className="svc-eyebrow">What's included</p>
             <h2 className="svc-title" id="service-capabilities-title">
               {service.title}, broken down
             </h2>
-            <p className="svc-lede">
-              From new products to existing platforms — we build, improve, and evolve what you
-              already run.
-            </p>
           </motion.div>
 
           <motion.div
@@ -406,89 +412,10 @@ export default function ServiceDetail() {
         </div>
       </section>
 
-      <section className="svc-section" aria-labelledby="service-value-title">
-        <div className="container">
-          <motion.div className="svc-head svc-head-center" {...reveal}>
-            <p className="svc-eyebrow">Why it works</p>
-            <h2 className="svc-title" id="service-value-title">
-              Built around your product, not a template
-            </h2>
-          </motion.div>
-
-          <div className="svc-value">
-            {detail.valueProps.map((item, index) => (
-              <motion.article
-                key={item.title}
-                className={`svc-value-row${index % 2 === 1 ? ' flip' : ''}`}
-                initial={
-                  reduceMotion
-                    ? false
-                    : { opacity: 0, x: index % 2 === 1 ? 48 : -48, y: 16 }
-                }
-                whileInView={{ opacity: 1, x: 0, y: 0 }}
-                viewport={{ once: true, amount: 0.35 }}
-                transition={{ duration: 0.7, ease }}
-              >
-                <div className="svc-value-copy">
-                  <span className="svc-value-step">0{index + 1}</span>
-                  <h3>{item.title}</h3>
-                  <p>{item.text}</p>
-                </div>
-                <div className="svc-value-rail" aria-hidden>
-                  0{index + 1}
-                </div>
-                <div className="svc-value-panel">
-                  {item.cards.map((card) => (
-                    <div key={card.label}>
-                      <strong>{card.label}</strong>
-                      <span>{card.detail}</span>
-                    </div>
-                  ))}
-                </div>
-              </motion.article>
-            ))}
-          </div>
-        </div>
-      </section>
-
-      <section className="svc-section svc-band-alt" aria-labelledby="service-process-title">
-        <div className="container">
-          <motion.div className="svc-head svc-head-center" {...reveal}>
-            <p className="svc-eyebrow">How it works</p>
-            <h2 className="svc-title" id="service-process-title">
-              Same process, every service line
-            </h2>
-            <p className="svc-lede">
-              Align, prioritize, ship, steady — the rhythm doesn't change with the engagement.
-            </p>
-          </motion.div>
-
-          <motion.div
-            className="svc-process-grid"
-            variants={reduceMotion ? undefined : stagger}
-            initial={reduceMotion ? undefined : 'hidden'}
-            whileInView={reduceMotion ? undefined : 'show'}
-            viewport={{ once: true, amount: 0.12 }}
-          >
-            {howItWorks.map((step) => (
-              <motion.div
-                key={step.step}
-                className="svc-process-card"
-                variants={reduceMotion ? undefined : fadeScale}
-              >
-                <span className="svc-process-index">{step.step}</span>
-                <h3>{step.title}</h3>
-                <p>{step.text}</p>
-              </motion.div>
-            ))}
-          </motion.div>
-        </div>
-      </section>
-
       <section className="svc-section" aria-labelledby="service-outcomes-title">
         <div className="container">
           <motion.div className="svc-head svc-head-center" {...reveal}>
-            <p className="svc-eyebrow">Outcomes, not activity</p>
+            <p className="svc-eyebrow">Outcomes</p>
             <h2 className="svc-title" id="service-outcomes-title">
               What changes when we run this line
             </h2>
@@ -510,35 +437,34 @@ export default function ServiceDetail() {
                 <span className="svc-outcome-index">0{index + 1}</span>
                 <h3>{item.title}</h3>
                 <p>{item.text}</p>
-                <Link className="svc-outcome-link" to="/contact">
-                  Learn more <span aria-hidden>→</span>
-                </Link>
               </motion.div>
             ))}
           </motion.div>
         </div>
       </section>
 
-      <section className="svc-section svc-band-alt" aria-labelledby="service-related-title">
-        <div className="container">
-          <motion.div className="svc-head svc-head-center" {...reveal}>
-            <p className="svc-eyebrow">Explore more</p>
-            <h2 className="svc-title" id="service-related-title">
-              Other service lines
-            </h2>
-          </motion.div>
+      {related.length > 0 && (
+        <section className="svc-section svc-band-alt" aria-labelledby="service-related-title">
+          <div className="container">
+            <motion.div className="svc-head svc-head-center" {...reveal}>
+              <p className="svc-eyebrow">Explore more</p>
+              <h2 className="svc-title" id="service-related-title">
+                Related service lines
+              </h2>
+            </motion.div>
 
-          <div className="svc-related-grid">
-            {otherServices.map((item) => (
-              <Link key={item.id} className="svc-related-card" to={`/services/${item.id}`}>
-                <span>{item.mark}</span>
-                <strong>{item.title}</strong>
-                <em aria-hidden>→</em>
-              </Link>
-            ))}
+            <div className="svc-related-grid">
+              {related.map((item) => (
+                <Link key={item.id} className="svc-related-card" to={`/services/${item.id}`}>
+                  <span>{item.mark}</span>
+                  <strong>{item.title}</strong>
+                  <em aria-hidden>→</em>
+                </Link>
+              ))}
+            </div>
           </div>
-        </div>
-      </section>
+        </section>
+      )}
 
       {content && (
         <section className="svc-section svc-faq-section" aria-labelledby="service-faq-title">
@@ -576,7 +502,7 @@ export default function ServiceDetail() {
             <p>Tell us the constraint and the deadline — we'll map the smallest team that ships it.</p>
           </motion.div>
           <Link className="btn btn-light" to="/contact">
-            Book a free consultation <span aria-hidden>→</span>
+            Talk to our team <span aria-hidden>→</span>
           </Link>
         </div>
       </section>

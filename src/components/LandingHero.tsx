@@ -12,7 +12,7 @@ export function LandingHero() {
           <p className="landing-hero-description">For product teams building something new or improving what’s already live. We bring engineering, QA, and cloud delivery together so you can move forward with a clear plan.</p>
           <div className="hero-actions">
             <a className="btn btn-primary" href="#contact">Talk to our team <span aria-hidden>↗</span></a>
-            <Link className="btn btn-ghost-ink" to="/services">Explore our services <span aria-hidden>→</span></Link>
+            <Link className="btn btn-ghost-ink" to="/portfolio">See our work <span aria-hidden>→</span></Link>
           </div>
           <p className="landing-hero-note">Your roadmap. Our shared responsibility.</p>
         </div>

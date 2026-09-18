@@ -1,7 +1,7 @@
-import { AnimatePresence, motion, useReducedMotion } from 'framer-motion'
+import { motion, useReducedMotion } from 'framer-motion'
 import { Seo } from '../components/Seo'
-import { useContactForm } from '../hooks/useContactForm'
-import { CONTACT_EMAIL, services } from '../data'
+import { ContactForm } from '../components/ContactForm'
+import { CONTACT_EMAIL } from '../data'
 import { pageMetadata } from '../seoData'
 import { officeLocations } from '../pagesData'
 
@@ -14,7 +14,6 @@ const fadeUp = {
 
 export default function Contact() {
   const reduceMotion = Boolean(useReducedMotion())
-  const { status, onSubmit } = useContactForm()
   const reveal = reduceMotion
     ? {}
     : {
@@ -38,16 +37,21 @@ export default function Contact() {
           <motion.div className="section-head center" {...reveal}>
             <p className="section-label">Contact</p>
             <h1 className="section-title" id="contact-title">
-              Send the brief. We'll reply immediately.
+              Talk to our team
             </h1>
             <p className="section-lead">
-              Share context, timeline, and what "good" looks like. No pitch deck required.
+              Share context, timeline, and what “good” looks like. No pitch deck required.
             </p>
           </motion.div>
 
           <div className="contact-grid">
             <motion.div {...reveal}>
-              <p className="section-label">Reach us directly</p>
+              <p className="section-label">What happens next</p>
+              <ol className="contact-next">
+                <li>We review the brief.</li>
+                <li>A delivery lead replies.</li>
+                <li>If there’s a fit, we book a focused discovery call.</li>
+              </ol>
               <a className="contact-email" href={`mailto:${CONTACT_EMAIL}`}>
                 {CONTACT_EMAIL}
               </a>
@@ -61,87 +65,14 @@ export default function Contact() {
               </div>
             </motion.div>
 
-            <motion.form
-              className="contact-form"
-              onSubmit={onSubmit}
+            <motion.div
               initial={reduceMotion ? false : { opacity: 0, y: 28, scale: 0.98 }}
               whileInView={{ opacity: 1, y: 0, scale: 1 }}
               viewport={{ once: true, amount: 0.2 }}
               transition={{ duration: 0.6, ease }}
             >
-              <div className="form-row">
-                <label>
-                  Full name
-                  <input name="name" type="text" required autoComplete="name" />
-                </label>
-                <label>
-                  Work email
-                  <input name="email" type="email" required autoComplete="email" />
-                </label>
-              </div>
-              <div className="form-row">
-                <label>
-                  Company
-                  <input name="company" type="text" autoComplete="organization" />
-                </label>
-                <label>
-                  Service interest
-                  <select name="service" defaultValue="Web Development">
-                    {services.map((service) => (
-                      <option key={service.id} value={service.title}>
-                        {service.title}
-                      </option>
-                    ))}
-                    <option value="Multiple services">Multiple services</option>
-                  </select>
-                </label>
-              </div>
-              <label>
-                Project details
-                <textarea name="message" required rows={5} />
-              </label>
-              <input
-                type="checkbox"
-                name="_honey"
-                tabIndex={-1}
-                autoComplete="off"
-                aria-hidden="true"
-                className="apply-honeypot"
-              />
-              <motion.button
-                className="btn btn-ink"
-                type="submit"
-                disabled={status === 'submitting'}
-                whileHover={reduceMotion ? undefined : { scale: 1.02 }}
-                whileTap={reduceMotion ? undefined : { scale: 0.98 }}
-              >
-                {status === 'submitting' ? 'Sending…' : 'Email our team'} <span aria-hidden>→</span>
-              </motion.button>
-              <AnimatePresence>
-                {status === 'success' && (
-                  <motion.p
-                    key="ok"
-                    className="form-note success"
-                    initial={{ opacity: 0, y: 6 }}
-                    animate={{ opacity: 1, y: 0 }}
-                    exit={{ opacity: 0 }}
-                  >
-                    Message sent — we'll reply immediately.
-                  </motion.p>
-                )}
-                {status === 'error' && (
-                  <motion.p
-                    key="err"
-                    className="form-note error"
-                    initial={{ opacity: 0, y: 6 }}
-                    animate={{ opacity: 1, y: 0 }}
-                    exit={{ opacity: 0 }}
-                  >
-                    Something went wrong. Please email us directly at {CONTACT_EMAIL}.
-                  </motion.p>
-                )}
-              </AnimatePresence>
-            </motion.form>
+              <ContactForm />
+            </motion.div>
           </div>
         </div>
       </section>

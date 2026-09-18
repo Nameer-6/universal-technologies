@@ -51,6 +51,36 @@
     <priority>0.6</priority>
   </url>
   <url>
+    <loc>https://universal-technologies.com/products/pulse</loc>
+    <changefreq>monthly</changefreq>
+    <priority>0.5</priority>
+  </url>
+  <url>
+    <loc>https://universal-technologies.com/products/ledgerline</loc>
+    <changefreq>monthly</changefreq>
+    <priority>0.5</priority>
+  </url>
+  <url>
+    <loc>https://universal-technologies.com/products/triagebot</loc>
+    <changefreq>monthly</changefreq>
+    <priority>0.5</priority>
+  </url>
+  <url>
+    <loc>https://universal-technologies.com/products/fieldsync</loc>
+    <changefreq>monthly</changefreq>
+    <priority>0.5</priority>
+  </url>
+  <url>
+    <loc>https://universal-technologies.com/products/postit-ai</loc>
+    <changefreq>monthly</changefreq>
+    <priority>0.5</priority>
+  </url>
+  <url>
+    <loc>https://universal-technologies.com/portfolio</loc>
+    <changefreq>monthly</changefreq>
+    <priority>0.8</priority>
+  </url>
+  <url>
     <loc>https://universal-technologies.com/careers</loc>
     <changefreq>weekly</changefreq>
     <priority>0.7</priority>

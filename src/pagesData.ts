@@ -208,6 +208,8 @@ export const jobOpenings: JobOpening[] = [
   },
 ]
 
+export type ProductStatus = 'Production' | 'Internal accelerator' | 'Beta' | 'Prototype'
+
 export type Product = {
   id: string
   mark: string
@@ -215,6 +217,8 @@ export type Product = {
   tagline: string
   description: string
   tags: string[]
+  status: ProductStatus
+  audience: string
 }
 
 export const products: Product[] = [
@@ -226,6 +230,8 @@ export const products: Product[] = [
     description:
       'Rolls up deploy frequency, error rates, and rollback history across every service so leads can see release risk before it ships.',
     tags: ['Dashboards', 'Alerting', 'CI/CD integrations'],
+    status: 'Internal accelerator',
+    audience: 'Delivery leads watching release risk across services',
   },
   {
     id: 'ledgerline',
@@ -235,6 +241,8 @@ export const products: Product[] = [
     description:
       'Automates transaction matching across payment providers and your ledger, flagging exceptions for a human to review.',
     tags: ['Fintech', 'Automation', 'Audit trail'],
+    status: 'Internal accelerator',
+    audience: 'Finance and ops teams reconciling payments',
   },
   {
     id: 'triagebot',
@@ -244,6 +252,8 @@ export const products: Product[] = [
     description:
       'Classifies and routes inbound support tickets by urgency and team, cutting time-to-first-response for critical issues.',
     tags: ['Support ops', 'NLP', 'Slack + email'],
+    status: 'Internal accelerator',
+    audience: 'Support teams routing inbound tickets',
   },
   {
     id: 'fieldsync',
@@ -253,6 +263,8 @@ export const products: Product[] = [
     description:
       'A mobile app for crews working with unreliable connectivity — jobs sync the moment a signal comes back.',
     tags: ['Mobile', 'Offline sync', 'Logistics'],
+    status: 'Internal accelerator',
+    audience: 'Field crews working with unreliable connectivity',
   },
   {
     id: 'postit-ai',
@@ -262,7 +274,17 @@ export const products: Product[] = [
     description:
       'An AI scheduling tool that plans and publishes company posts to LinkedIn, Instagram, and Facebook from a single dashboard — draft once, tailor per platform, and queue it all on one shared calendar.',
     tags: ['Social scheduling', 'AI', 'LinkedIn + Instagram + Facebook'],
+    status: 'Internal accelerator',
+    audience: 'Marketing teams scheduling company posts',
   },
+]
+
+export const hiringSteps = [
+  { step: '01', title: 'Application', text: 'Send a resume and a short note on what you want to own.' },
+  { step: '02', title: 'Intro call', text: 'A conversation about the role, the team, and how you work.' },
+  { step: '03', title: 'Skills conversation', text: 'A technical or craft discussion with the people you’d work beside.' },
+  { step: '04', title: 'Practical discussion', text: 'Walk through real work — a past project or a scoped problem.' },
+  { step: '05', title: 'Offer', text: 'If it’s a fit on both sides, we make it concrete.' },
 ]
 
 export const officeLocations = [

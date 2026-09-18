@@ -39,6 +39,30 @@ export const pageMetadata: Record<string, { title: string; description: string }
     "title": "Our Products | Universal Technologies",
     "description": "Explore the internal tools and platforms Universal Technologies has built in-house — proof of the engineering craft behind every client engagement."
   },
+  "/products/pulse": {
+    "title": "Pulse | Universal Technologies",
+    "description": "Release health in one dashboard — deploy frequency, error rates, and rollback history for delivery leads."
+  },
+  "/products/ledgerline": {
+    "title": "Ledgerline | Universal Technologies",
+    "description": "Automate transaction matching across payment providers and your ledger, with exceptions flagged for review."
+  },
+  "/products/triagebot": {
+    "title": "Triagebot | Universal Technologies",
+    "description": "Classify and route inbound support tickets by urgency and team to cut time-to-first-response."
+  },
+  "/products/fieldsync": {
+    "title": "Fieldsync | Universal Technologies",
+    "description": "An offline-first mobile app for field crews — jobs sync the moment a signal comes back."
+  },
+  "/products/postit-ai": {
+    "title": "postit.ai | Universal Technologies",
+    "description": "Plan and publish company posts to LinkedIn, Instagram, and Facebook from one shared calendar."
+  },
+  "/portfolio": {
+    "title": "Portfolio | Universal Technologies",
+    "description": "Software engineering that moves a business number. See the clients, industries, process, and engagement models behind Universal Technologies."
+  },
   "/careers": {
     "title": "Careers at Universal Technologies | Open Roles",
     "description": "Join Universal Technologies. Explore open roles across engineering, QA, DevOps, and design — remote-first, project-driven, and built around real ownership."

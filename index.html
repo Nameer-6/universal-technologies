@@ -36,7 +36,10 @@
       (function () {
         try {
           var theme = localStorage.getItem('theme')
-          if (theme !== 'light') document.documentElement.setAttribute('data-theme', 'dark')
+          var preferLight =
+            theme === 'light' ||
+            (!theme && window.matchMedia('(prefers-color-scheme: light)').matches)
+          if (!preferLight) document.documentElement.setAttribute('data-theme', 'dark')
         } catch (e) {}
       })()
     </script>

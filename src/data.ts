@@ -806,4 +806,10 @@ export const clients = [
   { name: 'InnoCaption', logo: '/clients/innocaption.png' },
   { name: 'Ecwid', logo: '/clients/ecwid.svg' },
   { name: 'Dovetail', logo: '/clients/dovetail.svg' },
+  { name: 'ClearCaptions', logo: '/clients/clearcaptions.jpg' },
+  { name: 'MORE in 1', logo: '/clients/more-in-1.jpg' },
+  { name: 'Ribit', logo: '/clients/ribit.jpg' },
+  { name: 'Bluepeak Solutions', logo: '/clients/bluepeak-solutions.jpg' },
+  // TODO: replace with the client's real name once confirmed (used as the img alt text).
+  { name: 'Client', logo: '/clients/frog.jpg' },
 ]

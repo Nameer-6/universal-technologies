@@ -1,15 +1,9 @@
-import { Fragment } from 'react'
 import { motion, useReducedMotion } from 'framer-motion'
 import { Link } from 'react-router-dom'
+import { DELIVERY_ECOSYSTEM } from '../components/ServiceFlow'
 import { Seo } from '../components/Seo'
-import { Sparkline } from '../components/Sparkline'
 import { pageMetadata } from '../seoData'
 import { howItWorks, industries, outcomes, services } from '../data'
-
-const ROLLBACK_TREND =
-  '0,5.6 10.9,10.2 21.8,15.2 32.7,13.5 43.6,19 54.5,17.3 65.4,22.8 76.3,21.1 87.2,26.6 98.1,24.9 109,29.9 119.9,27.4'
-
-const MARQUEE_LIST = [...industries, ...industries]
 
 const ease = [0.22, 1, 0.36, 1] as const
 
@@ -27,8 +21,6 @@ const stagger = {
   hidden: {},
   show: { transition: { staggerChildren: 0.09, delayChildren: 0.06 } },
 }
-
-const PIPELINE_STAGES = ['build', 'run', 'test', 'canary', 'prod']
 
 const WHY_US = [
   {
@@ -87,77 +79,39 @@ export default function Services() {
             </p>
             <div className="svc-hero-cta">
               <Link className="btn btn-svc-primary" to="/contact">
-                Book a call <span aria-hidden>→</span>
+                Talk to our team <span aria-hidden>→</span>
               </Link>
-              <a className="btn btn-svc-ghost" href="#grid">
-                Explore services
+              <a className="btn btn-ghost-ink" href="#grid">
+                See how we deliver
               </a>
             </div>
           </motion.div>
 
-          <div className="svc-pipeline-wrap">
-            <motion.div
-              className="svc-pipeline"
-              initial={reduceMotion ? false : { opacity: 0, y: 30, scale: 0.97 }}
-              animate={{ opacity: 1, y: 0, scale: 1 }}
-              transition={{ duration: 0.7, delay: 0.15, ease }}
-            >
-              <div className="svc-pipeline-bar">
-                <span className="svc-console-dots">
-                  <span />
-                  <span />
-                  <span />
-                </span>
-                <span className="svc-pipeline-bar-label">Deployment pipeline · api-gateway — main</span>
-              </div>
-
-              <div className="svc-pipeline-body">
-                <div className="svc-pipeline-stages" aria-hidden>
-                  {PIPELINE_STAGES.map((stage, index) => (
-                    <Fragment key={stage}>
-                      <div className="svc-pipeline-stage is-done">
-                        <i />
-                        <span>{stage}</span>
-                      </div>
-                      {index < PIPELINE_STAGES.length - 1 && (
-                        <div className="svc-pipeline-connector is-done" />
-                      )}
-                    </Fragment>
-                  ))}
-                </div>
-
-                <div className="svc-pipeline-terminal" aria-hidden>
-                  <div>
-                    <span className="cmd">$ universal deploy --env prod</span>
-                  </div>
-                  <div className="out">→ bundle 2.1mb · 16 fn · edge</div>
-                  <div className="out">→ canary 5% traffic · 0 errors</div>
-                </div>
-
-                <div className="svc-pipeline-stats">
-                  <div>
-                    <Sparkline />
-                    <strong>180</strong>
-                    <span>Deploys / wk</span>
-                  </div>
-                  <div>
-                    <Sparkline points={ROLLBACK_TREND} />
-                    <strong>0.6%</strong>
-                    <span>Rollback rate</span>
-                  </div>
-                </div>
-              </div>
-            </motion.div>
-          </div>
+          <motion.div
+            className="svc-flow-wrap"
+            initial={reduceMotion ? false : { opacity: 0, y: 24 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.7, delay: 0.12, ease }}
+          >
+            <div className="svc-flow">
+              <p className="svc-flow-label">How work reaches production</p>
+              <ol className="svc-flow-steps">
+                {DELIVERY_ECOSYSTEM.map((step, index) => (
+                  <li key={step}>
+                    <span>{String(index + 1).padStart(2, '0')}</span>
+                    <strong>{step}</strong>
+                  </li>
+                ))}
+              </ol>
+            </div>
+          </motion.div>
 
           <p className="svc-marquee-label">Built for teams across</p>
-          <div className="svc-marquee" aria-label="Industries we support">
-            <div className={`svc-marquee-track${reduceMotion ? ' paused' : ''}`}>
-              {MARQUEE_LIST.map((name, index) => (
-                <span key={`${name}-${index}`}>{name}</span>
-              ))}
-            </div>
-          </div>
+          <ul className="industry-chips">
+            {industries.map((name) => (
+              <li key={name}>{name}</li>
+            ))}
+          </ul>
         </div>
       </section>
 
@@ -323,7 +277,7 @@ export default function Services() {
             </p>
           </motion.div>
           <Link className="btn btn-light" to="/contact">
-            Book a call <span aria-hidden>→</span>
+            Talk to our team <span aria-hidden>→</span>
           </Link>
         </div>
       </section>

@@ -1,4 +1,14 @@
-export const resources = [
+export type Resource = {
+  slug: string
+  title: string
+  description: string
+  category: string
+  sections: { title: string; text: string }[]
+  service: string
+  serviceLabel: string
+}
+
+export const resources: Resource[] = [
   {
     slug: 'choose-software-development-partner',
     title: 'How to choose a software development partner',
@@ -30,3 +40,11 @@ export const resources = [
     serviceLabel: 'Discuss an accountable delivery team',
   },
 ]
+
+export function readingMinutes(article: Resource) {
+  const words = [article.description, ...article.sections.map((section) => section.text)]
+    .join(' ')
+    .split(/\s+/)
+    .filter(Boolean).length
+  return Math.max(1, Math.round(words / 220))
+}

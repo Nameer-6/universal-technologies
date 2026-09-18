@@ -81,86 +81,64 @@ export default function JobDetail() {
       />
 
       <section className="section" aria-labelledby="job-title">
-        <div className="container">
-          <motion.div
-            className="section-head center"
-            initial={reduceMotion ? false : { opacity: 0, y: 24 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.7, ease }}
-          >
-            <p className="section-label">Careers · {job.team}</p>
-            <h1 className="section-title" id="job-title">
-              {job.title}
-            </h1>
-            <p className="section-lead">{job.summary}</p>
-            <div className="stack-row" style={{ justifyContent: 'center' }}>
-              <span>{job.location}</span>
-              <span>{job.type}</span>
-              <span>{job.team}</span>
-            </div>
-            <div className="hero-actions" style={{ justifyContent: 'center' }}>
-              <button type="button" className="btn btn-ink" onClick={() => setApplyOpen(true)}>
-                Apply for this role <span aria-hidden>→</span>
-              </button>
-              <Link className="btn btn-ghost-ink" to="/careers">
-                All openings
-              </Link>
-            </div>
-          </motion.div>
-        </div>
-      </section>
+        <div className="container job-layout">
+          <div>
+            <motion.div
+              className="section-head"
+              initial={reduceMotion ? false : { opacity: 0, y: 24 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.7, ease }}
+            >
+              <p className="section-label">Careers · {job.team}</p>
+              <h1 className="section-title" id="job-title">
+                {job.title}
+              </h1>
+              <p className="section-lead">{job.summary}</p>
+              <div className="stack-row">
+                <span>{job.location}</span>
+                <span>{job.type}</span>
+                <span>{job.team}</span>
+              </div>
+            </motion.div>
 
-      <section className="section band" aria-labelledby="job-responsibilities-title">
-        <div className="container">
-          <motion.div className="section-head split" {...reveal}>
-            <div>
+            <section className="job-block" aria-labelledby="job-responsibilities-title">
               <p className="section-label">What you'll do</p>
               <h2 className="section-title" id="job-responsibilities-title">
                 Responsibilities
               </h2>
-            </div>
-          </motion.div>
+              <ul className="job-list">
+                {job.responsibilities.map((item) => (
+                  <li key={item}>{item}</li>
+                ))}
+              </ul>
+            </section>
 
-          <motion.ul
-            className="job-list"
-            variants={reduceMotion ? undefined : stagger}
-            initial={reduceMotion ? undefined : 'hidden'}
-            whileInView={reduceMotion ? undefined : 'show'}
-            viewport={{ once: true, amount: 0.2 }}
-          >
-            {job.responsibilities.map((item) => (
-              <motion.li key={item} variants={reduceMotion ? undefined : fadeUp}>
-                {item}
-              </motion.li>
-            ))}
-          </motion.ul>
-        </div>
-      </section>
-
-      <section className="section" aria-labelledby="job-requirements-title">
-        <div className="container">
-          <motion.div className="section-head split" {...reveal}>
-            <div>
+            <section className="job-block" aria-labelledby="job-requirements-title">
               <p className="section-label">What we're looking for</p>
               <h2 className="section-title" id="job-requirements-title">
                 Requirements
               </h2>
-            </div>
-          </motion.div>
+              <ul className="job-list">
+                {job.requirements.map((item) => (
+                  <li key={item}>{item}</li>
+                ))}
+              </ul>
+            </section>
+          </div>
 
-          <motion.ul
-            className="job-list"
-            variants={reduceMotion ? undefined : stagger}
-            initial={reduceMotion ? undefined : 'hidden'}
-            whileInView={reduceMotion ? undefined : 'show'}
-            viewport={{ once: true, amount: 0.2 }}
-          >
-            {job.requirements.map((item) => (
-              <motion.li key={item} variants={reduceMotion ? undefined : fadeUp}>
-                {item}
-              </motion.li>
-            ))}
-          </motion.ul>
+          <aside className="job-apply-panel">
+            <p className="section-label">{job.team}</p>
+            <h2>{job.title}</h2>
+            <p>
+              {job.location} · {job.type}
+            </p>
+            <button type="button" className="btn btn-ink" onClick={() => setApplyOpen(true)}>
+              Apply for this role <span aria-hidden>→</span>
+            </button>
+            <Link className="btn btn-ghost-ink" to="/careers">
+              All openings
+            </Link>
+          </aside>
         </div>
       </section>
 
@@ -233,6 +211,13 @@ export default function JobDetail() {
           </button>
         </div>
       </section>
+
+      <div className="job-sticky-apply">
+        <span>{job.title}</span>
+        <button type="button" className="btn btn-ink" onClick={() => setApplyOpen(true)}>
+          Apply
+        </button>
+      </div>
 
       <ApplyModal jobTitle={job.title} open={applyOpen} onClose={() => setApplyOpen(false)} />
     </>

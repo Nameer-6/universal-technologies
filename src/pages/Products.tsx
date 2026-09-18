@@ -55,7 +55,7 @@ export default function Products() {
           </motion.div>
 
           <motion.div
-            className="service-grid"
+            className="product-grid"
             variants={reduceMotion ? undefined : stagger}
             initial={reduceMotion ? undefined : 'hidden'}
             whileInView={reduceMotion ? undefined : 'show'}
@@ -64,24 +64,31 @@ export default function Products() {
             {products.map((product) => (
               <motion.article
                 key={product.id}
-                className="service-card"
+                className="product-card"
                 variants={reduceMotion ? undefined : fadeScale}
                 whileHover={
                   reduceMotion ? undefined : { y: -8, transition: { duration: 0.25, ease } }
                 }
               >
-                <div className="service-top">
-                  <span>{product.mark}</span>
-                  <h3>{product.name}</h3>
-                </div>
-                <p>
-                  <strong>{product.tagline}.</strong> {product.description}
-                </p>
-                <div className="stack-row">
-                  {product.tags.map((tag) => (
-                    <span key={tag}>{tag}</span>
-                  ))}
-                </div>
+                <Link to={`/products/${product.id}`} className="service-card-link">
+                  <p className="product-status">{product.status}</p>
+                  <div className="service-top">
+                    <span>{product.mark}</span>
+                    <h2>{product.name}</h2>
+                  </div>
+                  <p>
+                    <strong>{product.tagline}.</strong> {product.description}
+                  </p>
+                  <p className="product-audience">{product.audience}</p>
+                  <ul className="product-caps">
+                    {product.tags.map((tag) => (
+                      <li key={tag}>{tag}</li>
+                    ))}
+                  </ul>
+                  <span className="card-affordance">
+                    Explore product <span aria-hidden>→</span>
+                  </span>
+                </Link>
               </motion.article>
             ))}
           </motion.div>
@@ -100,7 +107,7 @@ export default function Products() {
             <p>We'll show you the product live and talk through fit for your team.</p>
           </motion.div>
           <Link className="btn btn-light" to="/contact">
-            Book a walkthrough <span aria-hidden>→</span>
+            Request a demo <span aria-hidden>→</span>
           </Link>
         </div>
       </section>

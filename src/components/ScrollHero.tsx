@@ -7,6 +7,7 @@ import {
   useTransform,
   type MotionValue,
 } from 'framer-motion'
+import { Link } from 'react-router-dom'
 import { backboneMetrics, heroCards, swarmTiles } from '../data'
 
 const cards = heroCards
@@ -280,11 +281,11 @@ function StaticHero() {
             </p>
             <div className="hero-actions">
               <a className="btn btn-ink" href="#contact">
-                Get Started <span aria-hidden>→</span>
+                Talk to our team <span aria-hidden>→</span>
               </a>
-              <a className="btn btn-ghost-ink" href="#how">
-                How it works
-              </a>
+              <Link className="btn btn-ghost-ink" to="/portfolio">
+                See our work <span aria-hidden>→</span>
+              </Link>
             </div>
           </div>
 
@@ -379,11 +380,11 @@ function FullScrollHero() {
             </p>
             <div className="hero-actions">
               <a className="btn btn-ink" href="#contact">
-                Get Started <span aria-hidden>→</span>
+                Talk to our team <span aria-hidden>→</span>
               </a>
-              <a className="btn btn-ghost-ink" href="#how">
-                How it works
-              </a>
+              <Link className="btn btn-ghost-ink" to="/portfolio">
+                See our work <span aria-hidden>→</span>
+              </Link>
             </div>
           </motion.div>
 

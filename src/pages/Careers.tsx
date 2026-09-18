@@ -3,7 +3,7 @@ import { Link } from 'react-router-dom'
 import { Seo } from '../components/Seo'
 import { HR_EMAIL } from '../data'
 import { pageMetadata } from '../seoData'
-import { jobOpenings, perks } from '../pagesData'
+import { jobOpenings, hiringSteps, perks } from '../pagesData'
 
 const ease = [0.22, 1, 0.36, 1] as const
 
@@ -57,6 +57,30 @@ export default function Careers() {
               else's roadmap.
             </p>
           </motion.div>
+        </div>
+      </section>
+
+      <section className="section" aria-labelledby="hiring-title">
+        <div className="container">
+          <motion.div className="section-head center" {...reveal}>
+            <p className="section-label">Hiring process</p>
+            <h2 className="section-title" id="hiring-title">
+              What happens after you apply
+            </h2>
+          </motion.div>
+          <ol className="pf-process hiring-steps">
+            {hiringSteps.map((step) => (
+              <li key={step.step}>
+                <span className="pf-process-index">{step.step}</span>
+                <div>
+                  <div className="pf-process-head">
+                    <h3>{step.title}</h3>
+                  </div>
+                  <p>{step.text}</p>
+                </div>
+              </li>
+            ))}
+          </ol>
         </div>
       </section>
 
@@ -161,6 +185,9 @@ export default function Careers() {
                     <span>{job.location}</span>
                     <span>{job.type}</span>
                   </div>
+                  <span className="card-affordance">
+                    View role <span aria-hidden>→</span>
+                  </span>
                 </Link>
               </motion.article>
             ))}

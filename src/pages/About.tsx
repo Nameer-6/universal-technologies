@@ -132,9 +132,9 @@ export default function About() {
                     .map((n) => n[0])
                     .join('')}
                 </span>
+                <em>{person.role}</em>
                 <h3>{person.name}</h3>
                 <p>{person.bio}</p>
-                <em>{person.role}</em>
               </motion.article>
             ))}
           </motion.div>
@@ -149,11 +149,11 @@ export default function About() {
             viewport={{ once: true, amount: 0.4 }}
             transition={{ duration: 0.65, ease }}
           >
-            <h2 id="about-cta-title">Want to build with us?</h2>
-            <p>See open roles or send us a brief — either way, a real person replies immediately.</p>
+            <h2 id="about-cta-title">Want to work with us?</h2>
+            <p>Send a brief — a real person replies immediately.</p>
           </motion.div>
-          <Link className="btn btn-light" to="/careers">
-            See open roles <span aria-hidden>→</span>
+          <Link className="btn btn-light" to="/contact">
+            Talk to our team <span aria-hidden>→</span>
           </Link>
         </div>
       </section>

@@ -3,6 +3,7 @@ import { Link, Outlet, useLocation } from 'react-router-dom'
 import { motion, useReducedMotion, useScroll, useSpring, useTransform } from 'framer-motion'
 import { Helmet } from 'react-helmet-async'
 import { CONTACT_EMAIL, services } from '../data'
+import { resources } from '../resourcesData'
 import { useTheme } from '../hooks/useTheme'
 import { SITE_URL } from './Seo'
 
@@ -46,6 +47,14 @@ export function Layout() {
     window.scrollTo(0, 0)
   }, [location.pathname])
 
+  useEffect(() => {
+    const onKey = (event: KeyboardEvent) => {
+      if (event.key === 'Escape') setMenuOpen(false)
+    }
+    window.addEventListener('keydown', onKey)
+    return () => window.removeEventListener('keydown', onKey)
+  }, [])
+
   const closeMenu = () => setMenuOpen(false)
 
   return (
@@ -53,6 +62,10 @@ export function Layout() {
       <Helmet>
         <script type="application/ld+json">{JSON.stringify(organizationJsonLd)}</script>
       </Helmet>
+
+      <a className="skip-link" href="#main-content">
+        Skip to content
+      </a>
 
       {!reduceMotion && (
         <motion.div className="scroll-progress" style={{ width: progressWidth }} aria-hidden />
@@ -81,6 +94,9 @@ export function Layout() {
           <nav className="nav-links" aria-label="Primary">
             <Link to="/services" onClick={closeMenu}>
               Services
+            </Link>
+            <Link to="/portfolio" onClick={closeMenu}>
+              Portfolio
             </Link>
             <Link to="/products" onClick={closeMenu}>
               Products
@@ -144,41 +160,51 @@ export function Layout() {
         </div>
       </header>
 
-      <main id="top">
+      <main id="main-content">
         <Outlet />
       </main>
 
       <footer className="footer">
-        <div className="container footer-grid">
-          <div>
+        <div className="container">
+          <div className="footer-brand">
             <img src="/logo-dark.png" alt="Universal Technologies" width={451} height={164} />
-            <p>
-              Product engineering, quality, cloud, and growth — staffed as one delivery team.
-            </p>
+            <p>Product engineering, quality, cloud, and growth — staffed as one delivery team.</p>
           </div>
-          <div>
-            <h4>Services</h4>
-            {services.slice(0, 4).map((s) => (
-              <Link key={s.id} to={`/services/${s.id}`}>
-                {s.title}
-              </Link>
-            ))}
-          </div>
-          <div>
-            <h4>Company</h4>
-            <Link to="/about">About</Link>
-            <Link to="/careers">Careers</Link>
-            <Link to="/resources">Resources</Link>
-            <Link to="/contact">Contact</Link>
-            <a href={`mailto:${CONTACT_EMAIL}`}>{CONTACT_EMAIL}</a>
+          <div className="footer-grid">
+            <div>
+              <h4>Services</h4>
+              {services.map((service) => (
+                <Link key={service.id} to={`/services/${service.id}`}>
+                  {service.title}
+                </Link>
+              ))}
+            </div>
+            <div>
+              <h4>Company</h4>
+              <Link to="/about">About</Link>
+              <Link to="/portfolio">Portfolio</Link>
+              <Link to="/careers">Careers</Link>
+            </div>
+            <div>
+              <h4>Resources</h4>
+              <Link to="/resources">Insights</Link>
+              {resources.map((article) => (
+                <Link key={article.slug} to={`/resources/${article.slug}`}>
+                  {article.title}
+                </Link>
+              ))}
+              <Link to="/privacy-policy">Privacy</Link>
+              <Link to="/terms">Terms</Link>
+            </div>
+            <div>
+              <h4>Connect</h4>
+              <Link to="/contact">Contact</Link>
+              <a href={`mailto:${CONTACT_EMAIL}`}>{CONTACT_EMAIL}</a>
+            </div>
           </div>
         </div>
         <div className="container footer-bottom">
           <span>© {new Date().getFullYear()} Universal Technologies</span>
-          <span className="footer-legal">
-            <Link to="/privacy-policy">Privacy Policy</Link>
-            <Link to="/terms">Terms of Service</Link>
-          </span>
           <span>Ship with one accountable partner</span>
         </div>
       </footer>

@@ -2,12 +2,21 @@ import { useCallback, useEffect, useState } from 'react'
 
 type Theme = 'light' | 'dark'
 
+function systemTheme(): Theme {
+  if (typeof window !== 'undefined' && window.matchMedia('(prefers-color-scheme: light)').matches) {
+    return 'light'
+  }
+  return 'dark'
+}
+
 function readStoredTheme(): Theme {
   try {
-    return localStorage.getItem('theme') === 'light' ? 'light' : 'dark'
+    const stored = localStorage.getItem('theme')
+    if (stored === 'light' || stored === 'dark') return stored
   } catch {
-    return 'dark'
+    // ignore read failures (private browsing, quota, etc.)
   }
+  return systemTheme()
 }
 
 export function useTheme() {
