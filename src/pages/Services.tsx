@@ -1,26 +1,10 @@
-import { motion, useReducedMotion } from 'framer-motion'
+import { motion } from 'framer-motion'
 import { Link } from 'react-router-dom'
 import { DELIVERY_ECOSYSTEM } from '../components/ServiceFlow'
 import { Seo } from '../components/Seo'
+import { usePageMotion } from '../hooks/usePageMotion'
 import { pageMetadata } from '../seoData'
 import { howItWorks, industries, outcomes, services } from '../data'
-
-const ease = [0.22, 1, 0.36, 1] as const
-
-const fadeUp = {
-  hidden: { opacity: 0, y: 32 },
-  show: { opacity: 1, y: 0 },
-}
-
-const fadeScale = {
-  hidden: { opacity: 0, y: 24, scale: 0.96 },
-  show: { opacity: 1, y: 0, scale: 1 },
-}
-
-const stagger = {
-  hidden: {},
-  show: { transition: { staggerChildren: 0.09, delayChildren: 0.06 } },
-}
 
 const WHY_US = [
   {
@@ -41,16 +25,7 @@ const WHY_US = [
 ]
 
 export default function Services() {
-  const reduceMotion = Boolean(useReducedMotion())
-  const reveal = reduceMotion
-    ? {}
-    : {
-        initial: 'hidden' as const,
-        whileInView: 'show' as const,
-        viewport: { once: true, amount: 0.28 },
-        variants: fadeUp,
-        transition: { duration: 0.7, ease },
-      }
+  const { reveal, hero, heroFollow, list, item, inView } = usePageMotion()
 
   return (
     <div className="svc-page">
@@ -64,9 +39,7 @@ export default function Services() {
         <div className="container">
           <motion.div
             className="svc-hero-inner"
-            initial={reduceMotion ? false : { opacity: 0, y: 24 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.7, ease }}
+            {...hero}
           >
             <p className="svc-eyebrow">Services</p>
             <h1 className="svc-hero-title" id="services-title">
@@ -81,29 +54,25 @@ export default function Services() {
               <Link className="btn btn-svc-primary" to="/contact">
                 Talk to our team <span aria-hidden>→</span>
               </Link>
-              <a className="btn btn-ghost-ink" href="#grid">
+              <a className="btn btn-ghost-ink" href="#process">
                 See how we deliver
               </a>
             </div>
           </motion.div>
 
           <motion.div
-            className="svc-flow-wrap"
-            initial={reduceMotion ? false : { opacity: 0, y: 24 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.7, delay: 0.12, ease }}
+            className="svc-path-wrap"
+            {...heroFollow}
           >
-            <div className="svc-flow">
-              <p className="svc-flow-label">How work reaches production</p>
-              <ol className="svc-flow-steps">
-                {DELIVERY_ECOSYSTEM.map((step, index) => (
-                  <li key={step}>
-                    <span>{String(index + 1).padStart(2, '0')}</span>
-                    <strong>{step}</strong>
-                  </li>
-                ))}
-              </ol>
-            </div>
+            <p className="svc-path-label">How work reaches production</p>
+            <ol className="svc-path">
+              {DELIVERY_ECOSYSTEM.map((step, index) => (
+                <li key={step}>
+                  <span>{String(index + 1).padStart(2, '0')}</span>
+                  <strong>{step}</strong>
+                </li>
+              ))}
+            </ol>
           </motion.div>
 
           <p className="svc-marquee-label">Built for teams across</p>
@@ -129,16 +98,14 @@ export default function Services() {
 
           <motion.div
             className="svc-list-grid"
-            variants={reduceMotion ? undefined : stagger}
-            initial={reduceMotion ? undefined : 'hidden'}
-            whileInView={reduceMotion ? undefined : 'show'}
-            viewport={{ once: true, amount: 0.12 }}
+            {...list}
           >
             {services.map((service) => (
               <motion.div
                 key={service.id}
                 id={service.id}
-                variants={reduceMotion ? undefined : fadeScale}
+                className="svc-list-item"
+                variants={item}
               >
                 <Link to={`/services/${service.id}`} className="svc-list-card">
                   <div className="svc-list-top">
@@ -172,17 +139,15 @@ export default function Services() {
 
           <motion.div
             className="svc-why-grid"
-            variants={reduceMotion ? undefined : stagger}
-            initial={reduceMotion ? undefined : 'hidden'}
-            whileInView={reduceMotion ? undefined : 'show'}
-            viewport={{ once: true, amount: 0.2 }}
+            {...list}
           >
-            {WHY_US.map((item) => (
+            {WHY_US.map((item, index) => (
               <motion.div
                 key={item.title}
                 className="svc-why-card"
-                variants={reduceMotion ? undefined : fadeScale}
+                variants={item}
               >
+                <span className="svc-why-index">0{index + 1}</span>
                 <h3>{item.title}</h3>
                 <p>{item.text}</p>
                 <ul className="svc-why-list">
@@ -196,7 +161,7 @@ export default function Services() {
         </div>
       </section>
 
-      <section className="svc-section svc-band-alt" aria-labelledby="services-process-title">
+      <section className="svc-section svc-band-alt" id="process" aria-labelledby="services-process-title">
         <div className="container">
           <motion.div className="svc-head svc-head-center" {...reveal}>
             <p className="svc-eyebrow">How it works</p>
@@ -211,16 +176,13 @@ export default function Services() {
 
           <motion.div
             className="svc-process-grid"
-            variants={reduceMotion ? undefined : stagger}
-            initial={reduceMotion ? undefined : 'hidden'}
-            whileInView={reduceMotion ? undefined : 'show'}
-            viewport={{ once: true, amount: 0.12 }}
+            {...list}
           >
             {howItWorks.map((step) => (
               <motion.div
                 key={step.step}
                 className="svc-process-card"
-                variants={reduceMotion ? undefined : fadeScale}
+                variants={item}
               >
                 <span className="svc-process-index">{step.step}</span>
                 <h3>{step.title}</h3>
@@ -242,16 +204,13 @@ export default function Services() {
 
           <motion.div
             className="svc-outcome-grid"
-            variants={reduceMotion ? undefined : stagger}
-            initial={reduceMotion ? undefined : 'hidden'}
-            whileInView={reduceMotion ? undefined : 'show'}
-            viewport={{ once: true, amount: 0.25 }}
+            {...list}
           >
             {outcomes.map((item, index) => (
               <motion.div
                 key={item.title}
                 className="svc-outcome-card"
-                variants={reduceMotion ? undefined : fadeScale}
+                variants={item}
               >
                 <span className="svc-outcome-index">0{index + 1}</span>
                 <h3>{item.title}</h3>
@@ -264,12 +223,7 @@ export default function Services() {
 
       <section className="cta-band" aria-labelledby="services-cta-title">
         <div className="container cta-inner">
-          <motion.div
-            initial={reduceMotion ? false : { opacity: 0, y: 24 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            viewport={{ once: true, amount: 0.4 }}
-            transition={{ duration: 0.65, ease }}
-          >
+          <motion.div {...inView}>
             <h2 id="services-cta-title">Not sure which capability you need?</h2>
             <p>
               Start with a 30-minute call. Describe what you're building and where it's slowing

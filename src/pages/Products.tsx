@@ -1,37 +1,12 @@
-import { motion, useReducedMotion } from 'framer-motion'
+import { motion } from 'framer-motion'
 import { Link } from 'react-router-dom'
 import { Seo } from '../components/Seo'
+import { usePageMotion } from '../hooks/usePageMotion'
 import { pageMetadata } from '../seoData'
 import { products } from '../pagesData'
 
-const ease = [0.22, 1, 0.36, 1] as const
-
-const fadeUp = {
-  hidden: { opacity: 0, y: 32 },
-  show: { opacity: 1, y: 0 },
-}
-
-const fadeScale = {
-  hidden: { opacity: 0, y: 24, scale: 0.96 },
-  show: { opacity: 1, y: 0, scale: 1 },
-}
-
-const stagger = {
-  hidden: {},
-  show: { transition: { staggerChildren: 0.09, delayChildren: 0.06 } },
-}
-
 export default function Products() {
-  const reduceMotion = Boolean(useReducedMotion())
-  const reveal = reduceMotion
-    ? {}
-    : {
-        initial: 'hidden' as const,
-        whileInView: 'show' as const,
-        viewport: { once: true, amount: 0.28 },
-        variants: fadeUp,
-        transition: { duration: 0.7, ease },
-      }
+  const { reveal, list, item, cardHover, inView } = usePageMotion()
 
   return (
     <>
@@ -56,19 +31,14 @@ export default function Products() {
 
           <motion.div
             className="product-grid"
-            variants={reduceMotion ? undefined : stagger}
-            initial={reduceMotion ? undefined : 'hidden'}
-            whileInView={reduceMotion ? undefined : 'show'}
-            viewport={{ once: true, amount: 0.12 }}
+            {...list}
           >
             {products.map((product) => (
               <motion.article
                 key={product.id}
                 className="product-card"
-                variants={reduceMotion ? undefined : fadeScale}
-                whileHover={
-                  reduceMotion ? undefined : { y: -8, transition: { duration: 0.25, ease } }
-                }
+                variants={item}
+                whileHover={cardHover}
               >
                 <Link to={`/products/${product.id}`} className="service-card-link">
                   <p className="product-status">{product.status}</p>
@@ -97,12 +67,7 @@ export default function Products() {
 
       <section className="cta-band" aria-labelledby="products-cta-title">
         <div className="container cta-inner">
-          <motion.div
-            initial={reduceMotion ? false : { opacity: 0, y: 24 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            viewport={{ once: true, amount: 0.4 }}
-            transition={{ duration: 0.65, ease }}
-          >
+          <motion.div {...inView}>
             <h2 id="products-cta-title">Want a walkthrough?</h2>
             <p>We'll show you the product live and talk through fit for your team.</p>
           </motion.div>

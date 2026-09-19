@@ -27,13 +27,36 @@ export function Layout() {
   const progress = useSpring(scrollYProgress, { stiffness: 120, damping: 28, mass: 0.3 })
   const progressWidth = useTransform(progress, [0, 1], ['0%', '100%'])
   const location = useLocation()
+  const isHome = location.pathname === '/'
 
   useEffect(() => {
-    const onScroll = () => setScrolled(window.scrollY > 12)
-    onScroll()
-    window.addEventListener('scroll', onScroll, { passive: true })
-    return () => window.removeEventListener('scroll', onScroll)
-  }, [])
+    const update = () => {
+      if (!isHome) {
+        setScrolled(window.scrollY > 8)
+        return
+      }
+
+      const hero = document.querySelector<HTMLElement>('.scroll-hero')
+      if (!hero) {
+        setScrolled(window.scrollY > 8)
+        return
+      }
+
+      const navHeight =
+        parseFloat(
+          getComputedStyle(document.documentElement).getPropertyValue('--nav-h'),
+        ) || 72
+      setScrolled(hero.getBoundingClientRect().bottom <= navHeight + 12)
+    }
+
+    update()
+    window.addEventListener('scroll', update, { passive: true })
+    window.addEventListener('resize', update)
+    return () => {
+      window.removeEventListener('scroll', update)
+      window.removeEventListener('resize', update)
+    }
+  }, [isHome])
 
   useEffect(() => {
     document.body.style.overflow = menuOpen ? 'hidden' : ''
@@ -44,6 +67,7 @@ export function Layout() {
 
   useEffect(() => {
     setMenuOpen(false)
+    setScrolled(location.pathname !== '/')
     window.scrollTo(0, 0)
   }, [location.pathname])
 

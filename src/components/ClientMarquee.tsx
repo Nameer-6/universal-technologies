@@ -1,7 +1,8 @@
 import { useReducedMotion } from 'framer-motion'
 import { clients } from '../data'
 
-const marqueeList = [...clients, ...clients]
+const named = clients.filter((client) => client.name !== 'Client')
+const marqueeList = [...named, ...named]
 
 export function ClientMarquee() {
   const reduceMotion = Boolean(useReducedMotion())
@@ -10,7 +11,7 @@ export function ClientMarquee() {
     <div className="client-marquee" aria-label="Teams we've worked with">
       <div className={`client-marquee-track${reduceMotion ? ' paused' : ''}`}>
         {marqueeList.map((client, index) => {
-          const duplicate = index >= clients.length
+          const duplicate = index >= named.length
           return (
             <span
               key={`${client.logo}-${index}`}

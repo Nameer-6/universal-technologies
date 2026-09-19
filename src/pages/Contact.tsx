@@ -1,28 +1,13 @@
-import { motion, useReducedMotion } from 'framer-motion'
+import { motion } from 'framer-motion'
 import { Seo } from '../components/Seo'
 import { ContactForm } from '../components/ContactForm'
 import { CONTACT_EMAIL } from '../data'
+import { usePageMotion } from '../hooks/usePageMotion'
 import { pageMetadata } from '../seoData'
 import { officeLocations } from '../pagesData'
 
-const ease = [0.22, 1, 0.36, 1] as const
-
-const fadeUp = {
-  hidden: { opacity: 0, y: 32 },
-  show: { opacity: 1, y: 0 },
-}
-
 export default function Contact() {
-  const reduceMotion = Boolean(useReducedMotion())
-  const reveal = reduceMotion
-    ? {}
-    : {
-        initial: 'hidden' as const,
-        whileInView: 'show' as const,
-        viewport: { once: true, amount: 0.28 },
-        variants: fadeUp,
-        transition: { duration: 0.7, ease },
-      }
+  const { reveal, inView } = usePageMotion()
 
   return (
     <>
@@ -65,12 +50,7 @@ export default function Contact() {
               </div>
             </motion.div>
 
-            <motion.div
-              initial={reduceMotion ? false : { opacity: 0, y: 28, scale: 0.98 }}
-              whileInView={{ opacity: 1, y: 0, scale: 1 }}
-              viewport={{ once: true, amount: 0.2 }}
-              transition={{ duration: 0.6, ease }}
-            >
+            <motion.div {...inView}>
               <ContactForm />
             </motion.div>
           </div>

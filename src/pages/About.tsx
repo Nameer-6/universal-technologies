@@ -1,32 +1,12 @@
-import { motion, useReducedMotion } from 'framer-motion'
+import { motion } from 'framer-motion'
 import { Link } from 'react-router-dom'
 import { Seo } from '../components/Seo'
+import { usePageMotion } from '../hooks/usePageMotion'
 import { pageMetadata } from '../seoData'
 import { companyValues, leadership, milestones } from '../pagesData'
 
-const ease = [0.22, 1, 0.36, 1] as const
-
-const fadeUp = {
-  hidden: { opacity: 0, y: 32 },
-  show: { opacity: 1, y: 0 },
-}
-
-const stagger = {
-  hidden: {},
-  show: { transition: { staggerChildren: 0.09, delayChildren: 0.06 } },
-}
-
 export default function About() {
-  const reduceMotion = Boolean(useReducedMotion())
-  const reveal = reduceMotion
-    ? {}
-    : {
-        initial: 'hidden' as const,
-        whileInView: 'show' as const,
-        viewport: { once: true, amount: 0.28 },
-        variants: fadeUp,
-        transition: { duration: 0.7, ease },
-      }
+  const { reveal, list, item, inView } = usePageMotion()
 
   return (
     <>
@@ -80,16 +60,13 @@ export default function About() {
 
           <motion.div
             className="engage-grid"
-            variants={reduceMotion ? undefined : stagger}
-            initial={reduceMotion ? undefined : 'hidden'}
-            whileInView={reduceMotion ? undefined : 'show'}
-            viewport={{ once: true, amount: 0.2 }}
+            {...list}
           >
             {companyValues.map((item) => (
               <motion.article
                 key={item.step}
                 className="engage-card"
-                variants={reduceMotion ? undefined : fadeUp}
+                variants={item}
               >
                 <span className="engage-mark">{item.step}</span>
                 <h3>{item.title}</h3>
@@ -115,16 +92,13 @@ export default function About() {
 
           <motion.div
             className="engage-grid"
-            variants={reduceMotion ? undefined : stagger}
-            initial={reduceMotion ? undefined : 'hidden'}
-            whileInView={reduceMotion ? undefined : 'show'}
-            viewport={{ once: true, amount: 0.2 }}
+            {...list}
           >
             {leadership.map((person) => (
               <motion.article
                 key={person.name}
                 className="engage-card"
-                variants={reduceMotion ? undefined : fadeUp}
+                variants={item}
               >
                 <span className="engage-mark">
                   {person.name
@@ -143,12 +117,7 @@ export default function About() {
 
       <section className="cta-band" aria-labelledby="about-cta-title">
         <div className="container cta-inner">
-          <motion.div
-            initial={reduceMotion ? false : { opacity: 0, y: 24 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            viewport={{ once: true, amount: 0.4 }}
-            transition={{ duration: 0.65, ease }}
-          >
+          <motion.div {...inView}>
             <h2 id="about-cta-title">Want to work with us?</h2>
             <p>Send a brief — a real person replies immediately.</p>
           </motion.div>

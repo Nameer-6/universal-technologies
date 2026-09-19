@@ -1,30 +1,14 @@
-import { motion, useReducedMotion } from 'framer-motion'
+import { motion } from 'framer-motion'
 import { Link } from 'react-router-dom'
 import { ScrollHero } from '../components/ScrollHero'
 import { Seo } from '../components/Seo'
-import { ClientLogoGrid } from '../components/ClientLogoGrid'
+import { ClientMarquee } from '../components/ClientMarquee'
 import { ContactForm } from '../components/ContactForm'
+import { usePageMotion } from '../hooks/usePageMotion'
 import { pageMetadata } from '../seoData'
 import { CONTACT_EMAIL, engagements, howItWorks, outcomes, services } from '../data'
 import { products } from '../pagesData'
 import { resources } from '../resourcesData'
-
-const ease = [0.22, 1, 0.36, 1] as const
-
-const fadeUp = {
-  hidden: { opacity: 0, y: 32 },
-  show: { opacity: 1, y: 0 },
-}
-
-const fadeScale = {
-  hidden: { opacity: 0, y: 24, scale: 0.96 },
-  show: { opacity: 1, y: 0, scale: 1 },
-}
-
-const stagger = {
-  hidden: {},
-  show: { transition: { staggerChildren: 0.09, delayChildren: 0.06 } },
-}
 
 const featuredProducts = products.slice(0, 3)
 const featuredGuides = resources.slice(0, 2)
@@ -45,17 +29,8 @@ const trustNotes = [
 ]
 
 export default function Home() {
-  const reduceMotion = Boolean(useReducedMotion())
-
-  const reveal = reduceMotion
-    ? {}
-    : {
-        initial: 'hidden' as const,
-        whileInView: 'show' as const,
-        viewport: { once: true, amount: 0.28 },
-        variants: fadeUp,
-        transition: { duration: 0.7, ease },
-      }
+  const { reveal, list, item: itemVariants, cardHover, inView, reduceMotion, ease } =
+    usePageMotion()
 
   return (
     <>
@@ -75,7 +50,7 @@ export default function Home() {
               Teams we’ve worked with
             </h2>
           </motion.div>
-          <ClientLogoGrid caption="Selected organizations and products our team has supported." />
+          <ClientMarquee />
         </div>
       </section>
 
@@ -96,20 +71,15 @@ export default function Home() {
 
           <motion.div
             className="service-grid"
-            variants={reduceMotion ? undefined : stagger}
-            initial={reduceMotion ? undefined : 'hidden'}
-            whileInView={reduceMotion ? undefined : 'show'}
-            viewport={{ once: true, amount: 0.12 }}
+            {...list}
           >
             {services.map((service) => (
               <motion.article
                 key={service.id}
                 className="service-card"
-                variants={reduceMotion ? undefined : fadeScale}
+                variants={itemVariants}
                 transition={{ duration: 0.55, ease }}
-                whileHover={
-                  reduceMotion ? undefined : { y: -8, transition: { duration: 0.25, ease } }
-                }
+                whileHover={cardHover}
               >
                 <Link to={`/services/${service.id}`} className="service-card-link">
                   <div className="service-top">
@@ -201,23 +171,17 @@ export default function Home() {
             </p>
           </motion.div>
 
-          <motion.div
-            className="outcome-grid"
-            variants={reduceMotion ? undefined : stagger}
-            initial={reduceMotion ? undefined : 'hidden'}
-            whileInView={reduceMotion ? undefined : 'show'}
-            viewport={{ once: true, amount: 0.25 }}
-          >
-            {outcomes.map((item, index) => (
+          <motion.div className="outcome-grid" {...list}>
+            {outcomes.map((outcome, index) => (
               <motion.div
-                key={item.title}
+                key={outcome.title}
                 className="outcome-card"
-                variants={reduceMotion ? undefined : fadeScale}
-                whileHover={reduceMotion ? undefined : { y: -6 }}
+                variants={itemVariants}
+                whileHover={cardHover}
               >
                 <span className="outcome-index">0{index + 1}</span>
-                <h3>{item.title}</h3>
-                <p>{item.text}</p>
+                <h3>{outcome.title}</h3>
+                <p>{outcome.text}</p>
               </motion.div>
             ))}
           </motion.div>
@@ -236,26 +200,18 @@ export default function Home() {
             </p>
           </motion.div>
 
-          <motion.div
-            className="engage-grid"
-            variants={reduceMotion ? undefined : stagger}
-            initial={reduceMotion ? undefined : 'hidden'}
-            whileInView={reduceMotion ? undefined : 'show'}
-            viewport={{ once: true, amount: 0.2 }}
-          >
-            {engagements.map((item) => (
+          <motion.div className="engage-grid" {...list}>
+            {engagements.map((engagement) => (
               <motion.article
-                key={item.step}
+                key={engagement.step}
                 className="engage-card"
-                variants={reduceMotion ? undefined : fadeScale}
-                whileHover={
-                  reduceMotion ? undefined : { y: -8, transition: { duration: 0.25, ease } }
-                }
+                variants={itemVariants}
+                whileHover={cardHover}
               >
-                <span className="engage-mark">{item.step}</span>
-                <h3>{item.title}</h3>
-                <p>{item.text}</p>
-                <em>{item.detail}</em>
+                <span className="engage-mark">{engagement.step}</span>
+                <h3>{engagement.title}</h3>
+                <p>{engagement.text}</p>
+                <em>{engagement.detail}</em>
               </motion.article>
             ))}
           </motion.div>
@@ -275,16 +231,13 @@ export default function Home() {
           </motion.div>
           <motion.div
             className="service-grid"
-            variants={reduceMotion ? undefined : stagger}
-            initial={reduceMotion ? undefined : 'hidden'}
-            whileInView={reduceMotion ? undefined : 'show'}
-            viewport={{ once: true, amount: 0.12 }}
+            {...list}
           >
             {featuredProducts.map((product) => (
               <motion.article
                 key={product.id}
                 className="service-card"
-                variants={reduceMotion ? undefined : fadeScale}
+                variants={itemVariants}
               >
                 <Link to={`/products/${product.id}`} className="service-card-link">
                   <p className="section-label">{product.status}</p>
@@ -313,21 +266,15 @@ export default function Home() {
               Delivery habits you can inspect
             </h2>
           </motion.div>
-          <motion.div
-            className="outcome-grid"
-            variants={reduceMotion ? undefined : stagger}
-            initial={reduceMotion ? undefined : 'hidden'}
-            whileInView={reduceMotion ? undefined : 'show'}
-            viewport={{ once: true, amount: 0.25 }}
-          >
-            {trustNotes.map((item) => (
+          <motion.div className="outcome-grid" {...list}>
+            {trustNotes.map((note) => (
               <motion.article
-                key={item.title}
+                key={note.title}
                 className="outcome-card"
-                variants={reduceMotion ? undefined : fadeScale}
+                variants={itemVariants}
               >
-                <h3>{item.title}</h3>
-                <p>{item.text}</p>
+                <h3>{note.title}</h3>
+                <p>{note.text}</p>
               </motion.article>
             ))}
           </motion.div>
@@ -364,12 +311,7 @@ export default function Home() {
 
       <section className="cta-band" aria-labelledby="cta-title">
         <div className="container cta-inner">
-          <motion.div
-            initial={reduceMotion ? false : { opacity: 0, y: 24 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            viewport={{ once: true, amount: 0.4 }}
-            transition={{ duration: 0.65, ease }}
-          >
+          <motion.div {...inView}>
             <h2 id="cta-title">Have a date on the calendar?</h2>
             <p>
               Bring the product, the constraint, and the deadline. We’ll map a delivery plan you
@@ -401,12 +343,7 @@ export default function Home() {
               {CONTACT_EMAIL}
             </a>
           </motion.div>
-          <motion.div
-            initial={reduceMotion ? false : { opacity: 0, y: 28, scale: 0.98 }}
-            whileInView={{ opacity: 1, y: 0, scale: 1 }}
-            viewport={{ once: true, amount: 0.2 }}
-            transition={{ duration: 0.6, ease }}
-          >
+          <motion.div {...inView}>
             <ContactForm />
           </motion.div>
         </div>

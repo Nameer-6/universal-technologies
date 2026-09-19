@@ -1,81 +1,153 @@
-import { motion, useReducedMotion } from 'framer-motion'
+import { useEffect, useState } from 'react'
+import { motion } from 'framer-motion'
 import { Link } from 'react-router-dom'
 import { Seo } from '../components/Seo'
-import { ClientLogoGrid } from '../components/ClientLogoGrid'
-import { clients, services } from '../data'
+import { ClientMarquee } from '../components/ClientMarquee'
+import { howItWorks, services } from '../data'
+import { usePageMotion } from '../hooks/usePageMotion'
 import { pageMetadata } from '../seoData'
-import {
-  caseStudies,
-  clientAsks,
-  clientProfiles,
-  clientsCaption,
-  credentials,
-  differentiators,
-  engagementModels,
-  industries,
-  industriesLead,
-  portfolioClosing,
-  portfolioHero,
-  portfolioStats,
-  processLead,
-  servicesLead,
-  team,
-  techLayers,
-  techLead,
-  testimonials,
-  whoWeAre,
-  workStages,
-} from '../portfolioData'
 
-const ease = [0.22, 1, 0.36, 1] as const
+const PROCESS_PILLS = ['Scope', 'Team', 'Pilot', 'Build', 'Test', 'Deploy', 'Scale'] as const
 
-const fadeUp = {
-  hidden: { opacity: 0, y: 28 },
-  show: { opacity: 1, y: 0, transition: { duration: 0.6, ease } },
+const WHY_US = [
+  {
+    title: 'Senior-led delivery',
+    kicker: 'Experienced leadership from day one',
+    text: 'Every engagement is led by engineers who have shipped production systems before, working directly inside your roadmap and workflow.',
+  },
+  {
+    title: 'One accountable delivery partner',
+    kicker: 'Six capabilities. One accountable team.',
+    text: 'Bring in one capability or combine AI agents, automation, QA, DevOps, and full-stack engineering under one delivery partner.',
+  },
+  {
+    title: 'Built around your workflow',
+    kicker: 'Your roadmap. Your workflow. Our engineering team.',
+    text: 'Our engineers work within your existing tools, processes, roadmap, and communication rhythm instead of forcing your team into a separate delivery model.',
+  },
+]
+
+const SPARKS = [
+  [10, 16, 12, 22, 18, 28, 24],
+  [14, 10, 18, 14, 26, 20, 30],
+  [8, 14, 20, 16, 12, 24, 18],
+  [12, 20, 14, 28, 18, 22, 16],
+  [18, 12, 22, 10, 26, 14, 30],
+  [16, 22, 12, 20, 28, 18, 24],
+]
+
+const BOARDS = [
+  {
+    title: 'Automation Builder',
+    subtitle: 'workflow · prod-eng-1',
+    steps: ['Trigger', 'Enrich', 'Classify', 'Route', 'Deliver'],
+    active: 1,
+    left: { label: 'Runs today', value: 'On track' },
+    right: { label: 'Avg latency', value: 'Staging' },
+    foot: 'Queue throughput',
+  },
+  {
+    title: 'Automation Builder',
+    subtitle: 'workflow · prod-eng-1',
+    steps: ['Trigger', 'Enrich', 'Classify', 'Route', 'Deliver'],
+    active: 2,
+    left: { label: 'Runs today', value: 'On track' },
+    right: { label: 'Avg latency', value: 'Staging' },
+    foot: 'Queue throughput',
+  },
+  {
+    title: 'Release gates',
+    subtitle: 'qa-suite · main',
+    steps: ['Build', 'Test', 'Canary', 'Gate', 'Prod'],
+    active: 1,
+    left: { label: 'Checks', value: 'CI-gated' },
+    right: { label: 'Feedback', value: 'On merge' },
+    foot: 'Pipeline health',
+  },
+  {
+    title: 'Deployment pipeline',
+    subtitle: 'api-gateway · main',
+    steps: ['Build', 'Test', 'Canary', 'Prod', 'Watch'],
+    active: 3,
+    left: { label: 'Deploys', value: 'Routine' },
+    right: { label: 'Rollback', value: 'Rehearsed' },
+    foot: 'Traffic shift',
+  },
+  {
+    title: 'Product console',
+    subtitle: 'saas · multi-tenant',
+    steps: ['Auth', 'Bill', 'Tenant', 'Ship', 'Observe'],
+    active: 2,
+    left: { label: 'Tenants', value: 'Isolated' },
+    right: { label: 'Billing', value: 'Metered' },
+    foot: 'Platform health',
+  },
+  {
+    title: 'Delivery board',
+    subtitle: 'end-to-end · production',
+    steps: ['Align', 'Build', 'Test', 'Ship', 'Steady'],
+    active: 1,
+    left: { label: 'Focus', value: 'Production' },
+    right: { label: 'Cadence', value: 'Two-week' },
+    foot: 'Release progress',
+  },
+] as const
+
+function Spark({ variant }: { variant: number }) {
+  const heights = SPARKS[variant % SPARKS.length]
+  return (
+    <svg className="pf-plug-spark" viewBox="0 0 120 36" aria-hidden>
+      {heights.map((height, index) => (
+        <rect
+          key={index}
+          x={index * 17}
+          y={36 - height}
+          width="11"
+          height={height}
+          rx="2.5"
+          className={index === heights.length - 2 ? 'is-accent' : undefined}
+        />
+      ))}
+    </svg>
+  )
 }
 
-const stagger = {
-  hidden: {},
-  show: { transition: { staggerChildren: 0.07, delayChildren: 0.04 } },
+function MiniSpark() {
+  return (
+    <svg className="pf-mini-spark" viewBox="0 0 120 36" aria-hidden>
+      <polyline
+        fill="none"
+        stroke="currentColor"
+        strokeWidth="2.5"
+        strokeLinejoin="round"
+        points="0,28 18,22 36,24 54,14 72,18 90,8 120,12"
+      />
+    </svg>
+  )
 }
-
-const roster = new Set(clients.map((client) => client.name))
-const namedIndustries = industries
-  .map((industry) => ({
-    ...industry,
-    proof: industry.proof.filter((name) => roster.has(name)),
-  }))
-  .filter((industry) => industry.proof.length > 0)
-const profiledClients = clients.flatMap((client) => {
-  const profile = clientProfiles[client.name]
-  return profile ? [{ ...client, ...profile }] : []
-})
 
 export default function Portfolio() {
-  const reduceMotion = Boolean(useReducedMotion())
-  const mount = reduceMotion
-    ? {}
-    : {
-        initial: { opacity: 0, y: 22 },
-        animate: { opacity: 1, y: 0 },
-        transition: { duration: 0.7, ease },
-      }
-  const reveal = reduceMotion
-    ? {}
-    : {
-        initial: 'hidden' as const,
-        whileInView: 'show' as const,
-        viewport: { once: true, amount: 0.05 },
-        variants: fadeUp,
-      }
-  const listReveal = reduceMotion
-    ? {}
-    : {
-        initial: 'hidden' as const,
-        whileInView: 'show' as const,
-        viewport: { once: true, amount: 0.05 },
-        variants: stagger,
-      }
+  const { reduceMotion, reveal, hero, heroFollow, list, item, inView } = usePageMotion()
+  const [active, setActive] = useState(0)
+  const [pathGate, setPathGate] = useState(0)
+  const current = services[active]
+  const board = BOARDS[active] ?? BOARDS[0]
+
+  useEffect(() => {
+    if (reduceMotion || services.length < 2) return undefined
+    const id = window.setInterval(() => {
+      setActive((currentIndex) => (currentIndex + 1) % services.length)
+    }, 2800)
+    return () => window.clearInterval(id)
+  }, [reduceMotion])
+
+  useEffect(() => {
+    if (reduceMotion) return undefined
+    const id = window.setInterval(() => {
+      setPathGate((currentIndex) => (currentIndex + 1) % howItWorks.length)
+    }, 2600)
+    return () => window.clearInterval(id)
+  }, [reduceMotion])
 
   return (
     <div className="pf-page">
@@ -85,455 +157,187 @@ export default function Portfolio() {
         path="/portfolio"
       />
 
-      <section className="section pf-hero" aria-labelledby="portfolio-title">
-        <div className="container pf-hero-grid">
-          <motion.div {...mount}>
-            <p className="section-label">Portfolio</p>
-            <h1 className="section-title" id="portfolio-title">
-              {portfolioHero.title}
-            </h1>
-            <p className="section-lead">{portfolioHero.lead}</p>
-            <div className="hero-actions">
-              <Link className="btn btn-ink pf-hero-cta" to="/contact">
-                Talk to our team <span aria-hidden>→</span>
-              </Link>
-              <a className="btn btn-ghost-ink" href="#clients">
-                See the roster
-              </a>
-            </div>
-          </motion.div>
-          <motion.blockquote
-            className="pf-hero-aside"
-            {...(reduceMotion
-              ? {}
-              : {
-                  initial: { opacity: 0, y: 22 },
-                  animate: { opacity: 1, y: 0 },
-                  transition: { duration: 0.7, delay: 0.12, ease },
-                })}
-          >
-            <p className="section-label">How we stay on the work</p>
-            <p>{whoWeAre[2]}</p>
-          </motion.blockquote>
-        </div>
-
-        {portfolioStats.length > 0 && (
-          <div className="container">
-            <motion.div className="stats-row pf-stats" {...reveal}>
-              {portfolioStats.map((item) => (
-                <div key={item.label}>
-                  <strong>{item.value}</strong>
-                  <span>{item.label}</span>
-                </div>
-              ))}
-            </motion.div>
-          </div>
-        )}
-      </section>
-
-      <section className="section band clients" id="clients" aria-labelledby="portfolio-clients-title">
+      <section className="pf-cv-hero" aria-labelledby="portfolio-title">
         <div className="container">
-          <motion.div className="section-head split" {...reveal}>
-            <div>
-              <p className="section-label">Our clients</p>
-              <h2 className="section-title" id="portfolio-clients-title">
-                Teams we've worked with
-              </h2>
-            </div>
-            <p className="section-lead">{clientsCaption}</p>
-          </motion.div>
+          <motion.h1 className="pf-cv-title" id="portfolio-title" {...hero}>
+            Six engineering services. One accountable delivery partner
+          </motion.h1>
 
-          <ClientLogoGrid />
-
-          {profiledClients.length > 0 && (
-            <motion.div className="pf-directory-wrap" {...reveal}>
-              <table className="pf-directory">
-                <caption className="pf-caption">Named organizations, with public context only</caption>
-                <thead>
-                  <tr>
-                    <th scope="col">Organization</th>
-                    <th scope="col">Focus</th>
-                    <th scope="col">What they do</th>
-                  </tr>
-                </thead>
-                <tbody>
-                  {profiledClients.map((client) => (
-                    <tr key={client.name}>
-                      <th scope="row">{client.name}</th>
-                      <td>
-                        {client.country}
-                        <span> · {client.industry}</span>
-                      </td>
-                      <td>{client.does}</td>
-                    </tr>
-                  ))}
-                </tbody>
-              </table>
-            </motion.div>
-          )}
-        </div>
-      </section>
-
-      {caseStudies.length > 0 && (
-        <section className="section" aria-labelledby="portfolio-studies-title">
-          <div className="container">
-            <motion.div className="section-head split" {...reveal}>
-              <div>
-                <p className="section-label">Featured work</p>
-                <h2 className="section-title" id="portfolio-studies-title">
-                  Case studies
-                </h2>
-              </div>
-              <p className="section-lead">
-                Challenge, approach, what we built, and a before-and-after number.
+          <div className="pf-cv-split">
+            <motion.div {...heroFollow}>
+              <p className="pf-cv-kicker">{current.title}</p>
+              <p className="pf-cv-lead">
+                Choose one capability or combine several across AI agents, workflow automation, QA,
+                DevOps, SaaS, and end-to-end development — brought together around the outcome
+                your business needs.
               </p>
+              <div className="hero-actions">
+                <Link className="btn pf-cv-primary" to="/contact">
+                  Book a call
+                </Link>
+                <a className="btn btn-ghost-ink" href="#work">
+                  Explore services
+                </a>
+              </div>
+              <ol className="pf-cv-pills">
+                {PROCESS_PILLS.map((step) => (
+                  <li key={step} className={step === 'Build' ? 'is-active' : undefined}>
+                    {step}
+                  </li>
+                ))}
+              </ol>
             </motion.div>
 
-            <div className="pf-studies">
-              {caseStudies.map((study) => (
-                <motion.article key={study.id} className="pf-study" id={study.id} {...reveal}>
-                  <p className="section-label">{study.kind}</p>
-                  <h3>{study.title}</h3>
-                  <p className="pf-study-meta">
-                    {study.industry} · {study.duration} · {study.team}
-                  </p>
-                  <div className="stack-row">
-                    {study.stack.map((item) => (
-                      <span key={item}>{item}</span>
-                    ))}
-                  </div>
-                  <dl className="pf-study-body">
-                    <div>
-                      <dt>Challenge</dt>
-                      <dd>{study.challenge}</dd>
-                    </div>
-                    <div>
-                      <dt>Approach</dt>
-                      <dd>{study.approach}</dd>
-                    </div>
-                    <div>
-                      <dt>What we built</dt>
-                      <dd>{study.built}</dd>
-                    </div>
-                  </dl>
-                  <ul className="pf-results">
-                    {study.results.map((result) => (
-                      <li key={result}>{result}</li>
-                    ))}
-                  </ul>
-                  {study.quote && (
-                    <blockquote className="pf-quote">
-                      <p>{study.quote.text}</p>
-                      <cite>
-                        {study.quote.name}, {study.quote.role}, {study.quote.company}
-                      </cite>
-                    </blockquote>
-                  )}
-                </motion.article>
-              ))}
-            </div>
-          </div>
-        </section>
-      )}
-
-      <section className="section" aria-labelledby="portfolio-services-title">
-        <div className="container">
-          <motion.div className="section-head split" {...reveal}>
-            <div>
-              <p className="section-label">What we do</p>
-              <h2 className="section-title" id="portfolio-services-title">
-                Six lines. One release team.
-              </h2>
-            </div>
-            <p className="section-lead">{servicesLead}</p>
-          </motion.div>
-
-          <motion.ol className="pf-lanes" {...listReveal}>
-            {services.map((service) => (
-              <motion.li key={service.id} variants={reduceMotion ? undefined : fadeUp}>
-                <Link to={`/services/${service.id}`}>
-                  <span>{service.mark}</span>
-                  <div>
-                    <strong>
-                      {service.title} <em aria-hidden>→</em>
-                    </strong>
-                    <p>{service.summary}</p>
-                  </div>
-                </Link>
-              </motion.li>
-            ))}
-          </motion.ol>
-        </div>
-      </section>
-
-      <section className="section band" aria-labelledby="portfolio-process-title">
-        <div className="container">
-          <motion.div className="section-head split" {...reveal}>
-            <div>
-              <p className="section-label">How we work</p>
-              <h2 className="section-title" id="portfolio-process-title">
-                Discovery through support
-              </h2>
-            </div>
-            <p className="section-lead">{processLead}</p>
-          </motion.div>
-
-          <motion.ol className="pf-process" {...listReveal}>
-            {workStages.map((stage) => (
-              <motion.li key={stage.step} variants={reduceMotion ? undefined : fadeUp}>
-                <span className="pf-process-index">{stage.step}</span>
-                <div>
-                  <div className="pf-process-head">
-                    <h3>{stage.title}</h3>
-                    <span>{stage.timing}</span>
-                  </div>
-                  <p>{stage.text}</p>
-                </div>
-              </motion.li>
-            ))}
-          </motion.ol>
-
-          <motion.div className="pf-asks" {...reveal}>
-            <h3>What we ask of you</h3>
-            <ul>
-              {clientAsks.map((ask) => (
-                <li key={ask}>{ask}</li>
-              ))}
-            </ul>
-          </motion.div>
-        </div>
-      </section>
-
-      <section className="section" aria-labelledby="portfolio-engage-title">
-        <div className="container">
-          <motion.div className="section-head split" {...reveal}>
-            <div>
-              <p className="section-label">Engagement models</p>
-              <h2 className="section-title" id="portfolio-engage-title">
-                Four ways to work with us
-              </h2>
-            </div>
-            <p className="section-lead">
-              The right model depends on how well-defined the work is and how much of it your own
-              team will carry.
-            </p>
-          </motion.div>
-
-          <div className="pf-models">
-            <div className="pf-models-head" aria-hidden>
-              <span>Model</span>
-              <span>Best when</span>
-              <span>Commercials</span>
-            </div>
-            {engagementModels.map((model) => (
-              <motion.article key={model.name} {...reveal}>
-                <h3>{model.name}</h3>
-                <p>{model.bestWhen}</p>
-                <em>{model.commercials}</em>
-              </motion.article>
-            ))}
-          </div>
-        </div>
-      </section>
-
-      <section className="section band" aria-labelledby="portfolio-industries-title">
-        <div className="container">
-          <motion.div className="section-head split" {...reveal}>
-            <div>
-              <p className="section-label">Industries</p>
-              <h2 className="section-title" id="portfolio-industries-title">
-                Where failure has a cost
-              </h2>
-            </div>
-            <p className="section-lead">{industriesLead}</p>
-          </motion.div>
-
-          <motion.ul className="pf-industries" {...listReveal}>
-            {namedIndustries.map((industry) => (
-              <motion.li key={industry.name} variants={reduceMotion ? undefined : fadeUp}>
-                <h3>{industry.name}</h3>
-                <p>{industry.problem}</p>
-                <div className="stack-row">
-                  {industry.proof.map((name) => (
-                    <span key={name}>{name}</span>
-                  ))}
-                </div>
-              </motion.li>
-            ))}
-          </motion.ul>
-        </div>
-      </section>
-
-      <section className="section" aria-labelledby="portfolio-tech-title">
-        <div className="container">
-          <motion.div className="section-head split" {...reveal}>
-            <div>
-              <p className="section-label">Technology</p>
-              <h2 className="section-title" id="portfolio-tech-title">
-                Deliberately boring about the stack
-              </h2>
-            </div>
-            <p className="section-lead">{techLead}</p>
-          </motion.div>
-
-          <motion.div className="pf-tech" {...reveal}>
-            {techLayers.map((row) => (
-              <div key={row.layer} className="pf-tech-row">
-                <strong>{row.layer}</strong>
-                <div className="stack-row">
-                  {row.items.map((item) => (
-                    <span key={item}>{item}</span>
-                  ))}
+            <motion.div className="pf-visual" aria-hidden {...heroFollow}>
+              <div className="pf-visual-bar">
+                <span />
+                <span />
+                <span />
+                <div className="pf-visual-titles">
+                  <strong>{board.title}</strong>
+                  <em>{board.subtitle}</em>
                 </div>
               </div>
-            ))}
-          </motion.div>
+              <div className="pf-visual-flow">
+                {board.steps.map((step, index) => (
+                  <span key={step} className={index === board.active ? 'is-active' : undefined}>
+                    {step}
+                  </span>
+                ))}
+              </div>
+              <div className="pf-visual-stats">
+                <div>
+                  <small>{board.left.label}</small>
+                  <strong>{board.left.value}</strong>
+                  <MiniSpark />
+                </div>
+                <div>
+                  <small>{board.right.label}</small>
+                  <strong>{board.right.value}</strong>
+                  <MiniSpark />
+                </div>
+              </div>
+              <div className="pf-visual-foot">
+                <span>{board.foot}</span>
+                <b />
+              </div>
+            </motion.div>
+          </div>
+
+          <div className="pf-trust" id="clients">
+            <p>Trusted by teams at</p>
+            <ClientMarquee />
+          </div>
         </div>
       </section>
 
-      {testimonials.length > 0 && (
-        <section className="section band" aria-labelledby="portfolio-quotes-title">
-          <div className="container">
-            <motion.div className="section-head center" {...reveal}>
-              <p className="section-label">What clients say</p>
-              <h2 className="section-title" id="portfolio-quotes-title">
-                The before, the after, and a human note
-              </h2>
-            </motion.div>
-
-            <motion.div className="pf-quotes" {...listReveal}>
-              {testimonials.map((quote) => (
-                <motion.blockquote
-                  key={`${quote.name}-${quote.company}`}
-                  className="pf-quote"
-                  variants={reduceMotion ? undefined : fadeUp}
-                >
-                  <p>{quote.text}</p>
-                  <cite>
-                    {quote.name}, {quote.role}, {quote.company}
-                  </cite>
-                </motion.blockquote>
-              ))}
-            </motion.div>
-          </div>
-        </section>
-      )}
-
-      {team.length > 0 && (
-        <section className="section" aria-labelledby="portfolio-team-title">
-          <div className="container">
-            <motion.div className="section-head center" {...reveal}>
-              <p className="section-label">The team</p>
-              <h2 className="section-title" id="portfolio-team-title">
-                The people accountable for delivery
-              </h2>
-            </motion.div>
-
-            <motion.div className="engage-grid" {...listReveal}>
-              {team.map((person) => (
-                <motion.article
-                  key={person.name}
-                  className="engage-card"
-                  variants={reduceMotion ? undefined : fadeUp}
-                >
-                  {person.photo ? (
-                    <img className="pf-headshot" src={person.photo} alt={person.name} />
-                  ) : (
-                    <span className="engage-mark">
-                      {person.name
-                        .split(' ')
-                        .filter(Boolean)
-                        .map((part) => part[0])
-                        .join('')}
-                    </span>
-                  )}
-                  <h3>{person.name}</h3>
-                  <em>{person.role}</em>
-                  <p>{person.bio}</p>
-                  {person.linkedin && (
-                    <a href={person.linkedin} rel="noreferrer" target="_blank">
-                      LinkedIn
-                    </a>
-                  )}
-                </motion.article>
-              ))}
-            </motion.div>
-          </div>
-        </section>
-      )}
-
-      <section className="section band" aria-labelledby="portfolio-why-title">
+      <section className="section band pf-path-section" id="path" aria-labelledby="portfolio-path-title">
         <div className="container">
-          <motion.div className="section-head split" {...reveal}>
-            <div>
-              <p className="section-label">Why Universal Technologies</p>
-              <h2 className="section-title" id="portfolio-why-title">
-                Questions we get on a first call
-              </h2>
-            </div>
+          <motion.div className="section-head center" {...reveal}>
+            <p className="section-label">The path</p>
+            <h2 className="section-title" id="portfolio-path-title">
+              Scoped work, with the quality gates already inside the price.
+            </h2>
             <p className="section-lead">
-              Each one is written as an answer to a doubt a prospect already has — not as a
-              slogan a competitor could copy.
+              A typical partner covers one stage, or two stages that argue with each other. We own
+              every gate, so results carry client names.
             </p>
           </motion.div>
 
-          <motion.div className="pf-why" {...listReveal}>
-            {differentiators.map((item) => (
-              <motion.article key={item.question} variants={reduceMotion ? undefined : fadeUp}>
-                <h3>{item.question}</h3>
-                <p>{item.answer}</p>
-              </motion.article>
-            ))}
-          </motion.div>
-        </div>
-      </section>
+          <div className="pf-path">
+            <div className="pf-path-plaque">
+              <span>Project</span>
+              <strong>Scoped Delivery</strong>
+            </div>
 
-      {credentials.length > 0 && (
-        <section className="section" aria-labelledby="portfolio-credentials-title">
-          <div className="container">
-            <motion.div className="section-head center" {...reveal}>
-              <p className="section-label">Credentials</p>
-              <h2 className="section-title" id="portfolio-credentials-title">
-                Only what we actually hold
-              </h2>
-            </motion.div>
-
-            <motion.div className="pf-credentials" {...listReveal}>
-              {credentials.map((group) => (
-                <motion.article
-                  key={group.title}
-                  className="engage-card"
-                  variants={reduceMotion ? undefined : fadeUp}
+            <motion.ol className="pf-path-gates" {...list}>
+              {howItWorks.map((stage, index) => (
+                <motion.li
+                  key={stage.step}
+                  className={`pf-path-gate${index === pathGate ? ' is-active' : ''}`}
+                  variants={item}
                 >
-                  <h3>{group.title}</h3>
-                  <ul>
-                    {group.items.map((item) => (
-                      <li key={item.name}>
-                        {item.name}
-                        {item.detail ? ` — ${item.detail}` : ''}
+                  <p className="pf-path-stage">Stage {stage.step}</p>
+                  <h3>{stage.title}</h3>
+                  <p className="pf-path-copy">{stage.text}</p>
+                  <ul className="pf-path-chips">
+                    {stage.cards.map((card) => (
+                      <li key={card.label}>
+                        <strong>{card.label}</strong>
+                        <span>{card.detail}</span>
                       </li>
                     ))}
                   </ul>
-                </motion.article>
+                </motion.li>
               ))}
-            </motion.div>
+            </motion.ol>
           </div>
-        </section>
-      )}
+        </div>
+      </section>
+
+      <section className="section" id="work" aria-labelledby="portfolio-work-title">
+        <div className="container">
+          <motion.div className="section-head center" {...reveal}>
+            <h2 className="section-title" id="portfolio-work-title">
+              Choose where we plug in.
+            </h2>
+          </motion.div>
+
+          <motion.div className="pf-plug-grid" {...list}>
+            {services.map((service, index) => (
+              <motion.div key={service.id} variants={item}>
+                <Link to={`/services/${service.id}`} className="pf-plug-card">
+                  <span className="pf-plug-mark">{service.mark}</span>
+                  <h3>{service.title}</h3>
+                  <p>{service.summary}</p>
+                  <div className="pf-plug-tags">
+                    {service.stacks.slice(0, 4).map((tech) => (
+                      <span key={tech}>{tech}</span>
+                    ))}
+                  </div>
+                  <Spark variant={index} />
+                  <span className="pf-plug-more">
+                    Explore {service.title.toLowerCase()} <span aria-hidden>→</span>
+                  </span>
+                </Link>
+              </motion.div>
+            ))}
+          </motion.div>
+        </div>
+      </section>
+
+      <section className="section band" aria-labelledby="portfolio-why-title">
+        <div className="container">
+          <motion.div className="section-head center" {...reveal}>
+            <h2 className="section-title" id="portfolio-why-title">
+              Why teams choose Universal
+            </h2>
+          </motion.div>
+
+          <motion.div className="pf-why-grid" {...list}>
+            {WHY_US.map((card, index) => (
+              <motion.article key={card.title} className="pf-why-card" variants={item}>
+                <span>0{index + 1}</span>
+                <h3>{card.title}</h3>
+                <em>{card.kicker}</em>
+                <p>{card.text}</p>
+              </motion.article>
+            ))}
+          </motion.div>
+        </div>
+      </section>
 
       <section className="cta-band" aria-labelledby="portfolio-cta-title">
         <div className="container cta-inner">
-          <motion.div
-            initial={reduceMotion ? false : { opacity: 0, y: 24 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            viewport={{ once: true, amount: 0.4 }}
-            transition={{ duration: 0.65, ease }}
-          >
-            <h2 id="portfolio-cta-title">{portfolioClosing.title}</h2>
-            <p>{portfolioClosing.text}</p>
+          <motion.div {...inView}>
+            <h2 id="portfolio-cta-title">Not sure which capability you need?</h2>
+            <p>
+              Start with a 30-minute call. Describe what you are building and where it is slowing
+              down, and we will tell you which of these six services actually addresses it.
+            </p>
           </motion.div>
           <Link className="btn btn-light" to="/contact">
-            Talk to our team <span aria-hidden>→</span>
+            Book a call <span aria-hidden>→</span>
           </Link>
         </div>
       </section>

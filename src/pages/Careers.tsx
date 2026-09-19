@@ -1,122 +1,67 @@
-import { motion, useReducedMotion } from 'framer-motion'
+import { motion } from 'framer-motion'
 import { Link } from 'react-router-dom'
 import { Seo } from '../components/Seo'
 import { HR_EMAIL } from '../data'
+import { usePageMotion } from '../hooks/usePageMotion'
 import { pageMetadata } from '../seoData'
 import { jobOpenings, hiringSteps, perks } from '../pagesData'
 
-const ease = [0.22, 1, 0.36, 1] as const
-
-const fadeUp = {
-  hidden: { opacity: 0, y: 32 },
-  show: { opacity: 1, y: 0 },
-}
-
-const fadeScale = {
-  hidden: { opacity: 0, y: 24, scale: 0.96 },
-  show: { opacity: 1, y: 0, scale: 1 },
-}
-
-const stagger = {
-  hidden: {},
-  show: { transition: { staggerChildren: 0.09, delayChildren: 0.06 } },
-}
-
 export default function Careers() {
-  const reduceMotion = Boolean(useReducedMotion())
+  const { reveal, hero, heroFollow, list, item, inView } = usePageMotion()
   const featuredJob = jobOpenings.find((job) => job.featured) ?? jobOpenings[0]
   const otherJobs = jobOpenings.filter((job) => job.id !== featuredJob?.id)
-  const reveal = reduceMotion
-    ? {}
-    : {
-        initial: 'hidden' as const,
-        whileInView: 'show' as const,
-        viewport: { once: true, amount: 0.28 },
-        variants: fadeUp,
-        transition: { duration: 0.7, ease },
-      }
 
   return (
-    <>
+    <div className="careers-page">
       <Seo
         title={pageMetadata['/careers'].title}
         description={pageMetadata['/careers'].description}
         path="/careers"
       />
 
-      <section className="section" aria-labelledby="careers-title">
+      <section className="section careers-hero" aria-labelledby="careers-title">
         <div className="container">
-          <motion.div className="section-head center" {...reveal}>
+          <motion.div
+            className="careers-hero-inner"
+            {...hero}
+          >
             <p className="section-label">Careers</p>
-            <h1 className="section-title" id="careers-title">
+            <h1 className="careers-hero-title" id="careers-title">
               Own something real, from your first week.
             </h1>
-            <p className="section-lead">
+            <p className="careers-hero-lead">
               We hire senior people and hand them real ownership: their own features, their own
               client conversations, and a real say in how the team works — not a seat on someone
               else's roadmap.
             </p>
-          </motion.div>
-        </div>
-      </section>
-
-      <section className="section" aria-labelledby="hiring-title">
-        <div className="container">
-          <motion.div className="section-head center" {...reveal}>
-            <p className="section-label">Hiring process</p>
-            <h2 className="section-title" id="hiring-title">
-              What happens after you apply
-            </h2>
-          </motion.div>
-          <ol className="pf-process hiring-steps">
-            {hiringSteps.map((step) => (
-              <li key={step.step}>
-                <span className="pf-process-index">{step.step}</span>
-                <div>
-                  <div className="pf-process-head">
-                    <h3>{step.title}</h3>
-                  </div>
-                  <p>{step.text}</p>
-                </div>
-              </li>
-            ))}
-          </ol>
-        </div>
-      </section>
-
-      <section className="section band" aria-labelledby="perks-title">
-        <div className="container">
-          <motion.div className="section-head center" {...reveal}>
-            <p className="section-label">Why Universal</p>
-            <h2 className="section-title" id="perks-title">
-              What you get, beyond salary
-            </h2>
+            <div className="hero-actions careers-hero-actions">
+              <a className="btn btn-ink" href="#openings">
+                View openings <span aria-hidden>→</span>
+              </a>
+              <a className="btn btn-ghost-ink" href={`mailto:${HR_EMAIL}`}>
+                Email your resume
+              </a>
+            </div>
           </motion.div>
 
           <motion.div
-            className="engage-grid"
-            variants={reduceMotion ? undefined : stagger}
-            initial={reduceMotion ? undefined : 'hidden'}
-            whileInView={reduceMotion ? undefined : 'show'}
-            viewport={{ once: true, amount: 0.2 }}
+            className="careers-path-wrap"
+            {...heroFollow}
           >
-            {perks.map((item) => (
-              <motion.article
-                key={item.step}
-                className="engage-card"
-                variants={reduceMotion ? undefined : fadeScale}
-              >
-                <span className="engage-mark">{item.step}</span>
-                <h3>{item.title}</h3>
-                <p>{item.text}</p>
-                <em>{item.detail}</em>
-              </motion.article>
-            ))}
+            <p className="careers-path-label">What happens after you apply</p>
+            <ol className="careers-path">
+              {hiringSteps.map((step) => (
+                <li key={step.step}>
+                  <span>{step.step}</span>
+                  <strong>{step.title}</strong>
+                </li>
+              ))}
+            </ol>
           </motion.div>
         </div>
       </section>
 
-      <section className="section" id="openings" aria-labelledby="openings-title">
+      <section className="section band" id="openings" aria-labelledby="openings-title">
         <div className="container">
           <motion.div className="section-head split" {...reveal}>
             <div>
@@ -131,12 +76,7 @@ export default function Careers() {
           </motion.div>
 
           {featuredJob && (
-            <motion.div
-              initial={reduceMotion ? false : { opacity: 0, y: 24 }}
-              whileInView={{ opacity: 1, y: 0 }}
-              viewport={{ once: true, amount: 0.3 }}
-              transition={{ duration: 0.65, ease }}
-            >
+            <motion.div {...inView}>
               <Link to={`/careers/${featuredJob.id}`} className="job-featured">
                 <span className="job-featured-badge">Featured role</span>
                 <div className="job-featured-body">
@@ -160,35 +100,52 @@ export default function Careers() {
           )}
 
           <motion.div
-            className="service-grid"
-            variants={reduceMotion ? undefined : stagger}
-            initial={reduceMotion ? undefined : 'hidden'}
-            whileInView={reduceMotion ? undefined : 'show'}
-            viewport={{ once: true, amount: 0.12 }}
+            className="job-card-grid"
+            {...list}
           >
             {otherJobs.map((job) => (
-              <motion.article
-                key={job.id}
-                className="service-card"
-                variants={reduceMotion ? undefined : fadeScale}
-                whileHover={
-                  reduceMotion ? undefined : { y: -8, transition: { duration: 0.25, ease } }
-                }
-              >
-                <Link to={`/careers/${job.id}`} className="service-card-link">
-                  <div className="service-top">
-                    <span>{job.team}</span>
-                    <h3>{job.title}</h3>
-                  </div>
+              <motion.div key={job.id} variants={item}>
+                <Link to={`/careers/${job.id}`} className="job-card">
+                  <span className="job-card-team">{job.team}</span>
+                  <h3>{job.title}</h3>
                   <p>{job.summary}</p>
                   <div className="stack-row">
                     <span>{job.location}</span>
                     <span>{job.type}</span>
                   </div>
-                  <span className="card-affordance">
+                  <span className="job-card-cta">
                     View role <span aria-hidden>→</span>
                   </span>
                 </Link>
+              </motion.div>
+            ))}
+          </motion.div>
+        </div>
+      </section>
+
+      <section className="section" aria-labelledby="perks-title">
+        <div className="container">
+          <motion.div className="section-head center" {...reveal}>
+            <p className="section-label">Why Universal</p>
+            <h2 className="section-title" id="perks-title">
+              What you get, beyond salary
+            </h2>
+          </motion.div>
+
+          <motion.div
+            className="perk-grid"
+            {...list}
+          >
+            {perks.map((item, index) => (
+              <motion.article
+                key={item.step}
+                className="perk-card"
+                variants={item}
+              >
+                <span className="perk-index">0{index + 1}</span>
+                <h3>{item.title}</h3>
+                <p>{item.text}</p>
+                <em>{item.detail}</em>
               </motion.article>
             ))}
           </motion.div>
@@ -197,12 +154,7 @@ export default function Careers() {
 
       <section className="cta-band" aria-labelledby="careers-cta-title">
         <div className="container cta-inner">
-          <motion.div
-            initial={reduceMotion ? false : { opacity: 0, y: 24 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            viewport={{ once: true, amount: 0.4 }}
-            transition={{ duration: 0.65, ease }}
-          >
+          <motion.div {...inView}>
             <h2 id="careers-cta-title">Don't see the right role?</h2>
             <p>Send us your resume anyway — we keep a shortlist for the next opening.</p>
           </motion.div>
@@ -211,6 +163,6 @@ export default function Careers() {
           </a>
         </div>
       </section>
-    </>
+    </div>
   )
 }
