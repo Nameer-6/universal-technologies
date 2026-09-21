@@ -1,12 +1,12 @@
-import { useEffect, useState, type ReactNode } from 'react'
 import { motion, useReducedMotion } from 'framer-motion'
 import { Link, Navigate, useParams } from 'react-router-dom'
 import { Seo, SITE_URL } from '../components/Seo'
 import { Sparkline } from '../components/Sparkline'
+import { TypedCode } from '../components/CodeTyper'
 import { RELATED_SERVICES } from '../components/ServiceFlow'
 import { pageMetadata } from '../seoData'
 import { serviceContent } from '../serviceContent'
-import { outcomes, serviceDetails, services } from '../data'
+import { PRIMARY_CTA, outcomes as sharedOutcomes, serviceDetails, services } from '../data'
 
 const ease = [0.22, 1, 0.36, 1] as const
 
@@ -23,117 +23,6 @@ const fadeScale = {
 const stagger = {
   hidden: {},
   show: { transition: { staggerChildren: 0.09, delayChildren: 0.06 } },
-}
-
-const CODE_TOKEN_RE =
-  /(\/\/.*)|("(?:[^"\\]|\\.)*"|'(?:[^'\\]|\\.)*')|\b(import|from|export|const|let|async|await|return|function|resource|type|test)\b|\b([A-Za-z_][A-Za-z0-9_]*)(?=\()/g
-
-function highlightCode(code: string): ReactNode {
-  const nodes: ReactNode[] = []
-  let lastIndex = 0
-  let key = 0
-  let match: RegExpExecArray | null
-  CODE_TOKEN_RE.lastIndex = 0
-  while ((match = CODE_TOKEN_RE.exec(code))) {
-    if (match.index > lastIndex) nodes.push(code.slice(lastIndex, match.index))
-    const [full, comment, str, kw, fn] = match
-    if (comment) nodes.push(
-      <span key={key++} className="tok-com">
-        {comment}
-      </span>,
-    )
-    else if (str) nodes.push(
-      <span key={key++} className="tok-str">
-        {str}
-      </span>,
-    )
-    else if (kw) nodes.push(
-      <span key={key++} className="tok-kw">
-        {kw}
-      </span>,
-    )
-    else if (fn) nodes.push(
-      <span key={key++} className="tok-fn">
-        {fn}
-      </span>,
-    )
-    lastIndex = match.index + full.length
-  }
-  if (lastIndex < code.length) nodes.push(code.slice(lastIndex))
-  return nodes
-}
-
-type TypedLine = { number: number; visible: string; isCurrent: boolean }
-
-function splitTyped(code: string, length: number): TypedLine[] {
-  const lines = code.split('\n')
-  let consumed = 0
-  return lines.map((line, i) => {
-    const lineLen = line.length
-    let visible = ''
-    if (consumed < length) {
-      visible = consumed + lineLen <= length ? line : line.slice(0, length - consumed)
-    }
-    const isCurrent = consumed < length && consumed + lineLen >= length
-    consumed += lineLen + 1
-    return { number: i + 1, visible, isCurrent }
-  })
-}
-
-function TypedCode({ code }: { code: string }) {
-  const reduceMotion = Boolean(useReducedMotion())
-  const [length, setLength] = useState(reduceMotion ? code.length : 0)
-
-  useEffect(() => {
-    if (reduceMotion) {
-      setLength(code.length)
-      return
-    }
-
-    const TYPE_SPEED = 38
-    const HOLD_AT_END = 2600
-    const PAUSE_BEFORE_RETYPE = 500
-
-    let cancelled = false
-    let timeoutId: number
-
-    const typeFrom = (from: number) => {
-      if (cancelled) return
-      if (from >= code.length) {
-        setLength(code.length)
-        timeoutId = window.setTimeout(() => {
-          if (cancelled) return
-          setLength(0)
-          timeoutId = window.setTimeout(() => typeFrom(0), PAUSE_BEFORE_RETYPE)
-        }, HOLD_AT_END)
-        return
-      }
-      setLength(from + 1)
-      timeoutId = window.setTimeout(() => typeFrom(from + 1), TYPE_SPEED)
-    }
-
-    setLength(0)
-    timeoutId = window.setTimeout(() => typeFrom(0), PAUSE_BEFORE_RETYPE)
-
-    return () => {
-      cancelled = true
-      window.clearTimeout(timeoutId)
-    }
-  }, [code, reduceMotion])
-
-  return (
-    <div className="svc-console-code">
-      {splitTyped(code, length).map((line) => (
-        <div className="svc-console-line" key={line.number}>
-          <span className="svc-console-line-num">{line.number}</span>
-          <span className="svc-console-line-content">
-            {highlightCode(line.visible)}
-            {line.isCurrent && <span className="svc-console-caret" aria-hidden />}
-          </span>
-        </div>
-      ))}
-    </div>
-  )
 }
 
 function DevicePreview() {
@@ -183,6 +72,7 @@ export default function ServiceDetail() {
     .map((relatedId) => services.find((item) => item.id === relatedId))
     .filter((item): item is (typeof services)[number] => Boolean(item))
   const content = serviceContent[service.id]
+  const outcomes = content?.outcomes ?? sharedOutcomes
   const meta = pageMetadata[`/services/${service.id}`]
 
   const reveal = reduceMotion
@@ -229,6 +119,10 @@ export default function ServiceDetail() {
         description={meta.description}
         path={`/services/${service.id}`}
         jsonLd={jsonLd}
+        breadcrumbs={[
+          { name: 'Services', path: '/services' },
+          { name: service.title, path: `/services/${service.id}` },
+        ]}
       />
 
       <section className="svc-section svc-hero" aria-labelledby="service-detail-title">
@@ -246,7 +140,7 @@ export default function ServiceDetail() {
             {content && <p className="svc-hero-subtitle">{content.opener}</p>}
             <div className="svc-hero-cta">
               <Link className="btn btn-svc-primary" to="/contact">
-                Talk to our team <span aria-hidden>→</span>
+                {PRIMARY_CTA} <span aria-hidden>→</span>
               </Link>
               <a className="btn btn-ghost-ink" href="#capabilities">
                 See how we deliver
@@ -334,7 +228,7 @@ export default function ServiceDetail() {
                     </div>
                   </div>
                   <div className="svc-console-side-section">
-                    <p className="svc-console-side-label">Live metric</p>
+                    <p className="svc-console-side-label">Sample metric</p>
                     <Sparkline />
                     <p className="svc-console-metric">
                       <strong>{detail.console.latency}</strong> · {detail.console.uptime}
@@ -373,6 +267,10 @@ export default function ServiceDetail() {
                 <span className="svc-console-status-bar-right">deployment healthy</span>
               </div>
             </motion.div>
+            <p className="svc-console-caption">
+              Illustrative example of a delivery environment. Figures shown are representative,
+              not client or production data.
+            </p>
           </div>
         </div>
       </section>
@@ -502,7 +400,7 @@ export default function ServiceDetail() {
             <p>Tell us the constraint and the deadline — we'll map the smallest team that ships it.</p>
           </motion.div>
           <Link className="btn btn-light" to="/contact">
-            Talk to our team <span aria-hidden>→</span>
+            {PRIMARY_CTA} <span aria-hidden>→</span>
           </Link>
         </div>
       </section>

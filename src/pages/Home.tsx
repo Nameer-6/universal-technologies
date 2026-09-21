@@ -1,12 +1,13 @@
 import { motion } from 'framer-motion'
 import { Link } from 'react-router-dom'
 import { ScrollHero } from '../components/ScrollHero'
+import { BackboneLive } from '../components/BackboneLive'
 import { Seo } from '../components/Seo'
 import { ClientMarquee } from '../components/ClientMarquee'
 import { ContactForm } from '../components/ContactForm'
 import { usePageMotion } from '../hooks/usePageMotion'
 import { pageMetadata } from '../seoData'
-import { CONTACT_EMAIL, engagements, howItWorks, outcomes, services } from '../data'
+import { CONTACT_EMAIL, PRIMARY_CTA, engagements, howItWorks, outcomes, services } from '../data'
 import { products } from '../pagesData'
 import { resources } from '../resourcesData'
 
@@ -29,8 +30,7 @@ const trustNotes = [
 ]
 
 export default function Home() {
-  const { reveal, list, item: itemVariants, cardHover, inView, reduceMotion, ease } =
-    usePageMotion()
+  const { reveal, list, item: itemVariants, cardHover, inView, ease } = usePageMotion()
 
   return (
     <>
@@ -41,6 +41,8 @@ export default function Home() {
       />
 
       <ScrollHero />
+
+      <BackboneLive />
 
       <section className="section band clients" id="trust" aria-labelledby="clients-title">
         <div className="container">
@@ -136,7 +138,7 @@ export default function Home() {
               Align. Prioritize. Ship. Steady.
             </h2>
             <p className="section-lead">
-              An operating rhythm for product work — not another vague “agile” slide.
+              A repeatable operating rhythm for product work: shared scope, short loops, visible progress.
             </p>
           </motion.div>
 
@@ -278,6 +280,11 @@ export default function Home() {
               </motion.article>
             ))}
           </motion.div>
+          <p className="trust-more">
+            <Link className="contact-email" to="/security">
+              How we handle ownership, access, and data <span aria-hidden>→</span>
+            </Link>
+          </p>
         </div>
       </section>
 
@@ -319,7 +326,7 @@ export default function Home() {
             </p>
           </motion.div>
           <a className="btn btn-light" href="#contact">
-            Talk to our team <span aria-hidden>→</span>
+            {PRIMARY_CTA} <span aria-hidden>→</span>
           </a>
         </div>
       </section>
@@ -329,7 +336,7 @@ export default function Home() {
           <motion.div {...reveal}>
             <p className="section-label">Contact</p>
             <h2 className="section-title" id="contact-title">
-              Talk to our team
+              {PRIMARY_CTA}
             </h2>
             <p className="section-lead">
               Share context, timeline, and what “good” looks like. No pitch deck required.

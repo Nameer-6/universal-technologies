@@ -9,6 +9,7 @@ export default function Resources() {
         title="Software Delivery Resources | Universal Technologies"
         description="Practical guides to choosing a software development partner and planning your delivery team. Explore ownership, scope, quality, and engagement models."
         path="/resources"
+        breadcrumbs={[{ name: 'Insights', path: '/resources' }]}
       />
       <section className="section" aria-labelledby="resources-title">
         <div className="container">

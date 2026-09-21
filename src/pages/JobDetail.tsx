@@ -38,9 +38,9 @@ export default function JobDetail() {
   const otherJobs = jobOpenings.filter((item) => item.id !== job.id)
   const meta = pageMetadata[`/careers/${job.id}`]
 
-  // datePosted and applicantLocationRequirements are omitted: Google requires
-  // both to be accurate for job rich-result eligibility, and we don't have a
-  // verified posting date or eligible-country list to publish yet.
+  // datePosted, validThrough and applicantLocationRequirements are emitted only
+  // when the role carries verified values: Google requires them to be accurate
+  // for job rich-result eligibility, so they must never be guessed.
   const jobPostingJsonLd = {
     '@context': 'https://schema.org',
     '@type': 'JobPosting',
@@ -59,6 +59,14 @@ export default function JobDetail() {
     },
     employmentType: job.type === 'Contract' ? 'CONTRACTOR' : 'FULL_TIME',
     jobLocationType: 'TELECOMMUTE',
+    ...(job.datePosted && { datePosted: job.datePosted }),
+    ...(job.validThrough && { validThrough: job.validThrough }),
+    ...(job.applicantCountries?.length && {
+      applicantLocationRequirements: job.applicantCountries.map((country) => ({
+        '@type': 'Country',
+        name: country,
+      })),
+    }),
   }
 
   const reveal = reduceMotion
@@ -78,6 +86,10 @@ export default function JobDetail() {
         description={meta.description}
         path={`/careers/${job.id}`}
         jsonLd={jobPostingJsonLd}
+        breadcrumbs={[
+          { name: 'Careers', path: '/careers' },
+          { name: job.title, path: `/careers/${job.id}` },
+        ]}
       />
 
       <section className="section" aria-labelledby="job-title">
@@ -174,26 +186,28 @@ export default function JobDetail() {
         </div>
       </section>
 
-      <section className="section" aria-labelledby="job-other-title">
-        <div className="container">
-          <motion.div className="section-head center" {...reveal}>
-            <p className="section-label">Explore more</p>
-            <h2 className="section-title" id="job-other-title">
-              Other open roles
-            </h2>
-          </motion.div>
+      {otherJobs.length > 0 && (
+        <section className="section" aria-labelledby="job-other-title">
+          <div className="container">
+            <motion.div className="section-head center" {...reveal}>
+              <p className="section-label">Explore more</p>
+              <h2 className="section-title" id="job-other-title">
+                Other open roles
+              </h2>
+            </motion.div>
 
-          <div className="related-jobs-grid">
-            {otherJobs.map((item) => (
-              <Link key={item.id} className="related-job-card" to={`/careers/${item.id}`}>
-                <span>{item.team}</span>
-                <strong>{item.title}</strong>
-                <em aria-hidden>→</em>
-              </Link>
-            ))}
+            <div className="related-jobs-grid">
+              {otherJobs.map((item) => (
+                <Link key={item.id} className="related-job-card" to={`/careers/${item.id}`}>
+                  <span>{item.team}</span>
+                  <strong>{item.title}</strong>
+                  <em aria-hidden>→</em>
+                </Link>
+              ))}
+            </div>
           </div>
-        </div>
-      </section>
+        </section>
+      )}
 
       <section className="cta-band" aria-labelledby="job-cta-title">
         <div className="container cta-inner">

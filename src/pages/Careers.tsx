@@ -17,6 +17,7 @@ export default function Careers() {
         title={pageMetadata['/careers'].title}
         description={pageMetadata['/careers'].description}
         path="/careers"
+        breadcrumbs={[{ name: 'Careers', path: '/careers' }]}
       />
 
       <section className="section careers-hero" aria-labelledby="careers-title">
@@ -136,16 +137,16 @@ export default function Careers() {
             className="perk-grid"
             {...list}
           >
-            {perks.map((item, index) => (
+            {perks.map((perk, index) => (
               <motion.article
-                key={item.step}
+                key={perk.step}
                 className="perk-card"
                 variants={item}
               >
                 <span className="perk-index">0{index + 1}</span>
-                <h3>{item.title}</h3>
-                <p>{item.text}</p>
-                <em>{item.detail}</em>
+                <h3>{perk.title}</h3>
+                <p>{perk.text}</p>
+                <em>{perk.detail}</em>
               </motion.article>
             ))}
           </motion.div>

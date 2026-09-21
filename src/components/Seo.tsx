@@ -12,6 +12,8 @@ type SeoProps = {
   type?: 'website' | 'article'
   noindex?: boolean
   jsonLd?: object | object[]
+  /** Trail after Home, e.g. [{ name: 'Services', path: '/services' }, { name: 'QA', path: '/services/qa' }]. */
+  breadcrumbs?: { name: string; path: string }[]
 }
 
 export function Seo({
@@ -22,9 +24,22 @@ export function Seo({
   type = 'website',
   noindex = false,
   jsonLd,
+  breadcrumbs,
 }: SeoProps) {
   const url = `${SITE_URL}${path}`
-  const structuredData = jsonLd ? (Array.isArray(jsonLd) ? jsonLd : [jsonLd]) : []
+  const structuredData: object[] = jsonLd ? (Array.isArray(jsonLd) ? [...jsonLd] : [jsonLd]) : []
+  if (breadcrumbs?.length) {
+    structuredData.push({
+      '@context': 'https://schema.org',
+      '@type': 'BreadcrumbList',
+      itemListElement: [{ name: SITE_NAME, path: '/' }, ...breadcrumbs].map((crumb, index) => ({
+        '@type': 'ListItem',
+        position: index + 1,
+        name: crumb.name,
+        item: `${SITE_URL}${crumb.path === '/' ? '' : crumb.path}`,
+      })),
+    })
+  }
 
   return (
     <Helmet>

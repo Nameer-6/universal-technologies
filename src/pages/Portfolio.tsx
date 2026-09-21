@@ -1,9 +1,14 @@
-import { useEffect, useState } from 'react'
-import { motion } from 'framer-motion'
+import { useEffect, useRef, useState } from 'react'
+import { AnimatePresence, motion } from 'framer-motion'
 import { Link } from 'react-router-dom'
 import { Seo } from '../components/Seo'
 import { ClientMarquee } from '../components/ClientMarquee'
-import { howItWorks, services } from '../data'
+import { ServiceChartCard } from '../components/ServiceChartCard'
+import { PLUG_CHARTS, PLUG_EXPLORE } from '../components/serviceCharts'
+import { HeroBoardStage } from '../components/HeroBoards'
+import { SERVICE_BOARD } from '../components/boardMap'
+import { SWAP } from '../components/chartTokens'
+import { PRIMARY_CTA, howItWorks, services } from '../data'
 import { usePageMotion } from '../hooks/usePageMotion'
 import { pageMetadata } from '../seoData'
 
@@ -27,117 +32,36 @@ const WHY_US = [
   },
 ]
 
-const SPARKS = [
-  [10, 16, 12, 22, 18, 28, 24],
-  [14, 10, 18, 14, 26, 20, 30],
-  [8, 14, 20, 16, 12, 24, 18],
-  [12, 20, 14, 28, 18, 22, 16],
-  [18, 12, 22, 10, 26, 14, 30],
-  [16, 22, 12, 20, 28, 18, 24],
-]
-
-const BOARDS = [
-  {
-    title: 'Automation Builder',
-    subtitle: 'workflow · prod-eng-1',
-    steps: ['Trigger', 'Enrich', 'Classify', 'Route', 'Deliver'],
-    active: 1,
-    left: { label: 'Runs today', value: 'On track' },
-    right: { label: 'Avg latency', value: 'Staging' },
-    foot: 'Queue throughput',
-  },
-  {
-    title: 'Automation Builder',
-    subtitle: 'workflow · prod-eng-1',
-    steps: ['Trigger', 'Enrich', 'Classify', 'Route', 'Deliver'],
-    active: 2,
-    left: { label: 'Runs today', value: 'On track' },
-    right: { label: 'Avg latency', value: 'Staging' },
-    foot: 'Queue throughput',
-  },
-  {
-    title: 'Release gates',
-    subtitle: 'qa-suite · main',
-    steps: ['Build', 'Test', 'Canary', 'Gate', 'Prod'],
-    active: 1,
-    left: { label: 'Checks', value: 'CI-gated' },
-    right: { label: 'Feedback', value: 'On merge' },
-    foot: 'Pipeline health',
-  },
-  {
-    title: 'Deployment pipeline',
-    subtitle: 'api-gateway · main',
-    steps: ['Build', 'Test', 'Canary', 'Prod', 'Watch'],
-    active: 3,
-    left: { label: 'Deploys', value: 'Routine' },
-    right: { label: 'Rollback', value: 'Rehearsed' },
-    foot: 'Traffic shift',
-  },
-  {
-    title: 'Product console',
-    subtitle: 'saas · multi-tenant',
-    steps: ['Auth', 'Bill', 'Tenant', 'Ship', 'Observe'],
-    active: 2,
-    left: { label: 'Tenants', value: 'Isolated' },
-    right: { label: 'Billing', value: 'Metered' },
-    foot: 'Platform health',
-  },
-  {
-    title: 'Delivery board',
-    subtitle: 'end-to-end · production',
-    steps: ['Align', 'Build', 'Test', 'Ship', 'Steady'],
-    active: 1,
-    left: { label: 'Focus', value: 'Production' },
-    right: { label: 'Cadence', value: 'Two-week' },
-    foot: 'Release progress',
-  },
-] as const
-
-function Spark({ variant }: { variant: number }) {
-  const heights = SPARKS[variant % SPARKS.length]
-  return (
-    <svg className="pf-plug-spark" viewBox="0 0 120 36" aria-hidden>
-      {heights.map((height, index) => (
-        <rect
-          key={index}
-          x={index * 17}
-          y={36 - height}
-          width="11"
-          height={height}
-          rx="2.5"
-          className={index === heights.length - 2 ? 'is-accent' : undefined}
-        />
-      ))}
-    </svg>
-  )
-}
-
-function MiniSpark() {
-  return (
-    <svg className="pf-mini-spark" viewBox="0 0 120 36" aria-hidden>
-      <polyline
-        fill="none"
-        stroke="currentColor"
-        strokeWidth="2.5"
-        strokeLinejoin="round"
-        points="0,28 18,22 36,24 54,14 72,18 90,8 120,12"
-      />
-    </svg>
-  )
-}
-
 export default function Portfolio() {
   const { reduceMotion, reveal, hero, heroFollow, list, item, inView } = usePageMotion()
   const [active, setActive] = useState(0)
   const [pathGate, setPathGate] = useState(0)
   const current = services[active]
-  const board = BOARDS[active] ?? BOARDS[0]
+  const [pill, setPill] = useState(reduceMotion ? 3 : 0)
+  // Set while the pointer is over the hero board so it stops rotating under it.
+  const paused = useRef(false)
+  const heroVisual = reduceMotion
+    ? {}
+    : {
+        initial: { opacity: 0, y: 40, filter: 'blur(16px)' },
+        animate: { opacity: 1, y: 0, filter: 'blur(0px)' },
+        transition: { duration: 1.2, delay: 0.2, ease: SWAP },
+      }
 
   useEffect(() => {
     if (reduceMotion || services.length < 2) return undefined
     const id = window.setInterval(() => {
+      if (paused.current) return
       setActive((currentIndex) => (currentIndex + 1) % services.length)
-    }, 2800)
+    }, 3600)
+    return () => window.clearInterval(id)
+  }, [reduceMotion])
+
+  useEffect(() => {
+    if (reduceMotion) return undefined
+    const id = window.setInterval(() => {
+      setPill((current) => (current + 1) % PROCESS_PILLS.length)
+    }, 1400)
     return () => window.clearInterval(id)
   }, [reduceMotion])
 
@@ -155,6 +79,7 @@ export default function Portfolio() {
         title={pageMetadata['/portfolio'].title}
         description={pageMetadata['/portfolio'].description}
         path="/portfolio"
+        breadcrumbs={[{ name: 'Work', path: '/portfolio' }]}
       />
 
       <section className="pf-cv-hero" aria-labelledby="portfolio-title">
@@ -165,7 +90,23 @@ export default function Portfolio() {
 
           <div className="pf-cv-split">
             <motion.div {...heroFollow}>
-              <p className="pf-cv-kicker">{current.title}</p>
+              <div className="pf-cv-name">
+                {reduceMotion ? (
+                  <span>{current.title}</span>
+                ) : (
+                  <AnimatePresence mode="wait">
+                    <motion.span
+                      key={current.title}
+                      initial={{ opacity: 0, y: 34, filter: 'blur(12px)' }}
+                      animate={{ opacity: 1, y: 0, filter: 'blur(0px)' }}
+                      exit={{ opacity: 0, y: -34, filter: 'blur(12px)' }}
+                      transition={{ duration: 0.7, ease: SWAP }}
+                    >
+                      {current.title}
+                    </motion.span>
+                  </AnimatePresence>
+                )}
+              </div>
               <p className="pf-cv-lead">
                 Choose one capability or combine several across AI agents, workflow automation, QA,
                 DevOps, SaaS, and end-to-end development — brought together around the outcome
@@ -173,59 +114,42 @@ export default function Portfolio() {
               </p>
               <div className="hero-actions">
                 <Link className="btn pf-cv-primary" to="/contact">
-                  Book a call
+                  {PRIMARY_CTA}
                 </Link>
                 <a className="btn btn-ghost-ink" href="#work">
                   Explore services
                 </a>
               </div>
               <ol className="pf-cv-pills">
-                {PROCESS_PILLS.map((step) => (
-                  <li key={step} className={step === 'Build' ? 'is-active' : undefined}>
-                    {step}
+                {PROCESS_PILLS.map((step, index) => (
+                  <li key={step}>
+                    <span className={`pf-cv-pill${index === pill ? ' is-active' : ''}`}>{step}</span>
+                    {index < PROCESS_PILLS.length - 1 ? (
+                      <span className={`pf-cv-pill-line${index < pill ? ' is-done' : ''}`} aria-hidden />
+                    ) : null}
                   </li>
                 ))}
               </ol>
             </motion.div>
 
-            <motion.div className="pf-visual" aria-hidden {...heroFollow}>
-              <div className="pf-visual-bar">
-                <span />
-                <span />
-                <span />
-                <div className="pf-visual-titles">
-                  <strong>{board.title}</strong>
-                  <em>{board.subtitle}</em>
-                </div>
-              </div>
-              <div className="pf-visual-flow">
-                {board.steps.map((step, index) => (
-                  <span key={step} className={index === board.active ? 'is-active' : undefined}>
-                    {step}
-                  </span>
+            <motion.div className="pf-cv-visual" {...heroVisual}>
+              <HeroBoardStage
+                boardKey={SERVICE_BOARD[current.id] ?? 'automation'}
+                reduceMotion={reduceMotion}
+                onHoverChange={(hovering) => {
+                  paused.current = hovering
+                }}
+              />
+              <div className="pf-cv-dashes" aria-hidden>
+                {services.map((service, index) => (
+                  <span key={service.id} className={index === active ? 'is-on' : undefined} />
                 ))}
-              </div>
-              <div className="pf-visual-stats">
-                <div>
-                  <small>{board.left.label}</small>
-                  <strong>{board.left.value}</strong>
-                  <MiniSpark />
-                </div>
-                <div>
-                  <small>{board.right.label}</small>
-                  <strong>{board.right.value}</strong>
-                  <MiniSpark />
-                </div>
-              </div>
-              <div className="pf-visual-foot">
-                <span>{board.foot}</span>
-                <b />
               </div>
             </motion.div>
           </div>
 
           <div className="pf-trust" id="clients">
-            <p>Trusted by teams at</p>
+            <p>Organizations our team has supported</p>
             <ClientMarquee />
           </div>
         </div>
@@ -283,26 +207,21 @@ export default function Portfolio() {
             </h2>
           </motion.div>
 
-          <motion.div className="pf-plug-grid" {...list}>
+          <div className="pf-plug-grid">
             {services.map((service, index) => (
-              <motion.div key={service.id} variants={item}>
-                <Link to={`/services/${service.id}`} className="pf-plug-card">
-                  <span className="pf-plug-mark">{service.mark}</span>
-                  <h3>{service.title}</h3>
-                  <p>{service.summary}</p>
-                  <div className="pf-plug-tags">
-                    {service.stacks.slice(0, 4).map((tech) => (
-                      <span key={tech}>{tech}</span>
-                    ))}
-                  </div>
-                  <Spark variant={index} />
-                  <span className="pf-plug-more">
-                    Explore {service.title.toLowerCase()} <span aria-hidden>→</span>
-                  </span>
-                </Link>
-              </motion.div>
+              <ServiceChartCard
+                key={service.id}
+                id={service.id}
+                index={index}
+                title={service.title}
+                summary={service.summary}
+                capabilities={service.stacks.slice(0, 4)}
+                chart={PLUG_CHARTS[service.id] ?? PLUG_CHARTS['ai-agents']}
+                exploreLabel={PLUG_EXPLORE[service.id] ?? service.title.toLowerCase()}
+                reduceMotion={reduceMotion}
+              />
             ))}
-          </motion.div>
+          </div>
         </div>
       </section>
 
@@ -337,7 +256,7 @@ export default function Portfolio() {
             </p>
           </motion.div>
           <Link className="btn btn-light" to="/contact">
-            Book a call <span aria-hidden>→</span>
+            {PRIMARY_CTA} <span aria-hidden>→</span>
           </Link>
         </div>
       </section>

@@ -1,22 +1,43 @@
-import { useEffect, useState } from 'react'
-import { Link, Outlet, useLocation } from 'react-router-dom'
+import { useEffect, useRef, useState } from 'react'
+import { Link, NavLink, Outlet, useLocation } from 'react-router-dom'
 import { motion, useReducedMotion, useScroll, useSpring, useTransform } from 'framer-motion'
 import { Helmet } from 'react-helmet-async'
-import { CONTACT_EMAIL, services } from '../data'
+import { CONTACT_EMAIL, PRIMARY_CTA, services } from '../data'
+import { companyFacts } from '../companyFacts'
 import { resources } from '../resourcesData'
 import { useTheme } from '../hooks/useTheme'
 import { SITE_URL } from './Seo'
+
+const { legalEntity, foundedYear, headquarters } = companyFacts
 
 const organizationJsonLd = {
   '@context': 'https://schema.org',
   '@type': 'Organization',
   name: 'Universal Technologies',
+  ...(legalEntity && { legalName: legalEntity.name }),
   url: SITE_URL,
   logo: `${SITE_URL}/logo.png`,
   email: CONTACT_EMAIL,
+  ...(foundedYear && { foundingDate: String(foundedYear) }),
   description:
     'Remote-first delivery partner for AI agents, workflow automation, QA & test automation, DevOps & infrastructure, SaaS applications, and end-to-end software development.',
 }
+
+const websiteJsonLd = {
+  '@context': 'https://schema.org',
+  '@type': 'WebSite',
+  name: 'Universal Technologies',
+  url: SITE_URL,
+}
+
+const navItems = [
+  { to: '/services', label: 'Services' },
+  { to: '/portfolio', label: 'Work' },
+  { to: '/products', label: 'Products' },
+  { to: '/resources', label: 'Insights' },
+  { to: '/about', label: 'About' },
+  { to: '/careers', label: 'Careers' },
+]
 
 export function Layout() {
   const [scrolled, setScrolled] = useState(false)
@@ -28,6 +49,7 @@ export function Layout() {
   const progressWidth = useTransform(progress, [0, 1], ['0%', '100%'])
   const location = useLocation()
   const isHome = location.pathname === '/'
+  const menuToggleRef = useRef<HTMLButtonElement>(null)
 
   useEffect(() => {
     const update = () => {
@@ -72,12 +94,16 @@ export function Layout() {
   }, [location.pathname])
 
   useEffect(() => {
+    if (!menuOpen) return undefined
     const onKey = (event: KeyboardEvent) => {
-      if (event.key === 'Escape') setMenuOpen(false)
+      if (event.key !== 'Escape') return
+      setMenuOpen(false)
+      // Return focus to the menu button so keyboard users don't lose their place.
+      menuToggleRef.current?.focus()
     }
     window.addEventListener('keydown', onKey)
     return () => window.removeEventListener('keydown', onKey)
-  }, [])
+  }, [menuOpen])
 
   const closeMenu = () => setMenuOpen(false)
 
@@ -85,6 +111,7 @@ export function Layout() {
     <>
       <Helmet>
         <script type="application/ld+json">{JSON.stringify(organizationJsonLd)}</script>
+        <script type="application/ld+json">{JSON.stringify(websiteJsonLd)}</script>
       </Helmet>
 
       <a className="skip-link" href="#main-content">
@@ -94,15 +121,6 @@ export function Layout() {
       {!reduceMotion && (
         <motion.div className="scroll-progress" style={{ width: progressWidth }} aria-hidden />
       )}
-
-      <div className="topbar">
-        <div className="container topbar-inner">
-          <span>Engineering · Quality · Growth — executed as one system</span>
-          <Link to="/">
-            Explore Universal <span aria-hidden>→</span>
-          </Link>
-        </div>
-      </div>
 
       <header className={`nav${scrolled || menuOpen ? ' scrolled' : ''}${menuOpen ? ' open' : ''}`}>
         <div className="container nav-inner">
@@ -115,30 +133,16 @@ export function Layout() {
             />
           </Link>
 
-          <nav className="nav-links" aria-label="Primary">
-            <Link to="/services" onClick={closeMenu}>
-              Services
-            </Link>
-            <Link to="/portfolio" onClick={closeMenu}>
-              Portfolio
-            </Link>
-            <Link to="/products" onClick={closeMenu}>
-              Products
-            </Link>
-            <Link to="/about" onClick={closeMenu}>
-              About
-            </Link>
-            <Link to="/careers" onClick={closeMenu}>
-              Careers
-            </Link>
-            <Link to="/contact" onClick={closeMenu}>
-              Contact
-            </Link>
+          <nav className="nav-links" id="primary-nav" aria-label="Primary">
+            {navItems.map((item) => (
+              <NavLink key={item.to} to={item.to} onClick={closeMenu}>
+                {item.label}
+              </NavLink>
+            ))}
             <button
               type="button"
               className="theme-toggle"
               aria-label={theme === 'dark' ? 'Switch to light mode' : 'Switch to dark mode'}
-              aria-pressed={theme === 'dark'}
               onClick={toggleTheme}
             >
               {theme === 'dark' ? (
@@ -166,15 +170,17 @@ export function Layout() {
               </span>
             </button>
             <Link className="btn btn-ink nav-cta" to="/contact" onClick={closeMenu}>
-              Get Started
+              {PRIMARY_CTA}
             </Link>
           </nav>
 
           <button
+            ref={menuToggleRef}
             className="nav-toggle"
             type="button"
             aria-label={menuOpen ? 'Close menu' : 'Open menu'}
             aria-expanded={menuOpen}
+            aria-controls="primary-nav"
             onClick={() => setMenuOpen((open) => !open)}
           >
             <span />
@@ -206,7 +212,8 @@ export function Layout() {
             <div>
               <h4>Company</h4>
               <Link to="/about">About</Link>
-              <Link to="/portfolio">Portfolio</Link>
+              <Link to="/portfolio">Work</Link>
+              <Link to="/security">Security &amp; Trust</Link>
               <Link to="/careers">Careers</Link>
             </div>
             <div>
@@ -228,8 +235,10 @@ export function Layout() {
           </div>
         </div>
         <div className="container footer-bottom">
-          <span>© {new Date().getFullYear()} Universal Technologies</span>
-          <span>Ship with one accountable partner</span>
+          <span>
+            © {new Date().getFullYear()} {legalEntity?.name ?? 'Universal Technologies'}
+          </span>
+          <span>{headquarters ?? 'Ship with one accountable partner'}</span>
         </div>
       </footer>
     </>

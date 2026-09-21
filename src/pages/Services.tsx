@@ -2,15 +2,19 @@ import { motion } from 'framer-motion'
 import { Link } from 'react-router-dom'
 import { DELIVERY_ECOSYSTEM } from '../components/ServiceFlow'
 import { Seo } from '../components/Seo'
+import { ServicesLive } from '../components/ServicesLive'
+import { Bars, Sparkline } from '../components/chartPrimitives'
+import { dataVar } from '../components/chartTokens'
+import { PLUG_CHARTS } from '../components/serviceCharts'
 import { usePageMotion } from '../hooks/usePageMotion'
 import { pageMetadata } from '../seoData'
-import { howItWorks, industries, outcomes, services } from '../data'
+import { PRIMARY_CTA, howItWorks, industries, outcomes, services } from '../data'
 
 const WHY_US = [
   {
-    title: 'Senior-led delivery',
-    text: 'Every engagement is led by engineers who have shipped production systems before, working directly inside your roadmap and workflow.',
-    points: ['Hands-on technical leadership', 'Direct engineer access', 'No account-manager layer'],
+    title: 'Direct senior access',
+    text: 'Every engagement is led by engineers who have shipped production systems before. You work with a named delivery lead and reach the engineers doing the work directly, with a clear path for escalation.',
+    points: ['Hands-on technical leadership', 'Direct engineer access', 'Named delivery lead and clear escalation path'],
   },
   {
     title: 'One accountable delivery partner',
@@ -25,7 +29,7 @@ const WHY_US = [
 ]
 
 export default function Services() {
-  const { reveal, hero, heroFollow, list, item, inView } = usePageMotion()
+  const { reduceMotion, reveal, hero, heroFollow, list, item, inView } = usePageMotion()
 
   return (
     <div className="svc-page">
@@ -33,10 +37,12 @@ export default function Services() {
         title={pageMetadata['/services'].title}
         description={pageMetadata['/services'].description}
         path="/services"
+        breadcrumbs={[{ name: 'Services', path: '/services' }]}
       />
 
       <section className="svc-section svc-hero" aria-labelledby="services-title">
         <div className="container">
+          <div className="svc-hero-split">
           <motion.div
             className="svc-hero-inner"
             {...hero}
@@ -52,13 +58,16 @@ export default function Services() {
             </p>
             <div className="svc-hero-cta">
               <Link className="btn btn-svc-primary" to="/contact">
-                Talk to our team <span aria-hidden>→</span>
+                {PRIMARY_CTA} <span aria-hidden>→</span>
               </Link>
               <a className="btn btn-ghost-ink" href="#process">
                 See how we deliver
               </a>
             </div>
           </motion.div>
+
+          <ServicesLive />
+          </div>
 
           <motion.div
             className="svc-path-wrap"
@@ -118,6 +127,23 @@ export default function Services() {
                       <span key={tech}>{tech}</span>
                     ))}
                   </div>
+                  {PLUG_CHARTS[service.id] ? (
+                    <div className="svc-list-chart">
+                      {PLUG_CHARTS[service.id].kind === 'spark' ? (
+                        <Sparkline
+                          points={PLUG_CHARTS[service.id].points}
+                          color={PLUG_CHARTS[service.id].color}
+                          animate={!reduceMotion}
+                        />
+                      ) : (
+                        <Bars
+                          values={PLUG_CHARTS[service.id].points}
+                          colors={[dataVar('slate'), dataVar('slate'), dataVar('slate'), dataVar(PLUG_CHARTS[service.id].color)]}
+                          animate={!reduceMotion}
+                        />
+                      )}
+                    </div>
+                  ) : null}
                   <span className="svc-list-more">
                     Explore {service.title.toLowerCase()} <span aria-hidden>→</span>
                   </span>
@@ -141,17 +167,17 @@ export default function Services() {
             className="svc-why-grid"
             {...list}
           >
-            {WHY_US.map((item, index) => (
+            {WHY_US.map((reason, index) => (
               <motion.div
-                key={item.title}
+                key={reason.title}
                 className="svc-why-card"
                 variants={item}
               >
                 <span className="svc-why-index">0{index + 1}</span>
-                <h3>{item.title}</h3>
-                <p>{item.text}</p>
+                <h3>{reason.title}</h3>
+                <p>{reason.text}</p>
                 <ul className="svc-why-list">
-                  {item.points.map((point) => (
+                  {reason.points.map((point) => (
                     <li key={point}>{point}</li>
                   ))}
                 </ul>
@@ -206,15 +232,15 @@ export default function Services() {
             className="svc-outcome-grid"
             {...list}
           >
-            {outcomes.map((item, index) => (
+            {outcomes.map((outcome, index) => (
               <motion.div
-                key={item.title}
+                key={outcome.title}
                 className="svc-outcome-card"
                 variants={item}
               >
                 <span className="svc-outcome-index">0{index + 1}</span>
-                <h3>{item.title}</h3>
-                <p>{item.text}</p>
+                <h3>{outcome.title}</h3>
+                <p>{outcome.text}</p>
               </motion.div>
             ))}
           </motion.div>
@@ -231,7 +257,7 @@ export default function Services() {
             </p>
           </motion.div>
           <Link className="btn btn-light" to="/contact">
-            Talk to our team <span aria-hidden>→</span>
+            {PRIMARY_CTA} <span aria-hidden>→</span>
           </Link>
         </div>
       </section>

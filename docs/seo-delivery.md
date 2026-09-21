@@ -9,8 +9,8 @@
 - JobPosting markup describes the existing six roles. **Verified original posting dates and eligible countries remain required for Google job rich-result eligibility.** Optional `datePosted` and `applicantCountries` fields are ready in `src/pagesData.ts`; do not substitute deployment dates or invent locations.
 - Resources includes two original delivery-planning guides, individual article routes, Article markup, internal links, and sitemap entries.
 - Landing page has a responsive hero, direct service navigation, prominent CTA, and delivery principles. It no longer requires scrolling through a pinned 420vh hero to reach the page.
-- The explicit placeholder leadership names, founding year, company metrics, and office locations were removed from public copy pending verification. Existing product, hiring, client-list, and benefit claims still need the business owner's confirmation.
-- Privacy text now discloses the actual theme storage and Google Fonts requests in the code. Existing contact/application disclosures describe FormSubmit. This code review cannot verify inbox retention or company data practices outside the repository.
+- Placeholder leadership names, founding year, company metrics, and office locations are kept out of public copy until verified. They now live in `src/companyFacts.ts` (empty by default; pages render a fact only when it is set). See `docs/audit-remediation.md` for the full audit tracker and claims register. Existing product, hiring, client-list, and benefit claims still need the business owner's confirmation.
+- Fonts are self-hosted (`@fontsource-variable/*`), so there is no Google Fonts request. Privacy text discloses the theme storage and FormSubmit. Existing contact/application disclosures describe FormSubmit. This code review cannot verify inbox retention or company data practices outside the repository.
 
 ## Deploying
 
@@ -23,7 +23,8 @@ For a static host, configure these equivalent rules at the host/CDN:
 | Request | Response |
 | --- | --- |
 | `www.universal-technologies.com/*` | 301 to the same path/query on `https://universal-technologies.com` |
-| HTTP production traffic | Redirect to HTTPS at the TLS proxy/CDN |
+| HTTP production traffic | Redirect to HTTPS at the TLS proxy/CDN. The Node server also 301s to `https://universal-technologies.com` when the proxy sends `X-Forwarded-Proto: http`. |
+| `/services/ai` | 301 to `/services/ai-agents` (single hop, also for `/services/ai/`) |
 | `/services/software-development` | 301 to `/services/end-to-end-development` |
 | `/services/ui-ux` | 301 to `/services/end-to-end-development` (design is part of that service) |
 | `/services/cybersecurity` | 410; no equivalent standalone service is currently advertised |

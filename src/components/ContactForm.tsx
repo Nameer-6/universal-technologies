@@ -1,5 +1,5 @@
 import { Link } from 'react-router-dom'
-import { CONTACT_EMAIL, services } from '../data'
+import { CONTACT_EMAIL, PRIMARY_CTA, RESPONSE_PROMISE, services } from '../data'
 import { useContactForm } from '../hooks/useContactForm'
 
 export function ContactForm() {
@@ -9,7 +9,9 @@ export function ContactForm() {
     return (
       <div className="contact-success" role="status">
         <h3>Thanks — your brief is with our team.</h3>
-        <p>We’ll reply immediately and follow up if a discovery call is the right next step.</p>
+        <p>
+          We’ll reply {RESPONSE_PROMISE} and follow up if a discovery call is the right next step.
+        </p>
         <Link className="btn btn-ink" to="/">
           Return home <span aria-hidden>→</span>
         </Link>
@@ -96,7 +98,7 @@ export function ContactForm() {
         disabled={status === 'submitting'}
         aria-busy={status === 'submitting'}
       >
-        {status === 'submitting' ? 'Sending…' : 'Talk to our team'}{' '}
+        {status === 'submitting' ? 'Sending…' : PRIMARY_CTA}{' '}
         <span aria-hidden>→</span>
       </button>
       {status === 'error' && (

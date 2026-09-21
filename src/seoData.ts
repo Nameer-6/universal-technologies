@@ -5,7 +5,7 @@ export const pageMetadata: Record<string, { title: string; description: string }
   },
   "/about": {
     "title": "About Universal Technologies | How We Work",
-    "description": "Meet the team behind Universal Technologies — our engineering philosophy and how we work with clients to build, test, and ship software end to end."
+    "description": "How Universal Technologies works: one accountable team that carries a project from first sketch to production, with the standards we hold every project to."
   },
   "/services": {
     "title": "Our Services | AI, Automation & Engineering Delivery",
@@ -60,8 +60,8 @@ export const pageMetadata: Record<string, { title: string; description: string }
     "description": "Plan and publish company posts to LinkedIn, Instagram, and Facebook from one shared calendar."
   },
   "/portfolio": {
-    "title": "Portfolio | Universal Technologies",
-    "description": "Software engineering that moves a business number. See the clients, industries, process, and engagement models behind Universal Technologies."
+    "title": "Our Work | Universal Technologies",
+    "description": "Six engineering services from one accountable delivery partner, and the organizations our team has supported. See how Universal Technologies delivers."
   },
   "/careers": {
     "title": "Careers at Universal Technologies | Open Roles",
@@ -69,7 +69,11 @@ export const pageMetadata: Record<string, { title: string; description: string }
   },
   "/contact": {
     "title": "Contact Universal Technologies | Get a Quote",
-    "description": "Talk to Universal Technologies about your next project. Share your scope and timeline by form or email. Our team replies immediately."
+    "description": "Talk to Universal Technologies about your next project. Share your scope and timeline by form or email. Our team replies within 4 working hours."
+  },
+  "/security": {
+    "title": "Security & Trust | Universal Technologies",
+    "description": "How Universal Technologies handles your code, access, and data: client ownership, quality gates, AI data controls, and enterprise procurement support."
   },
   "/privacy-policy": {
     "title": "Privacy Policy | Universal Technologies",

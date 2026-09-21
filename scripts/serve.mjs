@@ -5,6 +5,7 @@ import { pathToFileURL } from 'node:url'
 
 const root = resolve('dist')
 const redirects = new Map([
+  ['/services/ai', '/services/ai-agents'],
   ['/services/software-development', '/services/end-to-end-development'],
   ['/services/ui-ux', '/services/end-to-end-development'],
 ])
@@ -20,7 +21,10 @@ export async function handleRequest(req, res) {
   try { path = decodeURIComponent(url.pathname) } catch { res.writeHead(400).end(); return }
   if (path.startsWith('//') || path.includes('\\') || path.includes('\0')) { res.writeHead(400).end(); return }
   const redirect = target => res.writeHead(301, { Location: target }).end()
-  if ((req.headers.host || '').split(':')[0].toLowerCase() === 'www.universal-technologies.com') {
+  const host = (req.headers.host || '').split(':')[0].toLowerCase()
+  // A TLS-terminating proxy reports the original scheme in X-Forwarded-Proto.
+  const insecure = String(req.headers['x-forwarded-proto'] || '').split(',')[0].trim().toLowerCase() === 'http'
+  if (host === 'www.universal-technologies.com' || (host === 'universal-technologies.com' && insecure)) {
     redirect(`https://universal-technologies.com${url.pathname}${url.search}`)
     return
   }

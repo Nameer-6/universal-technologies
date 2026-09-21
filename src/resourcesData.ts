@@ -6,6 +6,12 @@ export type Resource = {
   sections: { title: string; text: string }[]
   service: string
   serviceLabel: string
+  /** Named author and reviewer. Add only real, consenting people; the byline and Article schema appear automatically. */
+  author?: { name: string; role: string; profileUrl?: string }
+  reviewer?: { name: string; role: string }
+  /** ISO dates (YYYY-MM-DD). Add the real publication and last-review dates. */
+  datePublished?: string
+  dateModified?: string
 }
 
 export const resources: Resource[] = [

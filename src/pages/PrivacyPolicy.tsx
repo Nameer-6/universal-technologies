@@ -1,6 +1,9 @@
 import { Seo } from '../components/Seo'
 import { CONTACT_EMAIL } from '../data'
+import { companyFacts } from '../companyFacts'
 import { pageMetadata } from '../seoData'
+
+const { legalEntity } = companyFacts
 
 export default function PrivacyPolicy() {
   return (
@@ -9,6 +12,7 @@ export default function PrivacyPolicy() {
         title={pageMetadata['/privacy-policy'].title}
         description={pageMetadata['/privacy-policy'].description}
         path="/privacy-policy"
+        breadcrumbs={[{ name: 'Privacy Policy', path: '/privacy-policy' }]}
       />
 
       <section className="section" aria-labelledby="privacy-title">
@@ -27,6 +31,11 @@ export default function PrivacyPolicy() {
               through universal-technologies.com, how we use it, and how you can reach us about
               it.
             </p>
+            {legalEntity && (
+              <p>
+                The data controller is {legalEntity.name}, {legalEntity.registeredAddress}.
+              </p>
+            )}
 
             <h2>Information we collect</h2>
             <p>We collect information you provide directly to us:</p>
@@ -47,10 +56,10 @@ export default function PrivacyPolicy() {
 
             <h2>Fonts and local storage</h2>
             <p>
-              This site loads typefaces from Google Fonts, which receives the request directly
-              from your browser (including your IP address) when a page loads. We also store a
-              single preference — your light/dark theme choice — in your browser's local storage;
-              this stays on your device and is never sent to us.
+              Typefaces are served from this site itself, so loading a page does not send a font
+              request to a third party. We store a single preference — your light/dark theme
+              choice — in your browser's local storage; this stays on your device and is never
+              sent to us.
             </p>
 
             <h2>How we use it</h2>
@@ -68,6 +77,14 @@ export default function PrivacyPolicy() {
               third-party form-delivery service. Your submission passes through FormSubmit's
               infrastructure on its way to our inbox; we don't store form submissions in a
               database of our own beyond the resulting email.
+            </p>
+
+            <h2>Service providers</h2>
+            <p>
+              The only third party that handles data you submit is FormSubmit, which delivers the
+              contact and application forms to our email inbox as described above. Attachments
+              such as a resume travel through the same service. If you would rather not use a
+              web form, you can email us directly at the address below.
             </p>
 
             <h2>Data retention</h2>

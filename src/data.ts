@@ -9,6 +9,12 @@ export type Service = {
 export const CONTACT_EMAIL = 'contact@universal-technologies.com'
 export const HR_EMAIL = 'hr@universal-technologies.com'
 
+/** The one approved response-time promise. Use it everywhere a reply time is stated. */
+export const RESPONSE_PROMISE = 'within 4 working hours'
+
+/** The one global company/service call to action. Product-specific CTAs ("Request a demo") stay contextual. */
+export const PRIMARY_CTA = 'Talk to our team'
+
 export const services: Service[] = [
   {
     id: 'ai-agents',
@@ -39,7 +45,7 @@ export const services: Service[] = [
     title: 'DevOps & Infrastructure',
     mark: '04',
     summary:
-      'CI/CD, cloud architecture, and observability sized to your actual traffic — not a diagram from a blog post.',
+      'CI/CD, cloud architecture, and observability sized to your actual traffic and cost targets.',
     stacks: ['AWS', 'Docker', 'Kubernetes', 'Terraform', 'GitHub Actions'],
   },
   {
@@ -127,9 +133,9 @@ export const serviceDetails: Record<string, ServiceDetail> = {
       },
       {
         title: 'Weekly working software',
-        text: 'Weekly working software, not quarterly status decks.',
+        text: 'Working software in front of your stakeholders every week.',
         cards: [
-          { label: 'Weekly demos', detail: 'Working software, not slides' },
+          { label: 'Weekly demos', detail: 'Working software you can review' },
           { label: 'Usage-driven backlog', detail: 'Built on real signal' },
         ],
       },
@@ -662,45 +668,27 @@ export const swarmTiles = [
   'React',
   'Next.js',
   'React Native',
-  'AWS',
-  'Playwright',
-  'Anthropic',
-  'Kubernetes',
   'TypeScript',
-  'OpenAI',
-  'Cypress',
-  'Docker',
-  'LangChain',
-  'GraphQL',
-  'Terraform',
-  'Temporal',
   'Node.js',
-  'n8n',
-  'Zapier',
-  'Stripe',
-  'NestJS',
-  'Azure',
-  'Appium',
-  'Pinecone',
-  'Auth0',
-  'CI/CD',
-  'SEO',
-  'REST',
-  'Sentry',
-  'Redis',
-  'Postgres',
-  'Vite',
-  'Tailwind',
-  'Jest',
+  'Playwright',
+  'Cypress',
+  'Anthropic',
+  'OpenAI',
   'LangGraph',
-  'Vercel',
-  'GCP',
+  'n8n',
+  'AWS',
+  'Kubernetes',
+  'Terraform',
+  'Docker',
+  'Postgres',
+  'Stripe',
+  'CI/CD',
 ]
 
 export const backboneMetrics = [
   { value: '6', label: 'Integrated service lines' },
   { value: '1×', label: 'Accountable delivery team' },
-  { value: '1d', label: 'Typical first response' },
+  { value: '4h', label: 'Typical first response (working hours)' },
 ]
 
 /** Partnership operating model — not the same as engagement shapes below */
@@ -728,7 +716,7 @@ export const howItWorks = [
   {
     step: '03',
     title: 'Ship',
-    text: 'Build, test, and deploy in short loops with demos your stakeholders can react to — not status decks.',
+    text: 'Build, test, and deploy in short loops with demos your stakeholders can react to.',
     cards: [
       { label: 'Sprint demos', detail: 'Working software weekly' },
       { label: 'Quality gates', detail: 'Merge-ready checks' },

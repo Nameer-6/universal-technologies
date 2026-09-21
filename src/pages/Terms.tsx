@@ -1,6 +1,9 @@
 import { Seo } from '../components/Seo'
 import { CONTACT_EMAIL } from '../data'
+import { companyFacts } from '../companyFacts'
 import { pageMetadata } from '../seoData'
+
+const { legalEntity } = companyFacts
 
 export default function Terms() {
   return (
@@ -9,6 +12,7 @@ export default function Terms() {
         title={pageMetadata['/terms'].title}
         description={pageMetadata['/terms'].description}
         path="/terms"
+        breadcrumbs={[{ name: 'Terms of Service', path: '/terms' }]}
       />
 
       <section className="section" aria-labelledby="terms-title">
@@ -26,6 +30,17 @@ export default function Terms() {
               These terms govern your use of universal-technologies.com (the "site"), operated by
               Universal Technologies ("we," "us"). By using the site, you agree to them.
             </p>
+            {legalEntity && (
+              <p>
+                The contracting entity is {legalEntity.name}, a {legalEntity.type} organized in{' '}
+                {legalEntity.jurisdiction}, with its registered address at{' '}
+                {legalEntity.registeredAddress}
+                {legalEntity.registrationNumber
+                  ? ` (registration no. ${legalEntity.registrationNumber})`
+                  : ''}
+                .
+              </p>
+            )}
 
             <h2>Site content</h2>
             <p>

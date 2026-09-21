@@ -16,6 +16,7 @@ const ResourceDetail = lazy(() => import('./pages/ResourceDetail'))
 const Contact = lazy(() => import('./pages/Contact'))
 const PrivacyPolicy = lazy(() => import('./pages/PrivacyPolicy'))
 const Terms = lazy(() => import('./pages/Terms'))
+const Security = lazy(() => import('./pages/Security'))
 const NotFound = lazy(() => import('./pages/NotFound'))
 
 export default function App() {
@@ -37,6 +38,7 @@ export default function App() {
           <Route path="contact" element={<Contact />} />
           <Route path="privacy-policy" element={<PrivacyPolicy />} />
           <Route path="terms" element={<Terms />} />
+          <Route path="security" element={<Security />} />
           <Route path="*" element={<NotFound />} />
         </Route>
       </Routes>
