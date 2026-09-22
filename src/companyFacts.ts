@@ -47,12 +47,20 @@ export type CompanyFacts = {
 }
 
 export const companyFacts: CompanyFacts = {
-  foundedYear: null,
+  foundedYear: 2023,
+  // Name confirmed; entity type, jurisdiction and registered address still needed
+  // before this can be set (Terms renders all four fields together — see ENT-03
+  // in docs/audit-remediation.md).
   legalEntity: null,
-  headquarters: null,
+  headquarters: 'Katy, Texas, USA',
   offices: [],
   metrics: [],
   leadership: [],
   certifications: [],
-  timeline: [],
+  timeline: [
+    {
+      year: '2023',
+      text: 'Founded in 2023 as a digital technology and AI solutions company serving startups, SMBs, scale-ups, and enterprises.',
+    },
+  ],
 }

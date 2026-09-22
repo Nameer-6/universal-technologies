@@ -8,9 +8,9 @@ Status key: **Done** (in code, covered by `npm run check:seo` where noted) · **
 
 | ID | Status | Notes |
 | --- | --- | --- |
-| ENT-01 founding year | **Owner input** | The old "2016" conflicted with LinkedIn (2023), so it is unpublished. Set `companyFacts.foundedYear` (and `timeline`) once the chronology is confirmed, then align LinkedIn. |
-| ENT-02 HQ / locations | **Owner input** | Austin / Lisbon / Bengaluru removed (LinkedIn says Katy, TX). Fill `companyFacts.headquarters` and `offices` using the same labels as LinkedIn and contracts. |
-| ENT-03 legal entity | **Owner input** | Terms, Privacy, footer and Organization schema render the entity automatically when `companyFacts.legalEntity` is set. Counsel should review the wording. |
+| ENT-01 founding year | **Done** | Confirmed by business owner (23 Sep 2026): 2023, matching LinkedIn. `companyFacts.foundedYear` and `timeline` set. |
+| ENT-02 HQ / locations | **Done** | Confirmed by business owner (23 Sep 2026): Katy, Texas, USA, matching LinkedIn. `companyFacts.headquarters` set. `offices` (additional delivery hubs) still empty. |
+| ENT-03 legal entity | **Owner input** | Name confirmed ("Universal Technologies"). Still need entity **type** (e.g. LLC), **jurisdiction** and **registered address** — Terms renders all four together, so `companyFacts.legalEntity` stays unset until all are known. |
 | ENT-04 Security & Trust | **Done** | `/security`, linked from footer, Home and Contact; in sitemap. Content limited to claims already made elsewhere on the site. **Owner should confirm every statement** (see claims register). |
 | ENT-05 illustrative metrics | **Done** | "Live metric" → "Sample metric", plus a visible caption under every service console. Checked by `check:seo`. |
 | SEO-01 `/services/ai` | **Done in `serve.mjs`** | 301 → `/services/ai-agents` in one hop (also for the trailing-slash variant). **Static hosts need the equivalent rule** — see `seo-delivery.md`. |
@@ -62,7 +62,7 @@ Status key: **Done** (in code, covered by `npm run check:seo` where noted) · **
 | ID | Status | Notes |
 | --- | --- | --- |
 | ENT-13 tone | **Done** (main instances) | Removed jabs on Home, About, data copy. Some contrast phrasing ("not a bolted-on chatbot") remains. |
-| ENT-14 timeline | **Owner input** | Renders from `companyFacts.timeline` when set. |
+| ENT-14 timeline | **Done** | Renders from `companyFacts.timeline`; one entry set (2023 founding). |
 | SEO-15 Work vs Portfolio | **Done** | Visible label is "Work" everywhere; the URL stays `/portfolio`. |
 | SEO-16 thin product pages | **Owner input** | See UX-09. |
 | UX-13 announcement strip | **Done** | Removed (markup, CSS, mobile rule). |
