@@ -4086,6 +4086,93 @@ button {
   background: var(--data-gray);
 }
 
+/* Auto-advancing leadership carousel on About: 3 cards per page, with
+   prev/next arrows and round page dots. All cards stay in the DOM —
+   overflow:hidden clips the off-screen pages, aria-hidden/tabIndex keep
+   them out of the accessibility tree and tab order until active. */
+.leader-slider {
+  display: flex;
+  align-items: center;
+  gap: 0.85rem;
+}
+
+.leader-slider-viewport {
+  flex: 1;
+  min-width: 0;
+  overflow: hidden;
+}
+
+.leader-slider-track {
+  display: flex;
+  transition: transform 0.6s cubic-bezier(0.22, 1, 0.36, 1);
+}
+
+.leader-slide {
+  flex: 0 0 100%;
+  min-width: 0;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+}
+
+.leader-slider-arrow {
+  display: grid;
+  flex: 0 0 auto;
+  place-items: center;
+  width: 2.75rem;
+  height: 2.75rem;
+  border: 1px solid var(--line);
+  border-radius: 999px;
+  background: var(--paper);
+  color: var(--ink);
+  cursor: pointer;
+  transition: color 0.2s ease, border-color 0.2s ease, transform 0.2s ease;
+}
+
+.leader-slider-arrow:hover {
+  color: var(--brand);
+  border-color: rgba(227, 28, 35, 0.35);
+  transform: translateY(-1px);
+}
+
+.leader-slider-arrow svg {
+  width: 1.1rem;
+  height: 1.1rem;
+}
+
+.leader-dots {
+  display: flex;
+  justify-content: center;
+  gap: 0.5rem;
+  margin-top: 1.4rem;
+}
+
+.leader-dots button {
+  width: 0.55rem;
+  height: 0.55rem;
+  padding: 0;
+  border: none;
+  border-radius: 999px;
+  background: var(--line);
+  cursor: pointer;
+  transition: background 0.3s ease, transform 0.3s ease;
+}
+
+.leader-dots button.is-on {
+  background: var(--brand);
+  transform: scale(1.3);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .leader-slider-track {
+    transition: none;
+  }
+}
+
+@media (max-width: 980px) {
+  .leader-slide {
+    grid-template-columns: 1fr;
+  }
+}
+
 /* Dashboard boards */
 .hb-wrap {
   position: relative;
@@ -5081,23 +5168,30 @@ button {
 }
 
 /* Connected node/line timeline for About's company story (audit ENT-14). */
-.about-timeline {
+.about-path {
   position: relative;
   max-width: 42rem;
   margin: 0 auto;
-  padding: 0;
-  list-style: none;
 }
 
-.about-timeline::before {
-  content: '';
+/* Draws in via scaleY (see the motion.span in About.tsx); with reduced
+   motion no inline transform is ever set, so the line stays whole. */
+.about-path-spine {
   position: absolute;
   top: 0.7rem;
   bottom: 0.7rem;
   left: 1.5rem;
   width: 1px;
   background: var(--line);
+  transform-origin: top;
   pointer-events: none;
+}
+
+.about-timeline {
+  position: relative;
+  margin: 0;
+  padding: 0;
+  list-style: none;
 }
 
 .about-timeline li {
@@ -7475,5 +7569,299 @@ button {
 @media (prefers-reduced-motion: reduce) {
   .svc-console-pill.is-busy i {
     animation: none;
+  }
+}
+
+/* About hero: intro text beside the "no dropped handoffs" journey panel */
+.about-hero {
+  position: relative;
+  overflow: hidden;
+}
+
+.about-hero::before {
+  content: '';
+  position: absolute;
+  top: -16rem;
+  left: -14rem;
+  width: 42rem;
+  height: 42rem;
+  border-radius: 50%;
+  background: radial-gradient(closest-side, rgba(227, 28, 35, 0.1), transparent);
+  pointer-events: none;
+}
+
+.about-hero > .container {
+  position: relative;
+}
+
+.about-hero-grid {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 2.75rem;
+}
+
+.about-hero-visual {
+  width: 100%;
+  max-width: 40rem;
+  min-width: 0;
+}
+
+/* Wider than the site-wide .section-head.center default (42rem/16ch/40ch) —
+   scoped to this hero only, so every other page's centered header is untouched. */
+.about-hero .section-head.center {
+  max-width: 56rem;
+}
+
+.about-hero .section-title {
+  max-width: 22ch;
+}
+
+.about-hero .section-lead {
+  max-width: 62ch;
+}
+
+/* The journey panel itself — a lit path, not a dashboard card */
+.aj-panel {
+  padding: 1.75rem 1.6rem 1.5rem;
+  border: 1px solid var(--line);
+  border-radius: 24px;
+  background: var(--surface);
+  box-shadow: var(--shadow);
+}
+
+.aj-eyebrow {
+  margin: 0 0 1.75rem;
+  font-size: 0.72rem;
+  font-weight: 700;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: var(--brand);
+}
+
+.aj-track {
+  position: relative;
+}
+
+.aj-rail,
+.aj-rail-lit {
+  position: absolute;
+  top: 1.15rem;
+  left: 1.15rem;
+  right: 1.15rem;
+  height: 2px;
+  border-radius: 999px;
+}
+
+.aj-rail {
+  background: var(--line);
+}
+
+.aj-rail-lit {
+  right: auto;
+  background: linear-gradient(90deg, var(--brand), var(--brand-deep));
+}
+
+.aj-nodes {
+  position: relative;
+  display: flex;
+  justify-content: space-between;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.aj-node {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0.6rem;
+  border: 0;
+  background: transparent;
+  color: var(--muted);
+  cursor: pointer;
+}
+
+.aj-node-dot {
+  display: grid;
+  place-items: center;
+  width: 2.3rem;
+  height: 2.3rem;
+  border: 1.5px solid var(--line);
+  border-radius: 999px;
+  background: var(--paper);
+  font-family: var(--font-display);
+  font-size: 0.66rem;
+  font-weight: 800;
+  color: var(--muted);
+  transition: border-color 0.3s ease, background 0.3s ease, color 0.3s ease, transform 0.3s ease;
+}
+
+.aj-node.is-reached .aj-node-dot {
+  border-color: var(--brand);
+  background: var(--brand);
+  color: #fff;
+}
+
+.aj-node.is-active .aj-node-dot {
+  transform: scale(1.12);
+  box-shadow: 0 0 0 5px color-mix(in srgb, var(--brand) 16%, transparent);
+}
+
+.aj-node-label {
+  font-size: 0.74rem;
+  font-weight: 650;
+  letter-spacing: -0.01em;
+  color: var(--muted);
+  transition: color 0.3s ease;
+  white-space: nowrap;
+}
+
+.aj-node.is-reached .aj-node-label {
+  color: var(--text);
+}
+
+.aj-node:focus-visible {
+  outline: 2px solid var(--brand);
+  outline-offset: 4px;
+  border-radius: 12px;
+}
+
+.aj-caption {
+  margin-top: 1.75rem;
+  padding-top: 1.25rem;
+  border-top: 1px solid var(--line);
+  min-height: 3rem;
+}
+
+.aj-caption p {
+  margin: 0;
+  font-size: 0.92rem;
+  line-height: 1.55;
+  color: var(--muted);
+}
+
+@media (max-width: 640px) {
+  .aj-nodes {
+    justify-content: flex-start;
+    gap: 1.4rem;
+    overflow-x: auto;
+    padding-bottom: 0.3rem;
+    scrollbar-width: none;
+  }
+
+  .aj-nodes::-webkit-scrollbar {
+    display: none;
+  }
+
+  .aj-node {
+    flex: 0 0 auto;
+  }
+
+  .aj-rail,
+  .aj-rail-lit {
+    display: none;
+  }
+}
+
+/* /resources — extends the shared .resource-grid/.resource-card rules above
+   without touching .product-card (which reuses that same base rule). */
+.resources-hero {
+  position: relative;
+  overflow: hidden;
+}
+
+.resources-hero::before {
+  content: '';
+  position: absolute;
+  top: -15rem;
+  right: -12rem;
+  width: 40rem;
+  height: 40rem;
+  border-radius: 50%;
+  background: radial-gradient(closest-side, rgba(227, 28, 35, 0.1), transparent);
+  pointer-events: none;
+}
+
+.resources-hero > .container {
+  position: relative;
+}
+
+.resource-grid {
+  grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
+  gap: 1.25rem;
+  margin-top: 2.75rem;
+}
+
+.resource-card {
+  height: 100%;
+  transition: border-color 0.3s ease, box-shadow 0.3s ease;
+}
+
+.resource-card:has(.service-card-link:hover),
+.resource-card:has(.service-card-link:focus-visible) {
+  border-color: rgba(227, 28, 35, 0.32);
+  box-shadow: 0 20px 44px rgba(12, 15, 20, 0.09);
+}
+
+.resource-card .service-card-link:focus-visible {
+  outline: 2px solid var(--brand);
+  outline-offset: 4px;
+  border-radius: 18px;
+}
+
+.resource-card h2 {
+  margin: 0.9rem 0 0;
+  font-family: var(--font-display);
+  font-size: 1.35rem;
+  line-height: 1.3;
+  letter-spacing: -0.02em;
+}
+
+.resource-card > .service-card-link > p {
+  margin: 0.7rem 0 0;
+  color: var(--muted);
+}
+
+.resource-card-top {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-between;
+  gap: 0.5rem;
+}
+
+.resource-card-top .section-label {
+  margin: 0;
+}
+
+.resource-time {
+  padding: 0.24rem 0.65rem;
+  border-radius: 999px;
+  background: var(--paper);
+  border: 1px solid var(--line);
+  font-size: 0.74rem;
+  font-weight: 600;
+  color: var(--muted);
+  white-space: nowrap;
+}
+
+.resource-card .card-affordance {
+  align-items: center;
+  gap: 0.35rem;
+}
+
+.resource-card .card-affordance span {
+  transition: transform 0.25s ease;
+}
+
+.resource-card:has(.service-card-link:hover) .card-affordance span,
+.resource-card:has(.service-card-link:focus-visible) .card-affordance span {
+  transform: translateX(4px);
+}
+
+@media (max-width: 640px) {
+  .resource-grid {
+    grid-template-columns: minmax(0, 1fr);
   }
 }

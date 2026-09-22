@@ -28,7 +28,7 @@ Status key: **Done** (in code, covered by `npm run check:seo` where noted) · **
 | ID | Status | Notes |
 | --- | --- | --- |
 | ENT-06 client logos | **Owner input** | Portfolio heading changed from "Trusted by teams at" to "Organizations our team has supported". Keep a private evidence sheet per logo; one placeholder logo (`frog.jpg`, name "Client") is still hidden from the marquee until named. |
-| ENT-07 / UX-10 leadership | **Owner input** | The three placeholder people were removed. `companyFacts.leadership` requires a real profile URL per person and supports photos. |
+| ENT-07 / UX-10 leadership | **Deferred (owner choice)** | Section built (auto-advancing 3-per-page carousel with arrows/dots, `SHOW_LEADERSHIP` flag in `About.tsx`), currently off — business owner said not to add founders yet. `companyFacts.leadership` still needs real name/role/bio/LinkedIn per person before flipping it on. |
 | ENT-08 / UX-12 case studies, Portfolio focus | **Not done** | Needs 2–3 permissioned case studies. No content was invented. |
 | ENT-09 procurement support | **Done** (verify wording) | Section on `/security` and a note on Contact. |
 | ENT-10 "no account-manager layer" | **Done** | Now "Direct senior access" with named delivery lead and escalation path. |
@@ -36,7 +36,7 @@ Status key: **Done** (in code, covered by `npm run check:seo` where noted) · **
 | ENT-12 LinkedIn alignment | **Not done** | External. |
 | SEO-08 / SEO-09 metadata | **Done in code** | `check:seo` enforces unique titles/descriptions within length limits. About, Portfolio ("Our Work") and Contact metadata updated. Resubmit sitemap and request reindexing in GSC. |
 | SEO-10 structured data | **Done in code** / **Tooling** | Organization + WebSite site-wide, BreadcrumbList on inner pages, Service/FAQPage, Article, JobPosting. Validate with the Rich Results Test. |
-| SEO-11 JobPosting | **Owner input** | `datePosted`, `validThrough`, `applicantCountries` are now optional fields on each job in `pagesData.ts` and are emitted only when set. Do not guess them. |
+| SEO-11 JobPosting | **Partly — `validThrough` resolved** | Roles are rolling/always-open (confirmed by business owner, 23 Sep 2026): `validThrough` is intentionally left unset rather than given a fake expiry — Google's guidance is to omit it for non-expiring postings, not invent a date. `datePosted` and `applicantCountries` are still optional per job and still need real values if you want them (freshness signal for Google Jobs); not guessed. |
 | SEO-12 / CON-02 article authors | **Owner input** | `author`, `reviewer`, `datePublished`, `dateModified` supported on each article in `resourcesData.ts`; byline and schema appear automatically. |
 | SEO-13 / CON-04 products | **Done** (partly) | Every product card links to its page; status meaning and how to engage are shown on cards and pages; related-service and other-product links added. |
 | SEO-14 related content | **Done** | See UX-02/03. |
@@ -62,7 +62,7 @@ Status key: **Done** (in code, covered by `npm run check:seo` where noted) · **
 | ID | Status | Notes |
 | --- | --- | --- |
 | ENT-13 tone | **Done** (main instances) | Removed jabs on Home, About, data copy. Some contrast phrasing ("not a bolted-on chatbot") remains. |
-| ENT-14 timeline | **Done** | Renders from `companyFacts.timeline`; one entry set (2023 founding). |
+| ENT-14 timeline | **Done** | Renders from `companyFacts.timeline`; one entry set (2022 founding). |
 | SEO-15 Work vs Portfolio | **Done** | Visible label is "Work" everywhere; the URL stays `/portfolio`. |
 | SEO-16 thin product pages | **Owner input** | See UX-09. |
 | UX-13 announcement strip | **Done** | Removed (markup, CSS, mobile rule). |

@@ -55,7 +55,40 @@ export const companyFacts: CompanyFacts = {
   headquarters: 'Katy, Texas, USA',
   offices: [],
   metrics: [],
-  leadership: [],
+  // PREVIEW PLACEHOLDER — not real, not committed. Swap these for the actual
+  // founding members' name/role/bio/LinkedIn (and optional photo) before this ships.
+  leadership: [
+    {
+      name: 'Founder One (placeholder)',
+      role: 'Founder & CEO (placeholder)',
+      bio: 'Replace this with a real 1–2 line bio once the founder details are confirmed.',
+      profileUrl: '#',
+    },
+    {
+      name: 'Founder Two (placeholder)',
+      role: 'Co-Founder & CTO (placeholder)',
+      bio: 'Replace this with a real 1–2 line bio once the founder details are confirmed.',
+      profileUrl: '#',
+    },
+    {
+      name: 'Founder Three (placeholder)',
+      role: 'Co-Founder & COO (placeholder)',
+      bio: 'Replace this with a real 1–2 line bio once the founder details are confirmed.',
+      profileUrl: '#',
+    },
+    {
+      name: 'Founder Four (placeholder)',
+      role: 'Co-Founder & Head of Delivery (placeholder)',
+      bio: 'Replace this with a real 1–2 line bio once the founder details are confirmed.',
+      profileUrl: '#',
+    },
+    {
+      name: 'Founder Five (placeholder)',
+      role: 'Co-Founder & Head of Product (placeholder)',
+      bio: 'Replace this with a real 1–2 line bio once the founder details are confirmed.',
+      profileUrl: '#',
+    },
+  ],
   certifications: [],
   timeline: [
     {
