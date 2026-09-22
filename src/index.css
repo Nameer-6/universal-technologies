@@ -5080,6 +5080,68 @@ button {
   color: var(--muted);
 }
 
+/* Connected node/line timeline for About's company story (audit ENT-14). */
+.about-timeline {
+  position: relative;
+  max-width: 42rem;
+  margin: 0 auto;
+  padding: 0;
+  list-style: none;
+}
+
+.about-timeline::before {
+  content: '';
+  position: absolute;
+  top: 0.7rem;
+  bottom: 0.7rem;
+  left: 1.5rem;
+  width: 1px;
+  background: var(--line);
+  pointer-events: none;
+}
+
+.about-timeline li {
+  position: relative;
+  display: grid;
+  grid-template-columns: 3rem minmax(0, 1fr);
+  align-items: start;
+  gap: 1.1rem;
+  padding-bottom: 1.6rem;
+}
+
+.about-timeline li:last-child {
+  padding-bottom: 0;
+}
+
+.about-timeline-marker {
+  position: relative;
+  z-index: 1;
+  display: grid;
+  place-items: center;
+  width: 3rem;
+  height: 3rem;
+  border-radius: 999px;
+  background: var(--paper);
+  border: 1px solid var(--line);
+  color: var(--brand);
+  font-family: var(--font-display);
+  font-weight: 800;
+  font-size: 0.68rem;
+  letter-spacing: -0.02em;
+}
+
+.about-timeline-card {
+  padding: 1.05rem 1.25rem;
+  border: 1px solid var(--line);
+  border-radius: 18px;
+  background: var(--surface);
+}
+
+.about-timeline-card p {
+  margin: 0;
+  color: var(--muted);
+}
+
 .pf-asks {
   margin-top: 2rem;
   padding: 1.5rem 1.4rem;

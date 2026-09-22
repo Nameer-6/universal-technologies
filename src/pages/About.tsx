@@ -85,11 +85,11 @@ export default function About() {
                 How the team has evolved
               </h2>
             </motion.div>
-            <ol className="pf-process">
+            <ol className="about-timeline">
               {timeline.map((entry) => (
                 <motion.li key={`${entry.year}-${entry.text}`} {...reveal}>
-                  <span className="pf-process-index">{entry.year}</span>
-                  <div>
+                  <span className="about-timeline-marker">{entry.year}</span>
+                  <div className="about-timeline-card">
                     <p>{entry.text}</p>
                   </div>
                 </motion.li>

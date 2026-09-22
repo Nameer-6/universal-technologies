@@ -8,7 +8,7 @@ Status key: **Done** (in code, covered by `npm run check:seo` where noted) · **
 
 | ID | Status | Notes |
 | --- | --- | --- |
-| ENT-01 founding year | **Done** | Confirmed by business owner (23 Sep 2026): 2023, matching LinkedIn. `companyFacts.foundedYear` and `timeline` set. |
+| ENT-01 founding year | **Done in code** / **Owner action** | Confirmed by business owner (23 Sep 2026): 2022. `companyFacts.foundedYear` and `timeline` set. LinkedIn currently shows 2023 (per this audit) — **update LinkedIn to 2022** so the two stay aligned, the original point of this item. |
 | ENT-02 HQ / locations | **Done** | Confirmed by business owner (23 Sep 2026): Katy, Texas, USA, matching LinkedIn. `companyFacts.headquarters` set. `offices` (additional delivery hubs) still empty. |
 | ENT-03 legal entity | **Owner input** | Name confirmed ("Universal Technologies"). Still need entity **type** (e.g. LLC), **jurisdiction** and **registered address** — Terms renders all four together, so `companyFacts.legalEntity` stays unset until all are known. |
 | ENT-04 Security & Trust | **Done** | `/security`, linked from footer, Home and Contact; in sitemap. Content limited to claims already made elsewhere on the site. **Owner should confirm every statement** (see claims register). |

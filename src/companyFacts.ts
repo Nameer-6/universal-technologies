@@ -47,7 +47,7 @@ export type CompanyFacts = {
 }
 
 export const companyFacts: CompanyFacts = {
-  foundedYear: 2023,
+  foundedYear: 2022,
   // Name confirmed; entity type, jurisdiction and registered address still needed
   // before this can be set (Terms renders all four fields together — see ENT-03
   // in docs/audit-remediation.md).
@@ -59,8 +59,8 @@ export const companyFacts: CompanyFacts = {
   certifications: [],
   timeline: [
     {
-      year: '2023',
-      text: 'Founded in 2023 as a digital technology and AI solutions company serving startups, SMBs, scale-ups, and enterprises.',
+      year: '2022',
+      text: 'Founded in 2022 as a digital technology and AI solutions company serving startups, SMBs, scale-ups, and enterprises.',
     },
   ],
 }
