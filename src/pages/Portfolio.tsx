@@ -9,6 +9,25 @@ import { pageMetadata } from '../seoData'
 
 const PROCESS_PILLS = ['Scope', 'Team', 'Pilot', 'Build', 'Test', 'Deploy', 'Scale'] as const
 
+// Middle card reveals first; side cards then slide out from behind it.
+const whyReveal = {
+  hidden: (offset: number) => ({
+    opacity: 0,
+    x: offset * -60,
+    scale: offset === 0 ? 0.9 : 0.94,
+  }),
+  show: (offset: number) => ({
+    opacity: 1,
+    x: 0,
+    scale: 1,
+    transition: {
+      duration: offset === 0 ? 0.6 : 0.75,
+      delay: offset === 0 ? 0 : 0.45,
+      ease: [0.22, 1, 0.36, 1] as const,
+    },
+  }),
+}
+
 const WHY_US = [
   {
     title: 'Senior-led delivery',
@@ -268,6 +287,13 @@ export default function Portfolio() {
                       </li>
                     ))}
                   </ul>
+                  {index < howItWorks.length - 1 && (
+                    <span className="pf-path-arrow" aria-hidden="true">
+                      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.2" strokeLinecap="round" strokeLinejoin="round">
+                        <path d="M5 12h14M13 6l6 6-6 6" />
+                      </svg>
+                    </span>
+                  )}
                 </motion.li>
               ))}
             </motion.ol>
@@ -310,13 +336,23 @@ export default function Portfolio() {
         <div className="container">
           <motion.div className="section-head center" {...reveal}>
             <h2 className="section-title" id="portfolio-why-title">
-              Why teams choose Universal
+              Why teams choose Universal Technologies
             </h2>
           </motion.div>
 
-          <motion.div className="pf-why-grid" {...list}>
+          <motion.div
+            className="pf-why-grid"
+            initial={reduceMotion ? undefined : 'hidden'}
+            whileInView={reduceMotion ? undefined : 'show'}
+            viewport={{ once: true, amount: 0.3 }}
+          >
             {WHY_US.map((card, index) => (
-              <motion.article key={card.title} className="pf-why-card" variants={item}>
+              <motion.article
+                key={card.title}
+                className="pf-why-card"
+                variants={reduceMotion ? undefined : whyReveal}
+                custom={index - Math.floor(WHY_US.length / 2)}
+              >
                 <span>0{index + 1}</span>
                 <h3>{card.title}</h3>
                 <em>{card.kicker}</em>

@@ -4286,15 +4286,27 @@ button {
   padding: 0;
 }
 
-.pf-path-gates::before {
-  content: '';
+.pf-path-arrow {
   position: absolute;
-  top: 1.2rem;
-  left: 9%;
-  right: 9%;
-  height: 1px;
-  background: var(--line);
+  top: 50%;
+  right: calc(-0.425rem - 15px);
+  z-index: 2;
+  display: grid;
+  place-items: center;
+  width: 30px;
+  height: 30px;
+  border: 1px solid var(--line);
+  border-radius: 50%;
+  background: var(--surface);
+  color: var(--brand);
+  transform: translateY(-50%);
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.06);
   pointer-events: none;
+}
+
+.pf-path-arrow svg {
+  width: 15px;
+  height: 15px;
 }
 
 .pf-path-gate {
@@ -4488,6 +4500,14 @@ button {
   border-radius: 22px;
   background: var(--surface);
   transition: transform 0.3s ease, border-color 0.3s ease;
+}
+
+.pf-why-card {
+  position: relative;
+}
+
+.pf-why-card:nth-child(2) {
+  z-index: 1;
 }
 
 .pf-why-card:hover,
@@ -4999,7 +5019,7 @@ button {
     grid-template-columns: repeat(2, minmax(0, 1fr));
   }
 
-  .pf-path-gates::before {
+  .pf-path-gate:nth-child(2n) .pf-path-arrow {
     display: none;
   }
 }
@@ -5017,8 +5037,16 @@ button {
     grid-template-columns: 1fr;
   }
 
-  .pf-path-gates::before {
-    display: none;
+  .pf-path-gate:nth-child(2n) .pf-path-arrow {
+    display: grid;
+  }
+
+  .pf-path-arrow {
+    top: auto;
+    right: auto;
+    bottom: calc(-0.425rem - 15px);
+    left: 50%;
+    transform: translateX(-50%) rotate(90deg);
   }
 
   .pf-trust p {
