@@ -1,13 +1,13 @@
 import { useEffect, useRef, useState, type FormEvent } from 'react'
 import { Link } from 'react-router-dom'
 import { CONTACT_EMAIL } from '../data'
+import { ClientMarquee } from './ClientMarquee'
 import {
   dialCodes,
   projectStages,
   referralSources,
   serviceChoices,
   timelines,
-  trustLogos,
   type Option,
 } from '../bookCallData'
 
@@ -349,13 +349,7 @@ export function BookCallWizard() {
 
             <div className="bc-trust">
               <p className="bc-eyebrow">TRUSTED BY</p>
-              <ul className="bc-trust-logos">
-                {trustLogos.map((logo) => (
-                  <li key={logo.name}>
-                    <img src={logo.src} alt={logo.name} loading="lazy" />
-                  </li>
-                ))}
-              </ul>
+              <ClientMarquee />
             </div>
           </div>
         </aside>
@@ -452,7 +446,7 @@ export function BookCallWizard() {
                   <div className="bc-fields">
                     <RadioGroup
                       id="stage"
-                      legend="Where are you today?"
+                      legend="What stage is your project at?"
                       options={projectStages}
                       value={details.stage}
                       error={errors.stage}

@@ -84,9 +84,3 @@ export const dialCodes = [
   { code: 'DE', dial: '+49', label: 'DE +49', placeholder: '1512 3456789' },
   { code: 'PT', dial: '+351', label: 'PT +351', placeholder: '912 345 678' },
 ]
-
-export const trustLogos = [
-  { name: 'Teladoc Health', src: '/clients/teladoc-health.svg' },
-  { name: 'Ecwid', src: '/clients/ecwid.svg' },
-  { name: 'Dovetail', src: '/clients/dovetail.svg' },
-]

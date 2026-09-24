@@ -6417,30 +6417,24 @@ button {
   border-top: 1px solid rgba(var(--bc-rgb), 0.07);
 }
 
-.bc-trust-logos {
-  display: grid;
-  grid-template-columns: repeat(3, 1fr);
-  align-items: center;
-  gap: 0.75rem;
-  margin: 0.8rem 0 0;
-  padding: 0;
-  list-style: none;
+.bc-trust .client-marquee {
+  margin-top: 0.8rem;
 }
 
-.bc-trust-logos li {
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  min-width: 0;
+.bc-trust .client-marquee-track {
+  gap: 0.5rem;
+  animation-duration: 36s;
 }
 
-.bc-trust-logos img {
-  width: auto;
-  max-width: 76px;
-  height: 20px;
-  object-fit: contain;
-  opacity: 0.6;
-  filter: var(--bc-logo-filter);
+.bc-trust .client-card {
+  width: 6.25rem;
+  height: 3rem;
+  padding: 0.45rem 0.65rem;
+  border-radius: 12px;
+}
+
+.bc-trust .client-card img {
+  height: 1.5rem;
 }
 
 /* Panel ----------------------------------------------------------- */
