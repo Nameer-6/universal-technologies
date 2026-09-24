@@ -3035,6 +3035,11 @@ button {
 }
 
 /* Why choose us */
+.svc-journey {
+  max-width: 760px;
+  margin: 0 auto 2.5rem;
+}
+
 .svc-why-grid {
   display: grid;
   grid-template-columns: repeat(3, 1fr);

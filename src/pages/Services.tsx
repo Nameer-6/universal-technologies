@@ -1,5 +1,6 @@
 import { motion } from 'framer-motion'
 import { Link } from 'react-router-dom'
+import { AboutJourney } from '../components/AboutJourney'
 import { DELIVERY_ECOSYSTEM } from '../components/ServiceFlow'
 import { Seo } from '../components/Seo'
 import { ServicesLive } from '../components/ServicesLive'
@@ -161,6 +162,14 @@ export default function Services() {
             <h2 className="svc-title" id="services-why-title">
               Six capabilities. One accountable team.
             </h2>
+            <p className="svc-lede">
+              Every handoff between vendors loses context. We carry a project from the first sketch
+              to production with the same team, and stay close to it after launch.
+            </p>
+          </motion.div>
+
+          <motion.div className="svc-journey" {...reveal}>
+            <AboutJourney />
           </motion.div>
 
           <motion.div
