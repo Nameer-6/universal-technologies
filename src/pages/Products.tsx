@@ -3,7 +3,7 @@ import { Link } from 'react-router-dom'
 import { Seo } from '../components/Seo'
 import { usePageMotion } from '../hooks/usePageMotion'
 import { pageMetadata } from '../seoData'
-import { products } from '../pagesData'
+import { productStatusInfo, products } from '../pagesData'
 
 export default function Products() {
   const { reveal, list, item, cardHover, inView } = usePageMotion()
@@ -14,6 +14,7 @@ export default function Products() {
         title={pageMetadata['/products'].title}
         description={pageMetadata['/products'].description}
         path="/products"
+        breadcrumbs={[{ name: 'Products', path: '/products' }]}
       />
 
       <section className="section" aria-labelledby="products-title">
@@ -42,6 +43,7 @@ export default function Products() {
               >
                 <Link to={`/products/${product.id}`} className="service-card-link">
                   <p className="product-status">{product.status}</p>
+                  <p className="product-audience">{productStatusInfo[product.status].meaning}</p>
                   <div className="service-top">
                     <span>{product.mark}</span>
                     <h2>{product.name}</h2>

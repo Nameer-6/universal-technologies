@@ -1,10 +1,11 @@
-// Placeholder content for the About, Careers, Products, and Contact pages.
+// Content for the About, Careers, Products, and Contact pages.
+// Company facts (founding year, locations, metrics, leadership) live in companyFacts.ts.
 
 export const companyValues = [
   {
     step: '01',
     title: 'Evidence over opinions',
-    text: 'Every decision is checked against a metric someone will actually look at again, not a hunch that sounded right in a meeting.',
+    text: 'Every decision is checked against a metric someone will look at again, so priorities rest on evidence the whole team can see.',
   },
   {
     step: '02',
@@ -13,33 +14,8 @@ export const companyValues = [
   },
   {
     step: '03',
-    title: "Documentation isn't optional",
-    text: "Runbooks and docs ship with the feature, not as a favor squeezed in if there's time left.",
-  },
-]
-
-export const milestones = [
-  { value: '2016', label: 'Founded' },
-  { value: '120+', label: 'Products shipped' },
-  { value: '40+', label: 'Team members' },
-  { value: '18', label: 'Countries served' },
-]
-
-export const leadership = [
-  {
-    name: 'Amara Okoye',
-    role: 'Co-Founder & CEO',
-    bio: 'Twelve years leading delivery teams across fintech and healthcare platforms before starting Universal.',
-  },
-  {
-    name: 'Daniel Cho',
-    role: 'Co-Founder & CTO',
-    bio: 'Previously staff engineer on infrastructure teams at two Series C startups; keeps the stack boring on purpose.',
-  },
-  {
-    name: 'Priya Nair',
-    role: 'VP, Client Delivery',
-    bio: 'Runs the delivery leads program — the people accountable for every engagement from kickoff to handoff.',
+    title: 'Documentation ships with the work',
+    text: 'Runbooks and docs are part of the definition of done, so your team can operate what we build.',
   },
 ]
 
@@ -65,7 +41,7 @@ export const perks = [
   {
     step: 'D',
     title: 'Work that matters',
-    text: 'AI agents, automation pipelines, and production systems real customers depend on — not internal tooling nobody uses.',
+    text: 'AI agents, automation pipelines, and production systems real customers depend on.',
     detail: 'Real customers, real systems.',
   },
 ]
@@ -79,6 +55,12 @@ export type JobOpening = {
   summary: string
   /** Shown as the highlighted role at the top of the openings list. */
   featured?: boolean
+  /** ISO date (YYYY-MM-DD) the role was really first posted. Publish only when verified. */
+  datePosted?: string
+  /** ISO date after which the role is closed. Remove expired roles promptly. */
+  validThrough?: string
+  /** ISO 3166-1 alpha-2 codes of countries where applicants may be based. Publish only when verified. */
+  applicantCountries?: string[]
   responsibilities: string[]
   requirements: string[]
 }
@@ -210,6 +192,26 @@ export const jobOpenings: JobOpening[] = [
 
 export type ProductStatus = 'Production' | 'Internal accelerator' | 'Beta' | 'Prototype'
 
+/** What each status means and how a prospect can engage with it. Shown on cards and detail pages. */
+export const productStatusInfo: Record<ProductStatus, { meaning: string; engage: string }> = {
+  'Internal accelerator': {
+    meaning: 'Built in-house and used on our client engagements.',
+    engage: 'Request a walkthrough to see it live and talk through fit for your team.',
+  },
+  Production: {
+    meaning: 'Generally available and supported.',
+    engage: 'Request a demo to discuss fit and onboarding.',
+  },
+  Beta: {
+    meaning: 'Working, but still changing. Features and availability may change.',
+    engage: 'Request a demo to discuss early access.',
+  },
+  Prototype: {
+    meaning: 'An early proof of concept, shown to illustrate an approach.',
+    engage: 'Talk to us if you want to build on the idea.',
+  },
+}
+
 export type Product = {
   id: string
   mark: string
@@ -219,6 +221,8 @@ export type Product = {
   tags: string[]
   status: ProductStatus
   audience: string
+  /** id of the most relevant service line, for contextual internal linking. */
+  relatedService: string
 }
 
 export const products: Product[] = [
@@ -232,6 +236,7 @@ export const products: Product[] = [
     tags: ['Dashboards', 'Alerting', 'CI/CD integrations'],
     status: 'Internal accelerator',
     audience: 'Delivery leads watching release risk across services',
+    relatedService: 'devops',
   },
   {
     id: 'ledgerline',
@@ -243,6 +248,7 @@ export const products: Product[] = [
     tags: ['Fintech', 'Automation', 'Audit trail'],
     status: 'Internal accelerator',
     audience: 'Finance and ops teams reconciling payments',
+    relatedService: 'workflow-automation',
   },
   {
     id: 'triagebot',
@@ -254,6 +260,7 @@ export const products: Product[] = [
     tags: ['Support ops', 'NLP', 'Slack + email'],
     status: 'Internal accelerator',
     audience: 'Support teams routing inbound tickets',
+    relatedService: 'ai-agents',
   },
   {
     id: 'fieldsync',
@@ -265,6 +272,7 @@ export const products: Product[] = [
     tags: ['Mobile', 'Offline sync', 'Logistics'],
     status: 'Internal accelerator',
     audience: 'Field crews working with unreliable connectivity',
+    relatedService: 'end-to-end-development',
   },
   {
     id: 'postit-ai',
@@ -276,6 +284,7 @@ export const products: Product[] = [
     tags: ['Social scheduling', 'AI', 'LinkedIn + Instagram + Facebook'],
     status: 'Internal accelerator',
     audience: 'Marketing teams scheduling company posts',
+    relatedService: 'ai-agents',
   },
 ]
 
@@ -285,10 +294,4 @@ export const hiringSteps = [
   { step: '03', title: 'Skills conversation', text: 'A technical or craft discussion with the people you’d work beside.' },
   { step: '04', title: 'Practical discussion', text: 'Walk through real work — a past project or a scoped problem.' },
   { step: '05', title: 'Offer', text: 'If it’s a fit on both sides, we make it concrete.' },
-]
-
-export const officeLocations = [
-  { city: 'Austin, TX', detail: 'Headquarters · by appointment' },
-  { city: 'Lisbon, Portugal', detail: 'EMEA delivery hub' },
-  { city: 'Bengaluru, India', detail: 'APAC delivery hub' },
 ]

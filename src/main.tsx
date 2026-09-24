@@ -2,6 +2,10 @@ import { StrictMode } from 'react'
 import { createRoot } from 'react-dom/client'
 import { BrowserRouter } from 'react-router-dom'
 import { HelmetProvider } from 'react-helmet-async'
+// Self-hosted typefaces (variable WOFF2, latin + latin-ext subsets) — no third-party font requests.
+import '@fontsource-variable/dm-sans/opsz.css'
+import '@fontsource-variable/dm-sans/opsz-italic.css'
+import '@fontsource-variable/outfit/index.css'
 import './index.css'
 import App from './App.tsx'
 

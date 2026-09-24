@@ -5,6 +5,10 @@ import { handleRequest } from './serve.mjs'
 
 const sitemap = await readFile('dist/sitemap.xml', 'utf8')
 const paths = [...sitemap.matchAll(/<loc>(.*?)<\/loc>/g)].map(match => new URL(match[1]).pathname)
+// Retired URLs: must redirect, never appear in the sitemap or be linked internally (audit SEO-01/02/06).
+const LEGACY = ['/services/ai', '/services/software-development', '/services/ui-ux', '/services/cybersecurity']
+for (const old of LEGACY) assert(!paths.includes(old), `sitemap lists legacy URL ${old}`)
+assert(paths.includes('/security'), 'sitemap lists /security')
 const titles = new Set()
 const descriptions = new Set()
 const decode = text => text.replace(/&amp;/g, '&').replace(/&#x27;/g, "'").replace(/&quot;/g, '"').replace(/&lt;/g, '<').replace(/&gt;/g, '>').replace(/<!--.*?-->/g, '')
@@ -43,12 +47,29 @@ for (const path of paths) {
   for (const match of body.matchAll(/href="(\/[^"#?]*)/g)) {
     const link = match[1]
     assert(paths.includes(link), `${path}: internal link ${link} exists`)
+    assert(!LEGACY.includes(link), `${path}: links to legacy URL ${link}`)
+  }
+  assert(!body.includes('class="topbar"'), `${path}: generic announcement strip removed`)
+  assert.equal([...body.matchAll(/<header\b/g)].length, 1, `${path}: exactly one global header`)
+  assert.equal([...body.matchAll(/<footer\b/g)].length, 1, `${path}: exactly one global footer`)
+  assert(!body.includes('Live metric'), `${path}: no illustrative metric labelled live`)
+  assert(!/Get Started|Book a consultation|Start free audit/.test(body), `${path}: legacy CTA wording`)
+  assert(!/replies immediately|reply immediately/i.test(body), `${path}: one response-time promise`)
+  assert(!body.includes('fonts.googleapis.com') && !head.includes('fonts.googleapis.com'), `${path}: no Google Fonts request`)
+  assert(schemas.some((schema) => schema['@type'] === 'WebSite'), `${path}: WebSite schema`)
+  if (path !== '/') assert(schemas.some((schema) => schema['@type'] === 'BreadcrumbList'), `${path}: BreadcrumbList schema`)
+  // A related/other-roles heading must never render without cards under it (audit UX-02/03).
+  for (const [heading, card] of [['Related service lines', 'svc-related-card'], ['Other open roles', 'related-job-card']]) {
+    if (body.includes(heading)) assert(body.includes(card), `${path}: empty "${heading}" section`)
+  }
+  if (path.startsWith('/services/')) {
+    assert(body.includes('Illustrative example of a delivery environment'), `${path}: illustrative-data caption`)
   }
 }
 // Exercise the real HTTP handler without opening a socket.
-async function request(path, host = 'universal-technologies.com', method = 'GET') {
+async function request(path, host = 'universal-technologies.com', method = 'GET', extraHeaders = {}) {
   const result = {}
-  await handleRequest({ url: path, method, headers: { host } }, {
+  await handleRequest({ url: path, method, headers: { host, ...extraHeaders } }, {
     writeHead(status, headers) { result.status = status; result.headers = headers; return this },
     end(body) { result.body = body?.toString(); return this },
   })
@@ -64,6 +85,24 @@ for (const old of ['/services/software-development', '/services/ui-ux']) {
   const result = await request(old)
   assert.equal(result.status, 301)
   assert.equal(result.headers.Location, '/services/end-to-end-development')
+}
+// Legacy AI URL: one 301 straight to the canonical service (no chain, no duplicate homepage content).
+{
+  const result = await request('/services/ai')
+  assert.equal(result.status, 301)
+  assert.equal(result.headers.Location, '/services/ai-agents')
+  assert(paths.includes(result.headers.Location), 'redirect target is a canonical sitemap URL')
+  assert.equal((await request('/services/ai/')).headers.Location, '/services/ai-agents', 'trailing-slash variant is also a single hop')
+}
+// http and www variants each reach the canonical https host in a single permanent redirect.
+{
+  const http = await request('/services/qa?x=1', 'universal-technologies.com', 'GET', { 'x-forwarded-proto': 'http' })
+  assert.equal(http.status, 301)
+  assert.equal(http.headers.Location, 'https://universal-technologies.com/services/qa?x=1')
+  const https = await request('/services/qa', 'universal-technologies.com', 'GET', { 'x-forwarded-proto': 'https' })
+  assert.equal(https.status, 200)
+  const wwwHttp = await request('/services/qa', 'www.universal-technologies.com', 'GET', { 'x-forwarded-proto': 'http' })
+  assert.equal(wwwHttp.headers.Location, 'https://universal-technologies.com/services/qa')
 }
 assert.equal((await request('/about/', 'universal-technologies.com')).headers.Location, '/about')
 assert.equal((await request('/about?source=test', 'www.universal-technologies.com')).headers.Location, 'https://universal-technologies.com/about?source=test')

@@ -6,6 +6,12 @@ export type Resource = {
   sections: { title: string; text: string }[]
   service: string
   serviceLabel: string
+  /** Named author and reviewer. Add only real, consenting people; the byline and Article schema appear automatically. */
+  author?: { name: string; role: string; profileUrl?: string }
+  reviewer?: { name: string; role: string }
+  /** ISO dates (YYYY-MM-DD). Add the real publication and last-review dates. */
+  datePublished?: string
+  dateModified?: string
 }
 
 export const resources: Resource[] = [
@@ -38,6 +44,21 @@ export const resources: Resource[] = [
     ],
     service: 'end-to-end-development',
     serviceLabel: 'Discuss an accountable delivery team',
+  },
+  {
+    slug: 'evaluating-an-ai-agent-before-production',
+    title: 'What to check before an AI agent goes into production',
+    description: 'A practical checklist for evaluating an AI agent before it touches real workflows: task scope, data access, failure handling, and monitoring after launch.',
+    category: 'AI guide',
+    sections: [
+      { title: 'Define the task narrowly first', text: 'An agent that is asked to "handle support" will behave unpredictably. One asked to "draft a reply to billing questions using these three data sources" will not. Write down the exact inputs it will see, the outputs it should produce, and the actions it is and is not allowed to take before you evaluate anything else.' },
+      { title: 'Decide what data it can actually touch', text: 'Give the agent the narrowest access that lets it do its job, not the same access a full-time employee would have. Separate what it can read from what it can write, and require explicit approval before it reaches any system that affects customers, money, or production data.' },
+      { title: 'Plan for when it gets it wrong', text: 'Every agent will produce a wrong or unclear answer eventually. Decide in advance what happens next: does it ask a human, refuse, or retry with more context? For any action with real consequences, keep a person in the loop until you have evidence the agent handles the edge cases, not just the demo cases.' },
+      { title: 'Test it against real edge cases, not the happy path', text: 'A demo with clean, well-formed inputs tells you very little. Before launch, run it against ambiguous requests, missing information, and inputs designed to confuse it. Log what it did in each case and review the failures with the team that will own it, not just the team that built it.' },
+      { title: 'Set up monitoring before you launch, not after', text: "Decide who reviews the agent's output on a regular cadence, what \"good\" looks like, and what triggers a rollback. Track accuracy over time, not just at launch — agent behavior can drift as the systems and data around it change. An agent without an owner watching it is a liability, not a feature." },
+    ],
+    service: 'ai-agents',
+    serviceLabel: 'Explore AI agent development',
   },
 ]
 

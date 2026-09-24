@@ -1,169 +1,120 @@
-import { useEffect, useState } from 'react'
-import { motion } from 'framer-motion'
+import { useEffect, useRef, useState } from 'react'
+import { AnimatePresence, motion } from 'framer-motion'
 import { Link } from 'react-router-dom'
 import { Seo } from '../components/Seo'
 import { ClientMarquee } from '../components/ClientMarquee'
-import { howItWorks, services } from '../data'
-import { usePageMotion } from '../hooks/usePageMotion'
+import { ServiceChartCard } from '../components/ServiceChartCard'
+import { PLUG_CHARTS, PLUG_EXPLORE } from '../components/serviceCharts'
+import { HeroBoardStage } from '../components/HeroBoards'
+import { SERVICE_BOARD } from '../components/boardMap'
+import { SWAP } from '../components/chartTokens'
+import { services } from '../data'
+import { ease, usePageMotion } from '../hooks/usePageMotion'
 import { pageMetadata } from '../seoData'
 
-const PROCESS_PILLS = ['Scope', 'Team', 'Pilot', 'Build', 'Test', 'Deploy', 'Scale'] as const
+const PROCESS_PILLS = ['Discover', 'Design', 'Build', 'Test', 'Deploy', 'Support'] as const
 
-// Middle card reveals first; side cards then slide out from behind it.
-const whyReveal = {
-  hidden: (offset: number) => ({
-    opacity: 0,
-    x: offset * -60,
-    scale: offset === 0 ? 0.9 : 0.94,
-  }),
-  show: (offset: number) => ({
-    opacity: 1,
-    x: 0,
-    scale: 1,
-    transition: {
-      duration: offset === 0 ? 0.6 : 0.75,
-      delay: offset === 0 ? 0 : 0.45,
-      ease: [0.22, 1, 0.36, 1] as const,
-    },
-  }),
-}
-
-const WHY_US = [
+// The six SDLC stages behind every engagement, shown as the delivery path.
+const DELIVERY_STAGES = [
   {
-    title: 'Senior-led delivery',
-    kicker: 'Experienced leadership from day one',
-    text: 'Every engagement is led by engineers who have shipped production systems before, working directly inside your roadmap and workflow.',
+    title: 'Discovery & requirements',
+    text: 'We start by understanding your users, your constraints, and what "done" actually means for this project.',
   },
   {
-    title: 'One accountable delivery partner',
-    kicker: 'Six capabilities. One accountable team.',
-    text: 'Bring in one capability or combine AI agents, automation, QA, DevOps, and full-stack engineering under one delivery partner.',
+    title: 'Design & architecture',
+    text: 'We map the system before we build it — data flow, integrations, and the decisions that are expensive to change later.',
   },
   {
-    title: 'Built around your workflow',
-    kicker: 'Your roadmap. Your workflow. Our engineering team.',
-    text: 'Our engineers work within your existing tools, processes, roadmap, and communication rhythm instead of forcing your team into a separate delivery model.',
+    title: 'Development',
+    text: 'Our engineers build in short, reviewable cycles, so you see working software early and often — not just at the end.',
+  },
+  {
+    title: 'QA & testing',
+    text: 'Every feature is tested against real use cases, manually and with automation, before it reaches your users.',
+  },
+  {
+    title: 'Deployment',
+    text: 'We ship in controlled, monitored releases, so launches are predictable events rather than stressful ones.',
+  },
+  {
+    title: 'Support & iteration',
+    text: "After launch, we monitor, maintain, and keep improving — a product doesn't stop evolving once it's live.",
   },
 ]
 
-const SPARKS = [
-  [10, 16, 12, 22, 18, 28, 24],
-  [14, 10, 18, 14, 26, 20, 30],
-  [8, 14, 20, 16, 12, 24, 18],
-  [12, 20, 14, 28, 18, 22, 16],
-  [18, 12, 22, 10, 26, 14, 30],
-  [16, 22, 12, 20, 28, 18, 24],
-]
+const INDUSTRIES = ['Fintech', 'E-commerce', 'Lead generation'] as const
 
-const BOARDS = [
-  {
-    title: 'Automation Builder',
-    subtitle: 'workflow · prod-eng-1',
-    steps: ['Trigger', 'Enrich', 'Classify', 'Route', 'Deliver'],
-    active: 1,
-    left: { label: 'Runs today', value: 'On track' },
-    right: { label: 'Avg latency', value: 'Staging' },
-    foot: 'Queue throughput',
-  },
-  {
-    title: 'Automation Builder',
-    subtitle: 'workflow · prod-eng-1',
-    steps: ['Trigger', 'Enrich', 'Classify', 'Route', 'Deliver'],
-    active: 2,
-    left: { label: 'Runs today', value: 'On track' },
-    right: { label: 'Avg latency', value: 'Staging' },
-    foot: 'Queue throughput',
-  },
-  {
-    title: 'Release gates',
-    subtitle: 'qa-suite · main',
-    steps: ['Build', 'Test', 'Canary', 'Gate', 'Prod'],
-    active: 1,
-    left: { label: 'Checks', value: 'CI-gated' },
-    right: { label: 'Feedback', value: 'On merge' },
-    foot: 'Pipeline health',
-  },
-  {
-    title: 'Deployment pipeline',
-    subtitle: 'api-gateway · main',
-    steps: ['Build', 'Test', 'Canary', 'Prod', 'Watch'],
-    active: 3,
-    left: { label: 'Deploys', value: 'Routine' },
-    right: { label: 'Rollback', value: 'Rehearsed' },
-    foot: 'Traffic shift',
-  },
-  {
-    title: 'Product console',
-    subtitle: 'saas · multi-tenant',
-    steps: ['Auth', 'Bill', 'Tenant', 'Ship', 'Observe'],
-    active: 2,
-    left: { label: 'Tenants', value: 'Isolated' },
-    right: { label: 'Billing', value: 'Metered' },
-    foot: 'Platform health',
-  },
-  {
-    title: 'Delivery board',
-    subtitle: 'end-to-end · production',
-    steps: ['Align', 'Build', 'Test', 'Ship', 'Steady'],
-    active: 1,
-    left: { label: 'Focus', value: 'Production' },
-    right: { label: 'Cadence', value: 'Two-week' },
-    foot: 'Release progress',
-  },
+const PRODUCT_FEATURES = [
+  'Spots trending topics in your industry, around the clock',
+  'Writes platform-ready posts for LinkedIn, X, Facebook, and Instagram',
+  'Creates the visuals to match — images, carousels, infographics, PDFs',
+  'Builds your weekly posting calendar and publishes it automatically',
+  'Boosts your best posts as ads on Meta, LinkedIn, and X in one click',
+  'Writes once, adapts to 20+ languages',
 ] as const
 
-function Spark({ variant }: { variant: number }) {
-  const heights = SPARKS[variant % SPARKS.length]
-  return (
-    <svg className="pf-plug-spark" viewBox="0 0 120 36" aria-hidden>
-      {heights.map((height, index) => (
-        <rect
-          key={index}
-          x={index * 17}
-          y={36 - height}
-          width="11"
-          height={height}
-          rx="2.5"
-          className={index === heights.length - 2 ? 'is-accent' : undefined}
-        />
-      ))}
-    </svg>
-  )
+// Each "why us" card rotates in face-up as it scrolls into view, like a card
+// flipping over — staggered by the parent's `list` variants (staggerChildren).
+const flipCard = {
+  hidden: { opacity: 0, rotateY: -80 },
+  show: { opacity: 1, rotateY: 0, transition: { duration: 0.65, ease } },
 }
 
-function MiniSpark() {
-  return (
-    <svg className="pf-mini-spark" viewBox="0 0 120 36" aria-hidden>
-      <polyline
-        fill="none"
-        stroke="currentColor"
-        strokeWidth="2.5"
-        strokeLinejoin="round"
-        points="0,28 18,22 36,24 54,14 72,18 90,8 120,12"
-      />
-    </svg>
-  )
-}
+const ENGAGEMENTS = [
+  {
+    tag: 'Fintech',
+    title: 'Payments platform — QA & test automation',
+    text: 'Built out a regression and automation suite covering core transaction flows, so new releases could go out with confidence instead of guesswork.',
+  },
+  {
+    tag: 'E-commerce',
+    title: 'Storefront & checkout reliability',
+    text: 'Delivered end-to-end testing across checkout, inventory, and payment integrations ahead of a major seasonal traffic spike.',
+  },
+  {
+    tag: 'Lead generation',
+    title: 'Workflow automation for a growing sales team',
+    text: 'Designed automation that moved leads through qualification and follow-up steps automatically, freeing the team to focus on closing.',
+  },
+]
 
 export default function Portfolio() {
   const { reduceMotion, reveal, hero, heroFollow, list, item, inView } = usePageMotion()
   const [active, setActive] = useState(0)
   const [pathGate, setPathGate] = useState(0)
   const current = services[active]
-  const board = BOARDS[active] ?? BOARDS[0]
+  const [pill, setPill] = useState(reduceMotion ? 3 : 0)
+  // Set while the pointer is over the hero board so it stops rotating under it.
+  const paused = useRef(false)
+  const heroVisual = reduceMotion
+    ? {}
+    : {
+        initial: { opacity: 0, y: 40, filter: 'blur(16px)' },
+        animate: { opacity: 1, y: 0, filter: 'blur(0px)' },
+        transition: { duration: 1.2, delay: 0.2, ease: SWAP },
+      }
 
   useEffect(() => {
     if (reduceMotion || services.length < 2) return undefined
     const id = window.setInterval(() => {
+      if (paused.current) return
       setActive((currentIndex) => (currentIndex + 1) % services.length)
-    }, 2800)
+    }, 3600)
     return () => window.clearInterval(id)
   }, [reduceMotion])
 
   useEffect(() => {
     if (reduceMotion) return undefined
     const id = window.setInterval(() => {
-      setPathGate((currentIndex) => (currentIndex + 1) % howItWorks.length)
+      setPill((current) => (current + 1) % PROCESS_PILLS.length)
+    }, 1400)
+    return () => window.clearInterval(id)
+  }, [reduceMotion])
+
+  useEffect(() => {
+    if (reduceMotion) return undefined
+    const id = window.setInterval(() => {
+      setPathGate((currentIndex) => (currentIndex + 1) % DELIVERY_STAGES.length)
     }, 2600)
     return () => window.clearInterval(id)
   }, [reduceMotion])
@@ -174,120 +125,113 @@ export default function Portfolio() {
         title={pageMetadata['/portfolio'].title}
         description={pageMetadata['/portfolio'].description}
         path="/portfolio"
+        breadcrumbs={[{ name: 'Portfolio', path: '/portfolio' }]}
       />
 
       <section className="pf-cv-hero" aria-labelledby="portfolio-title">
         <div className="container">
           <motion.h1 className="pf-cv-title" id="portfolio-title" {...hero}>
-            Six engineering services. One accountable delivery partner
+            Software that works, the first time.
           </motion.h1>
 
           <div className="pf-cv-split">
             <motion.div {...heroFollow}>
-              <p className="pf-cv-kicker">{current.title}</p>
+              <div className="pf-cv-name">
+                {reduceMotion ? (
+                  <span>{current.title}</span>
+                ) : (
+                  <AnimatePresence mode="wait">
+                    <motion.span
+                      key={current.title}
+                      initial={{ opacity: 0, y: 34, filter: 'blur(12px)' }}
+                      animate={{ opacity: 1, y: 0, filter: 'blur(0px)' }}
+                      exit={{ opacity: 0, y: -34, filter: 'blur(12px)' }}
+                      transition={{ duration: 0.7, ease: SWAP }}
+                    >
+                      {current.title}
+                    </motion.span>
+                  </AnimatePresence>
+                )}
+              </div>
               <p className="pf-cv-lead">
-                Choose one capability or combine several across AI agents, workflow automation, QA,
-                DevOps, SaaS, and end-to-end development — brought together around the outcome
-                your business needs.
+                Universal Technologies designs, builds, and rigorously tests software for teams who
+                can't afford surprises — from fintech platforms to e-commerce and lead-generation
+                systems.
               </p>
               <div className="hero-actions">
                 <Link className="btn pf-cv-primary" to="/contact">
-                  Book a call
+                  Start a project
                 </Link>
                 <a className="btn btn-ghost-ink" href="#work">
-                  Explore services
+                  See our work
                 </a>
               </div>
               <ol className="pf-cv-pills">
-                {PROCESS_PILLS.map((step) => (
-                  <li key={step} className={step === 'Build' ? 'is-active' : undefined}>
-                    {step}
+                {PROCESS_PILLS.map((step, index) => (
+                  <li key={step}>
+                    <span className={`pf-cv-pill${index === pill ? ' is-active' : ''}`}>{step}</span>
+                    {index < PROCESS_PILLS.length - 1 ? (
+                      <span className={`pf-cv-pill-line${index < pill ? ' is-done' : ''}`} aria-hidden />
+                    ) : null}
                   </li>
                 ))}
               </ol>
             </motion.div>
 
-            <motion.div className="pf-visual" aria-hidden {...heroFollow}>
-              <div className="pf-visual-bar">
-                <span />
-                <span />
-                <span />
-                <div className="pf-visual-titles">
-                  <strong>{board.title}</strong>
-                  <em>{board.subtitle}</em>
-                </div>
-              </div>
-              <div className="pf-visual-flow">
-                {board.steps.map((step, index) => (
-                  <span key={step} className={index === board.active ? 'is-active' : undefined}>
-                    {step}
-                  </span>
+            <motion.div className="pf-cv-visual" {...heroVisual}>
+              <HeroBoardStage
+                boardKey={SERVICE_BOARD[current.id] ?? 'automation'}
+                reduceMotion={reduceMotion}
+                onHoverChange={(hovering) => {
+                  paused.current = hovering
+                }}
+              />
+              <div className="pf-cv-dashes" aria-hidden>
+                {services.map((service, index) => (
+                  <span key={service.id} className={index === active ? 'is-on' : undefined} />
                 ))}
-              </div>
-              <div className="pf-visual-stats">
-                <div>
-                  <small>{board.left.label}</small>
-                  <strong>{board.left.value}</strong>
-                  <MiniSpark />
-                </div>
-                <div>
-                  <small>{board.right.label}</small>
-                  <strong>{board.right.value}</strong>
-                  <MiniSpark />
-                </div>
-              </div>
-              <div className="pf-visual-foot">
-                <span>{board.foot}</span>
-                <b />
               </div>
             </motion.div>
           </div>
 
           <div className="pf-trust" id="clients">
-            <p>Trusted by teams at</p>
+            <p>Organizations our team has supported</p>
             <ClientMarquee />
           </div>
         </div>
       </section>
 
-      <section className="section band pf-path-section" id="path" aria-labelledby="portfolio-path-title">
+      <section className="section band pf-path-section" id="process" aria-labelledby="portfolio-path-title">
         <div className="container">
           <motion.div className="section-head center" {...reveal}>
-            <p className="section-label">The path</p>
+            <p className="section-label">How we deliver</p>
             <h2 className="section-title" id="portfolio-path-title">
-              Scoped work, with the quality gates already inside the price.
+              Six stages between an idea and a working product.
             </h2>
             <p className="section-lead">
-              A typical partner covers one stage, or two stages that argue with each other. We own
-              every gate, so results carry client names.
+              Most software problems aren't really about code — they're about what gets missed
+              along the way. So we test early, automate what's repeatable, and never ship something
+              we haven't checked ourselves.
             </p>
           </motion.div>
 
           <div className="pf-path">
             <div className="pf-path-plaque">
-              <span>Project</span>
-              <strong>Scoped Delivery</strong>
+              <span>SDLC</span>
+              <strong>Six-stage delivery</strong>
             </div>
 
-            <motion.ol className="pf-path-gates" {...list}>
-              {howItWorks.map((stage, index) => (
+            <motion.ol className="pf-path-gates pf-path-gates--six" {...list}>
+              {DELIVERY_STAGES.map((stage, index) => (
                 <motion.li
-                  key={stage.step}
+                  key={stage.title}
                   className={`pf-path-gate${index === pathGate ? ' is-active' : ''}`}
                   variants={item}
                 >
-                  <p className="pf-path-stage">Stage {stage.step}</p>
+                  <p className="pf-path-stage">Stage 0{index + 1}</p>
                   <h3>{stage.title}</h3>
                   <p className="pf-path-copy">{stage.text}</p>
-                  <ul className="pf-path-chips">
-                    {stage.cards.map((card) => (
-                      <li key={card.label}>
-                        <strong>{card.label}</strong>
-                        <span>{card.detail}</span>
-                      </li>
-                    ))}
-                  </ul>
-                  {index < howItWorks.length - 1 && (
+                  {index < DELIVERY_STAGES.length - 1 && (
                     <span className="pf-path-arrow" aria-hidden="true">
                       <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.2" strokeLinecap="round" strokeLinejoin="round">
                         <path d="M5 12h14M13 6l6 6-6 6" />
@@ -304,76 +248,124 @@ export default function Portfolio() {
       <section className="section" id="work" aria-labelledby="portfolio-work-title">
         <div className="container">
           <motion.div className="section-head center" {...reveal}>
+            <p className="section-label">Work</p>
             <h2 className="section-title" id="portfolio-work-title">
-              Choose where we plug in.
+              Where we've delivered
             </h2>
+            <p className="section-lead">A sample of the kind of engagements we take on.</p>
           </motion.div>
 
-          <motion.div className="pf-plug-grid" {...list}>
-            {services.map((service, index) => (
-              <motion.div key={service.id} variants={item}>
-                <Link to={`/services/${service.id}`} className="pf-plug-card">
-                  <span className="pf-plug-mark">{service.mark}</span>
-                  <h3>{service.title}</h3>
-                  <p>{service.summary}</p>
-                  <div className="pf-plug-tags">
-                    {service.stacks.slice(0, 4).map((tech) => (
-                      <span key={tech}>{tech}</span>
-                    ))}
-                  </div>
-                  <Spark variant={index} />
-                  <span className="pf-plug-more">
-                    Explore {service.title.toLowerCase()} <span aria-hidden>→</span>
-                  </span>
-                </Link>
-              </motion.div>
-            ))}
-          </motion.div>
-        </div>
-      </section>
-
-      <section className="section band" aria-labelledby="portfolio-why-title">
-        <div className="container">
-          <motion.div className="section-head center" {...reveal}>
-            <h2 className="section-title" id="portfolio-why-title">
-              Why teams choose Universal Technologies
-            </h2>
-          </motion.div>
-
-          <motion.div
-            className="pf-why-grid"
-            initial={reduceMotion ? undefined : 'hidden'}
-            whileInView={reduceMotion ? undefined : 'show'}
-            viewport={{ once: true, amount: 0.3 }}
-          >
-            {WHY_US.map((card, index) => (
+          <motion.div className="pf-why-grid" {...list}>
+            {ENGAGEMENTS.map((engagement) => (
               <motion.article
-                key={card.title}
+                key={engagement.title}
                 className="pf-why-card"
-                variants={reduceMotion ? undefined : whyReveal}
-                custom={index - Math.floor(WHY_US.length / 2)}
+                variants={reduceMotion ? undefined : flipCard}
+                style={{ transformPerspective: 1000 }}
               >
-                <span>0{index + 1}</span>
-                <h3>{card.title}</h3>
-                <em>{card.kicker}</em>
-                <p>{card.text}</p>
+                <span>{engagement.tag}</span>
+                <h3>{engagement.title}</h3>
+                <p>{engagement.text}</p>
               </motion.article>
             ))}
           </motion.div>
         </div>
       </section>
 
+      <section className="section band" id="services" aria-labelledby="portfolio-services-title">
+        <div className="container">
+          <motion.div className="section-head center" {...reveal}>
+            <p className="section-label">Services</p>
+            <h2 className="section-title" id="portfolio-services-title">
+              Choose where we plug in.
+            </h2>
+            <p className="section-lead">
+              QA and testing, AI automation, and full software delivery. Pick one, or lean on
+              several across a single build.
+            </p>
+            <ul className="pf-industries">
+              {INDUSTRIES.map((industry) => (
+                <li key={industry}>{industry}</li>
+              ))}
+            </ul>
+          </motion.div>
+
+          <div className="pf-plug-grid">
+            {services.map((service, index) => (
+              <ServiceChartCard
+                key={service.id}
+                id={service.id}
+                index={index}
+                title={service.title}
+                summary={service.summary}
+                capabilities={service.stacks.slice(0, 4)}
+                chart={PLUG_CHARTS[service.id] ?? PLUG_CHARTS['ai-agents']}
+                exploreLabel={PLUG_EXPLORE[service.id] ?? service.title.toLowerCase()}
+                reduceMotion={reduceMotion}
+              />
+            ))}
+          </div>
+        </div>
+      </section>
+
+      <section className="section" id="product" aria-labelledby="portfolio-product-title">
+        <div className="container">
+          <motion.div className="section-head center" {...reveal}>
+            <p className="section-label">Our product</p>
+            <h2 className="section-title" id="portfolio-product-title">
+              postit.ai
+            </h2>
+            <p className="section-lead">
+              Your AI autopilot for content — trends, writing, visuals, and scheduling, in one place.
+            </p>
+          </motion.div>
+
+          <div className="pf-product">
+            <motion.div className="pf-product-copy" {...reveal}>
+              <h3>Never run out of what to post.</h3>
+              <p>
+                Most teams don't run out of things to say — they run out of time to say it
+                everywhere, every week. postit.ai closes that gap. It watches for what's trending in
+                your industry, writes a post for each platform in the right tone and format, builds
+                the visuals to go with it, and fills in your weekly posting calendar automatically —
+                so consistency stops depending on someone remembering to do it.
+              </p>
+              <p>Accounts posting consistently with it see roughly 3.4x more impressions on average.</p>
+              <a
+                className="btn pf-cv-primary"
+                href="https://post-it.universal-technologies.com/dashboard"
+                target="_blank"
+                rel="noopener noreferrer"
+              >
+                Explore postit.ai
+              </a>
+            </motion.div>
+
+            <motion.ul className="pf-product-features" {...list}>
+              {PRODUCT_FEATURES.map((feature) => (
+                <motion.li key={feature} variants={item}>
+                  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
+                    <path d="M20 6L9 17l-5-5" />
+                  </svg>
+                  <span>{feature}</span>
+                </motion.li>
+              ))}
+            </motion.ul>
+          </div>
+        </div>
+      </section>
+
       <section className="cta-band" aria-labelledby="portfolio-cta-title">
         <div className="container cta-inner">
           <motion.div {...inView}>
-            <h2 id="portfolio-cta-title">Not sure which capability you need?</h2>
+            <h2 id="portfolio-cta-title">Have a project that needs to work the first time?</h2>
             <p>
-              Start with a 30-minute call. Describe what you are building and where it is slowing
-              down, and we will tell you which of these six services actually addresses it.
+              Tell us what you are building and where it keeps breaking. We will map it to the
+              stage and the service that actually fixes it.
             </p>
           </motion.div>
           <Link className="btn btn-light" to="/contact">
-            Book a call <span aria-hidden>→</span>
+            Start a project <span aria-hidden>→</span>
           </Link>
         </div>
       </section>
