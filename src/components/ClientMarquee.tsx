@@ -4,6 +4,12 @@ import { clients } from '../data'
 const named = clients.filter((client) => client.name !== 'Client')
 const marqueeList = [...named, ...named]
 
+// Start fetching every logo as soon as this module loads, so they are cached
+// before the marquee (e.g. inside the booking modal) ever renders.
+if (typeof window !== 'undefined') {
+  for (const client of named) new Image().src = client.logo
+}
+
 export function ClientMarquee() {
   const reduceMotion = Boolean(useReducedMotion())
 
@@ -21,7 +27,8 @@ export function ClientMarquee() {
               <img
                 src={client.logo}
                 alt={duplicate ? '' : client.name}
-                loading="lazy"
+                loading="eager"
+                decoding="async"
               />
             </span>
           )
