@@ -74,7 +74,7 @@ export async function exportPortfolioPdf(content: PortfolioExportContent) {
   )
   table(
     "Where we've delivered",
-    ['Industry', 'Engagement', 'Outcome'],
+    ['Industry', 'Focus', 'What we delivered'],
     content.engagements.map((engagement) => [engagement.tag, engagement.title, engagement.text]),
   )
   table(
@@ -100,7 +100,7 @@ export async function exportPortfolioPdf(content: PortfolioExportContent) {
     doc.setFontSize(8.5)
     doc.setTextColor(154, 161, 172)
     const footerY = doc.internal.pageSize.getHeight() - 24
-    doc.text(`${COMPANY} · Industries: ${content.industries.join(', ')}`, margin, footerY)
+    doc.text(`${COMPANY} · Portfolio`, margin, footerY)
     doc.text(`${page} / ${pages}`, margin + width, footerY, { align: 'right' })
   }
 
@@ -136,9 +136,9 @@ export async function exportPortfolioXlsx(content: PortfolioExportContent) {
       stickyRowsCount: 1,
     },
     {
-      sheet: 'Engagements',
+      sheet: 'Industries',
       data: [
-        header(['Industry', 'Engagement', 'Outcome']),
+        header(['Industry', 'Focus', 'What we delivered']),
         ...content.engagements.map((engagement) => [
           engagement.tag,
           engagement.title,

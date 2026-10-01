@@ -259,10 +259,10 @@ export default function Services() {
       <section className="cta-band" aria-labelledby="services-cta-title">
         <div className="container cta-inner">
           <motion.div {...inView}>
-            <h2 id="services-cta-title">Not sure which capability you need?</h2>
+            <h2 id="services-cta-title">Have a product to build, scale, or improve?</h2>
             <p>
-              Start with a 30-minute call. Describe what you're building and where it's slowing
-              down, and we'll tell you which of these six services actually addresses it.
+              Tell us what you’re working on. We’ll bring the right mix of software engineering,
+              AI, QA, cloud, and product expertise to move it forward.
             </p>
           </motion.div>
           <Link className="btn btn-light" to="/contact">

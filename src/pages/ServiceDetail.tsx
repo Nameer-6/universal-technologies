@@ -394,10 +394,11 @@ export default function ServiceDetail() {
             viewport={{ once: true, amount: 0.4 }}
             transition={{ duration: 0.65, ease }}
           >
-            <h2 id="service-cta-title">
-              Ready to build or improve your {service.title.toLowerCase()}?
-            </h2>
-            <p>Tell us the constraint and the deadline — we'll map the smallest team that ships it.</p>
+            <h2 id="service-cta-title">Have a product to build, scale, or improve?</h2>
+            <p>
+              Tell us what you’re working on. We’ll bring the right mix of software engineering,
+              AI, QA, cloud, and product expertise to move it forward.
+            </p>
           </motion.div>
           <Link className="btn btn-light" to="/contact">
             {PRIMARY_CTA} <span aria-hidden>→</span>

@@ -4,7 +4,7 @@ import { Link } from 'react-router-dom'
 import { Seo } from '../components/Seo'
 import { AboutJourney } from '../components/AboutJourney'
 import { companyFacts } from '../companyFacts'
-import { PRIMARY_CTA, RESPONSE_PROMISE } from '../data'
+import { PRIMARY_CTA } from '../data'
 import { usePageMotion } from '../hooks/usePageMotion'
 import { pageMetadata } from '../seoData'
 import { companyValues } from '../pagesData'
@@ -290,8 +290,11 @@ export default function About() {
       <section className="cta-band" aria-labelledby="about-cta-title">
         <div className="container cta-inner">
           <motion.div {...inView}>
-            <h2 id="about-cta-title">Want to work with us?</h2>
-            <p>Send a brief — a real person replies {RESPONSE_PROMISE}.</p>
+            <h2 id="about-cta-title">Have a product to build, scale, or improve?</h2>
+            <p>
+              Tell us what you’re working on. We’ll bring the right mix of software engineering,
+              AI, QA, cloud, and product expertise to move it forward.
+            </p>
           </motion.div>
           <Link className="btn btn-light" to="/contact">
             {PRIMARY_CTA} <span aria-hidden>→</span>

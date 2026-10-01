@@ -193,8 +193,11 @@ export default function Security() {
       <section className="cta-band" aria-labelledby="security-cta-title">
         <div className="container cta-inner">
           <motion.div {...inView}>
-            <h2 id="security-cta-title">Have a security or procurement question?</h2>
-            <p>Put it in your brief and a delivery lead will pick it up from there.</p>
+            <h2 id="security-cta-title">Have a product to build, scale, or improve?</h2>
+            <p>
+              Tell us what you’re working on. We’ll bring the right mix of software engineering,
+              AI, QA, cloud, and product expertise to move it forward.
+            </p>
           </motion.div>
           <Link className="btn btn-light" to="/contact">
             {PRIMARY_CTA} <span aria-hidden>→</span>

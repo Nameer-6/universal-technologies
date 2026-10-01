@@ -1,7 +1,8 @@
-import { useEffect, useRef, useState } from 'react'
+import { useEffect, useRef, useState, type CSSProperties } from 'react'
 import { AnimatePresence, motion } from 'framer-motion'
 import { Link } from 'react-router-dom'
 import { Seo } from '../components/Seo'
+import { PostitDashboard } from '../components/PostitDashboard'
 import { ClientMarquee } from '../components/ClientMarquee'
 import { ExportMenu } from '../components/ExportMenu'
 import { ServiceChartCard } from '../components/ServiceChartCard'
@@ -10,7 +11,7 @@ import { HeroBoardStage } from '../components/HeroBoards'
 import { SERVICE_BOARD } from '../components/boardMap'
 import { SWAP } from '../components/chartTokens'
 import { clients, services } from '../data'
-import { ease, usePageMotion } from '../hooks/usePageMotion'
+import { usePageMotion } from '../hooks/usePageMotion'
 import { pageMetadata } from '../seoData'
 import { clientProfiles } from '../portfolioData'
 import type { PortfolioExportContent } from '../portfolioExport'
@@ -45,41 +46,81 @@ const DELIVERY_STAGES = [
   },
 ]
 
-const INDUSTRIES = ['Fintech', 'E-commerce', 'Lead generation'] as const
-
 const PRODUCT_FEATURES = [
-  'Spots trending topics in your industry, around the clock',
-  'Writes platform-ready posts for LinkedIn, X, Facebook, and Instagram',
-  'Creates the visuals to match — images, carousels, infographics, PDFs',
-  'Builds your weekly posting calendar and publishes it automatically',
-  'Boosts your best posts as ads on Meta, LinkedIn, and X in one click',
-  'Writes once, adapts to 20+ languages',
+  { label: 'Spots trending topics', icon: 'M3 17l6-6 4 4 8-8M15 7h6v6' },
+  { label: 'Writes platform-ready posts', icon: 'M4 20h4L19 9a2.8 2.8 0 0 0-4-4L4 16v4zM13.5 6.5l4 4' },
+  { label: 'Creates stunning visuals', icon: 'M4 5h16v14H4zM4 16l5-5 4 4 3-3 4 4M9 9.5h.01' },
+  { label: 'Builds your posting calendar', icon: 'M4 6h16v14H4zM4 10h16M8 3v4M16 3v4' },
+  { label: 'Boosts top posts with AI', icon: 'M6 20v-6M12 20V6M18 20v-10' },
+  { label: 'Adapts to 20+ languages', icon: 'M12 21a9 9 0 1 0 0-18 9 9 0 0 0 0 18zM3 12h18M12 3c2.5 2.6 3.7 5.6 3.7 9s-1.2 6.4-3.7 9c-2.5-2.6-3.7-5.6-3.7-9S9.500 5.600 12 3z' },
 ] as const
 
-// Each "why us" card rotates in face-up as it scrolls into view, like a card
-// flipping over — staggered by the parent's `list` variants (staggerChildren).
-const flipCard = {
-  hidden: { opacity: 0, rotateY: -80 },
-  show: { opacity: 1, rotateY: 0, transition: { duration: 0.65, ease } },
-}
-
-const ENGAGEMENTS = [
+// Icon paths are 24x24 stroke glyphs; `tone` is the card's accent colour.
+const INDUSTRY_CARDS = [
   {
-    tag: 'Fintech',
-    title: 'Payments platform — QA & test automation',
-    text: 'Built out a regression and automation suite covering core transaction flows, so new releases could go out with confidence instead of guesswork.',
+    title: 'Healthcare & HealthTech',
+    sub: 'Connected healthcare & wellness platforms',
+    text: 'Built and tested patient, caregiver, wellness, accessibility, and connected-device experiences where reliability and data accuracy are critical.',
+    tone: '#e5384a',
+    icon: 'M20.8 4.6a5.5 5.5 0 0 0-7.8 0L12 5.7l-1-1.1a5.5 5.5 0 0 0-7.8 7.8l1 1.1L12 21l7.8-7.5 1-1.1a5.5 5.5 0 0 0 0-7.8zM7 12h2.5l1.5-3 2 6 1.5-3H17',
   },
   {
-    tag: 'E-commerce',
-    title: 'Storefront & checkout reliability',
-    text: 'Delivered end-to-end testing across checkout, inventory, and payment integrations ahead of a major seasonal traffic spike.',
+    title: 'Cybersecurity & Identity',
+    sub: 'Secure access & identity workflows',
+    text: 'Delivered authentication, authorization, role-based access, API security, and identity-focused workflows across complex applications.',
+    tone: '#2f6fe4',
+    icon: 'M12 3l8 3v6c0 4.5-3.2 8-8 9-4.8-1-8-4.5-8-9V6l8-3zM9.5 11h5v4h-5zM10.5 11V9.5a1.5 1.5 0 0 1 3 0V11',
   },
   {
-    tag: 'Lead generation',
-    title: 'Workflow automation for a growing sales team',
-    text: 'Designed automation that moved leads through qualification and follow-up steps automatically, freeing the team to focus on closing.',
+    title: 'Education & EdTech',
+    sub: 'Digital learning experiences',
+    text: 'Built and validated platforms for learning, training, assessments, content delivery, and user progress across web and mobile.',
+    tone: '#7c4ddb',
+    icon: 'M2 9l10-5 10 5-10 5L2 9zM6 11.5V16c0 1.2 2.7 2.5 6 2.5s6-1.3 6-2.5v-4.5M22 9v6',
   },
-]
+  {
+    title: 'FinTech, Banking & Markets',
+    sub: 'Payments & financial platforms',
+    text: 'Delivered QA, automation, integrations, transaction workflows, dashboards, and financial systems built around accuracy and reliability.',
+    tone: '#f08a1c',
+    icon: 'M3 10l9-6 9 6H3zM5 10v8M9 10v8M13 10v8M3 20h12M17 19l2-2 2 1 1-2',
+  },
+  {
+    title: 'Mobility, Travel & Aviation',
+    sub: 'Booking & mobility platforms',
+    text: 'Worked across reservation, scheduling, location, payment, operational, and customer-facing journeys for mobility and travel products.',
+    tone: '#14a98a',
+    icon: 'M17.8 19.2L16 11l3.5-3.5a2.1 2.1 0 0 0-3-3L13 8 4.8 6.2 3.4 7.6l6.3 3.6-3.1 3.1-2.7-.4L2.5 15.5l4 1.5 1.5 4 1.4-1.4-.4-2.7 3.1-3.1 3.6 6.3 1.6-1.5z',
+  },
+  {
+    title: 'Logistics & Storage',
+    sub: 'Operations & fulfillment systems',
+    text: 'Built and tested workflows covering inventory, tracking, storage, fulfillment, operational dashboards, and system integrations.',
+    tone: '#2f6fe4',
+    icon: 'M2 6h11v10H2zM13 9h4l4 4v3h-8zM6 19a1.8 1.8 0 1 0 0-.01zM17 19a1.8 1.8 0 1 0 0-.01z',
+  },
+  {
+    title: 'Construction, Real Estate & Design',
+    sub: 'Property & project platforms',
+    text: 'Delivered digital experiences supporting property, project management, collaboration, documentation, and customer workflows.',
+    tone: '#7c4ddb',
+    icon: 'M5 21V4l9-1v18M14 9l5 1.5V21M3 21h18M8 8h2M8 12h2M8 16h2M17 14h.01M17 17h.01',
+  },
+  {
+    title: 'Retail & E-Commerce',
+    sub: 'Commerce from storefront to checkout',
+    text: 'Delivered storefronts and tested checkout, inventory, payments, orders, integrations, and high-traffic commerce experiences.',
+    tone: '#e5384a',
+    icon: 'M2 3h3l2.7 12.4a1.5 1.5 0 0 0 1.5 1.1h8.6a1.5 1.5 0 0 0 1.5-1.1L21 7H6M10 21a1 1 0 1 0 0-.01zM18 21a1 1 0 1 0 0-.01z',
+  },
+  {
+    title: 'HR & Workforce',
+    sub: 'People & performance platforms',
+    text: 'Built and tested employee, performance review, feedback, goals, permissions, reporting, and workforce management workflows.',
+    tone: '#14a98a',
+    icon: 'M12 11a3 3 0 1 0 0-6 3 3 0 0 0 0 6zM5.5 13a2.5 2.5 0 1 0 0-5 2.5 2.5 0 0 0 0 5zM18.5 13a2.5 2.5 0 1 0 0-5 2.5 2.5 0 0 0 0 5zM7 20v-1.5a5 5 0 0 1 10 0V20M1.5 19v-1a3.5 3.5 0 0 1 4-3.4M22.5 19v-1a3.5 3.5 0 0 0-4-3.4',
+  },
+] as const
 
 const HERO_TITLE = 'Software that works, the first time.'
 const HERO_LEAD =
@@ -90,14 +131,14 @@ const EXPORT_CONTENT: PortfolioExportContent = {
   title: HERO_TITLE,
   lead: HERO_LEAD,
   stages: DELIVERY_STAGES,
-  engagements: ENGAGEMENTS,
+  engagements: INDUSTRY_CARDS.map((card) => ({ tag: card.title, title: card.sub, text: card.text })),
   services,
-  industries: INDUSTRIES,
+  industries: INDUSTRY_CARDS.map((card) => card.title),
   clients: clients.map((client) => ({ name: client.name, ...clientProfiles[client.name] })),
   product: {
     name: 'postit.ai',
     tagline: 'Your AI autopilot for content — trends, writing, visuals, and scheduling, in one place.',
-    features: PRODUCT_FEATURES,
+    features: PRODUCT_FEATURES.map((feature) => feature.label),
     url: 'https://post-it.universal-technologies.com/dashboard',
   },
 }
@@ -267,26 +308,37 @@ export default function Portfolio() {
       </section>
 
       <section className="section" id="work" aria-labelledby="portfolio-work-title">
-        <div className="container">
+        <div className="container pf-ind-wrap">
           <motion.div className="section-head center" {...reveal}>
-            <p className="section-label">Work</p>
+            <p className="section-label pf-ind-label">Where we've delivered</p>
             <h2 className="section-title" id="portfolio-work-title">
-              Where we've delivered
+              Experience across industries where reliability matters.
             </h2>
-            <p className="section-lead">A sample of the kind of engagements we take on.</p>
+            <p className="section-lead">
+              From healthcare and financial systems to commerce, workforce platforms, and mobility
+              products, our teams have delivered and supported software across complex digital
+              environments.
+            </p>
           </motion.div>
 
-          <motion.div className="pf-why-grid" {...list}>
-            {ENGAGEMENTS.map((engagement) => (
+          <motion.div className="pf-ind-grid" {...list}>
+            {INDUSTRY_CARDS.map((card) => (
               <motion.article
-                key={engagement.title}
-                className="pf-why-card"
-                variants={reduceMotion ? undefined : flipCard}
-                style={{ transformPerspective: 1000 }}
+                key={card.title}
+                className="pf-ind-card"
+                variants={item}
+                style={{ '--tone': card.tone } as CSSProperties}
               >
-                <span>{engagement.tag}</span>
-                <h3>{engagement.title}</h3>
-                <p>{engagement.text}</p>
+                <span className="pf-ind-icon" aria-hidden="true">
+                  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round">
+                    <path d={card.icon} />
+                  </svg>
+                </span>
+                <div>
+                  <h3>{card.title}</h3>
+                  <strong>{card.sub}</strong>
+                  <p>{card.text}</p>
+                </div>
               </motion.article>
             ))}
           </motion.div>
@@ -304,11 +356,6 @@ export default function Portfolio() {
               QA and testing, AI automation, and full software delivery. Pick one, or lean on
               several across a single build.
             </p>
-            <ul className="pf-industries">
-              {INDUSTRIES.map((industry) => (
-                <li key={industry}>{industry}</li>
-              ))}
-            </ul>
           </motion.div>
 
           <div className="pf-plug-grid">
@@ -345,33 +392,37 @@ export default function Portfolio() {
             <motion.div className="pf-product-copy" {...reveal}>
               <h3>Never run out of what to post.</h3>
               <p>
-                Most teams don't run out of things to say — they run out of time to say it
-                everywhere, every week. postit.ai closes that gap. It watches for what's trending in
-                your industry, writes a post for each platform in the right tone and format, builds
-                the visuals to go with it, and fills in your weekly posting calendar automatically —
-                so consistency stops depending on someone remembering to do it.
+                postit.ai watches for what's trending in your industry, generates platform-ready
+                posts in the right tone and format, creates stunning visuals, and organizes your
+                weekly calendar — so your team stays consistent and your brand keeps growing.
               </p>
-              <p>Accounts posting consistently with it see roughly 3.4x more impressions on average.</p>
+              <p>Accounts that post consistently with postit.ai see roughly 3.4x more impressions on average.</p>
               <a
                 className="btn pf-cv-primary"
                 href="https://post-it.universal-technologies.com/dashboard"
                 target="_blank"
                 rel="noopener noreferrer"
               >
-                Explore postit.ai
+                Explore postit.ai <span aria-hidden>→</span>
               </a>
+
+              <motion.ul className="pf-product-features" {...list}>
+                {PRODUCT_FEATURES.map((feature) => (
+                  <motion.li key={feature.label} variants={item}>
+                    <span className="pf-pf-icon" aria-hidden="true">
+                      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round">
+                        <path d={feature.icon} />
+                      </svg>
+                    </span>
+                    {feature.label}
+                  </motion.li>
+                ))}
+              </motion.ul>
             </motion.div>
 
-            <motion.ul className="pf-product-features" {...list}>
-              {PRODUCT_FEATURES.map((feature) => (
-                <motion.li key={feature} variants={item}>
-                  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
-                    <path d="M20 6L9 17l-5-5" />
-                  </svg>
-                  <span>{feature}</span>
-                </motion.li>
-              ))}
-            </motion.ul>
+            <motion.div className="pf-product-visual" {...reveal}>
+              <PostitDashboard />
+            </motion.div>
           </div>
         </div>
       </section>
@@ -379,10 +430,10 @@ export default function Portfolio() {
       <section className="cta-band" aria-labelledby="portfolio-cta-title">
         <div className="container cta-inner">
           <motion.div {...inView}>
-            <h2 id="portfolio-cta-title">Have a project that needs to work the first time?</h2>
+            <h2 id="portfolio-cta-title">Have a product to build, scale, or improve?</h2>
             <p>
-              Tell us what you are building and where it keeps breaking. We will map it to the
-              stage and the service that actually fixes it.
+              Tell us what you’re working on. We’ll bring the right mix of software engineering,
+              AI, QA, cloud, and product expertise to move it forward.
             </p>
           </motion.div>
           <Link className="btn btn-light" to="/contact">

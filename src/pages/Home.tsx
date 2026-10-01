@@ -319,10 +319,10 @@ export default function Home() {
       <section className="cta-band" aria-labelledby="cta-title">
         <div className="container cta-inner">
           <motion.div {...inView}>
-            <h2 id="cta-title">Have a date on the calendar?</h2>
+            <h2 id="cta-title">Have a product to build, scale, or improve?</h2>
             <p>
-              Bring the product, the constraint, and the deadline. We’ll map a delivery plan you
-              can take to stakeholders the same week.
+              Tell us what you’re working on. We’ll bring the right mix of software engineering,
+              AI, QA, cloud, and product expertise to move it forward.
             </p>
           </motion.div>
           <a className="btn btn-light" href="#contact">
