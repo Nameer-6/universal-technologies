@@ -4,17 +4,14 @@ import { Link } from 'react-router-dom'
 import { Seo } from '../components/Seo'
 import { PostitDashboard } from '../components/PostitDashboard'
 import { ClientMarquee } from '../components/ClientMarquee'
-import { ExportMenu } from '../components/ExportMenu'
 import { ServiceChartCard } from '../components/ServiceChartCard'
 import { PLUG_CHARTS, PLUG_EXPLORE } from '../components/serviceCharts'
 import { HeroBoardStage } from '../components/HeroBoards'
 import { SERVICE_BOARD } from '../components/boardMap'
 import { SWAP } from '../components/chartTokens'
-import { clients, services } from '../data'
+import { services } from '../data'
 import { usePageMotion } from '../hooks/usePageMotion'
 import { pageMetadata } from '../seoData'
-import { clientProfiles } from '../portfolioData'
-import type { PortfolioExportContent } from '../portfolioExport'
 
 const PROCESS_PILLS = ['Discover', 'Design', 'Build', 'Test', 'Deploy', 'Support'] as const
 
@@ -126,23 +123,6 @@ const HERO_TITLE = 'Software that works, the first time.'
 const HERO_LEAD =
   'Universal Technologies designs, builds, and rigorously tests software for businesses where performance, security, and reliability matter.'
 
-// Everything the Export button writes into the PDF / Excel download.
-const EXPORT_CONTENT: PortfolioExportContent = {
-  title: HERO_TITLE,
-  lead: HERO_LEAD,
-  stages: DELIVERY_STAGES,
-  engagements: INDUSTRY_CARDS.map((card) => ({ tag: card.title, title: card.sub, text: card.text })),
-  services,
-  industries: INDUSTRY_CARDS.map((card) => card.title),
-  clients: clients.map((client) => ({ name: client.name, ...clientProfiles[client.name] })),
-  product: {
-    name: 'postit.ai',
-    tagline: 'Your AI autopilot for content — trends, writing, visuals, and scheduling, in one place.',
-    features: PRODUCT_FEATURES.map((feature) => feature.label),
-    url: 'https://post-it.universal-technologies.com/dashboard',
-  },
-}
-
 export default function Portfolio() {
   const { reduceMotion, reveal, hero, heroFollow, list, item, inView } = usePageMotion()
   const [active, setActive] = useState(0)
@@ -226,7 +206,6 @@ export default function Portfolio() {
                 <a className="btn btn-ghost-ink" href="#work">
                   See our work
                 </a>
-                <ExportMenu content={EXPORT_CONTENT} />
               </div>
               <ol className="pf-cv-pills">
                 {PROCESS_PILLS.map((step, index) => (
