@@ -1,43 +1,57 @@
-import { useEffect, useRef, useState, type CSSProperties } from 'react'
+import { useEffect, useRef, useState } from 'react'
 import { AnimatePresence, motion } from 'framer-motion'
 import { Link } from 'react-router-dom'
 import { Seo } from '../components/Seo'
 import { PostitDashboard } from '../components/PostitDashboard'
 import { ClientMarquee } from '../components/ClientMarquee'
-import { ServiceChartCard } from '../components/ServiceChartCard'
-import { PLUG_CHARTS, PLUG_EXPLORE } from '../components/serviceCharts'
 import { HeroBoardStage } from '../components/HeroBoards'
 import { SERVICE_BOARD } from '../components/boardMap'
 import { SWAP } from '../components/chartTokens'
 import { services } from '../data'
 import { usePageMotion } from '../hooks/usePageMotion'
 import { pageMetadata } from '../seoData'
+import { Walkthrough } from '../components/HomeSections'
+import { ServiceArt } from '../components/ServiceArt'
+import { ServiceBento } from '../components/ServiceBento'
+import { StepArt } from '../components/StepArt'
 
 const PROCESS_PILLS = ['Discover', 'Design', 'Build', 'Test', 'Deploy', 'Support'] as const
 
 // The six SDLC stages behind every engagement, shown as the delivery path.
 const DELIVERY_STAGES = [
   {
+    short: 'Discover',
+    art: <StepArt step="01" />,
     title: 'Discovery & requirements',
     text: 'We start by understanding your users, your constraints, and what "done" actually means for this project.',
   },
   {
+    short: 'Design',
+    art: <ServiceArt id="end-to-end-development" />,
     title: 'Design & architecture',
     text: 'We map the system before we build it — data flow, integrations, and the decisions that are expensive to change later.',
   },
   {
+    short: 'Build',
+    art: <StepArt step="03" />,
     title: 'Development',
     text: 'Our engineers build in short, reviewable cycles, so you see working software early and often — not just at the end.',
   },
   {
+    short: 'Test',
+    art: <ServiceArt id="qa" />,
     title: 'QA & testing',
     text: 'Every feature is tested against real use cases, manually and with automation, before it reaches your users.',
   },
   {
+    short: 'Deploy',
+    art: <ServiceArt id="devops" />,
     title: 'Deployment',
     text: 'We ship in controlled, monitored releases, so launches are predictable events rather than stressful ones.',
   },
   {
+    short: 'Support',
+    art: <StepArt step="04" />,
     title: 'Support & iteration',
     text: "After launch, we monitor, maintain, and keep improving — a product doesn't stop evolving once it's live.",
   },
@@ -52,81 +66,73 @@ const PRODUCT_FEATURES = [
   { label: 'Adapts to 20+ languages', icon: 'M12 21a9 9 0 1 0 0-18 9 9 0 0 0 0 18zM3 12h18M12 3c2.5 2.6 3.7 5.6 3.7 9s-1.2 6.4-3.7 9c-2.5-2.6-3.7-5.6-3.7-9S9.500 5.600 12 3z' },
 ] as const
 
-// Icon paths are 24x24 stroke glyphs; `tone` is the card's accent colour.
+// Icon paths are 24x24 stroke glyphs.
 const INDUSTRY_CARDS = [
   {
     title: 'Healthcare & HealthTech',
     sub: 'Connected healthcare & wellness platforms',
     text: 'Built and tested patient, caregiver, wellness, accessibility, and connected-device experiences where reliability and data accuracy are critical.',
-    tone: '#e5384a',
     icon: 'M20.8 4.6a5.5 5.5 0 0 0-7.8 0L12 5.7l-1-1.1a5.5 5.5 0 0 0-7.8 7.8l1 1.1L12 21l7.8-7.5 1-1.1a5.5 5.5 0 0 0 0-7.8zM7 12h2.5l1.5-3 2 6 1.5-3H17',
   },
   {
     title: 'Cybersecurity & Identity',
     sub: 'Secure access & identity workflows',
     text: 'Delivered authentication, authorization, role-based access, API security, and identity-focused workflows across complex applications.',
-    tone: '#2f6fe4',
     icon: 'M12 3l8 3v6c0 4.5-3.2 8-8 9-4.8-1-8-4.5-8-9V6l8-3zM9.5 11h5v4h-5zM10.5 11V9.5a1.5 1.5 0 0 1 3 0V11',
   },
   {
     title: 'Education & EdTech',
     sub: 'Digital learning experiences',
     text: 'Built and validated platforms for learning, training, assessments, content delivery, and user progress across web and mobile.',
-    tone: '#7c4ddb',
     icon: 'M2 9l10-5 10 5-10 5L2 9zM6 11.5V16c0 1.2 2.7 2.5 6 2.5s6-1.3 6-2.5v-4.5M22 9v6',
   },
   {
     title: 'FinTech, Banking & Markets',
     sub: 'Payments & financial platforms',
     text: 'Delivered QA, automation, integrations, transaction workflows, dashboards, and financial systems built around accuracy and reliability.',
-    tone: '#f08a1c',
     icon: 'M3 10l9-6 9 6H3zM5 10v8M9 10v8M13 10v8M3 20h12M17 19l2-2 2 1 1-2',
   },
   {
     title: 'Mobility, Travel & Aviation',
     sub: 'Booking & mobility platforms',
     text: 'Worked across reservation, scheduling, location, payment, operational, and customer-facing journeys for mobility and travel products.',
-    tone: '#14a98a',
     icon: 'M17.8 19.2L16 11l3.5-3.5a2.1 2.1 0 0 0-3-3L13 8 4.8 6.2 3.4 7.6l6.3 3.6-3.1 3.1-2.7-.4L2.5 15.5l4 1.5 1.5 4 1.4-1.4-.4-2.7 3.1-3.1 3.6 6.3 1.6-1.5z',
   },
   {
     title: 'Logistics & Storage',
     sub: 'Operations & fulfillment systems',
     text: 'Built and tested workflows covering inventory, tracking, storage, fulfillment, operational dashboards, and system integrations.',
-    tone: '#2f6fe4',
     icon: 'M2 6h11v10H2zM13 9h4l4 4v3h-8zM6 19a1.8 1.8 0 1 0 0-.01zM17 19a1.8 1.8 0 1 0 0-.01z',
   },
   {
     title: 'Construction, Real Estate & Design',
     sub: 'Property & project platforms',
     text: 'Delivered digital experiences supporting property, project management, collaboration, documentation, and customer workflows.',
-    tone: '#7c4ddb',
     icon: 'M5 21V4l9-1v18M14 9l5 1.5V21M3 21h18M8 8h2M8 12h2M8 16h2M17 14h.01M17 17h.01',
   },
   {
     title: 'Retail & E-Commerce',
     sub: 'Commerce from storefront to checkout',
     text: 'Delivered storefronts and tested checkout, inventory, payments, orders, integrations, and high-traffic commerce experiences.',
-    tone: '#e5384a',
     icon: 'M2 3h3l2.7 12.4a1.5 1.5 0 0 0 1.5 1.1h8.6a1.5 1.5 0 0 0 1.5-1.1L21 7H6M10 21a1 1 0 1 0 0-.01zM18 21a1 1 0 1 0 0-.01z',
   },
   {
     title: 'HR & Workforce',
     sub: 'People & performance platforms',
     text: 'Built and tested employee, performance review, feedback, goals, permissions, reporting, and workforce management workflows.',
-    tone: '#14a98a',
     icon: 'M12 11a3 3 0 1 0 0-6 3 3 0 0 0 0 6zM5.5 13a2.5 2.5 0 1 0 0-5 2.5 2.5 0 0 0 0 5zM18.5 13a2.5 2.5 0 1 0 0-5 2.5 2.5 0 0 0 0 5zM7 20v-1.5a5 5 0 0 1 10 0V20M1.5 19v-1a3.5 3.5 0 0 1 4-3.4M22.5 19v-1a3.5 3.5 0 0 0-4-3.4',
   },
 ] as const
 
-const HERO_TITLE = 'Software that works, the first time.'
+// The headline is split so the second half renders in the muted tone.
+const HERO_TITLE_LEAD = 'Software that works,'
+const HERO_TITLE_TAIL = 'the first time.'
 const HERO_LEAD =
   'Universal Technologies designs, builds, and rigorously tests software for businesses where performance, security, and reliability matter.'
 
 export default function Portfolio() {
   const { reduceMotion, reveal, hero, heroFollow, list, item, inView } = usePageMotion()
   const [active, setActive] = useState(0)
-  const [pathGate, setPathGate] = useState(0)
   const current = services[active]
   const [pill, setPill] = useState(reduceMotion ? 3 : 0)
   // Set while the pointer is over the hero board so it stops rotating under it.
@@ -156,13 +162,6 @@ export default function Portfolio() {
     return () => window.clearInterval(id)
   }, [reduceMotion])
 
-  useEffect(() => {
-    if (reduceMotion) return undefined
-    const id = window.setInterval(() => {
-      setPathGate((currentIndex) => (currentIndex + 1) % DELIVERY_STAGES.length)
-    }, 2600)
-    return () => window.clearInterval(id)
-  }, [reduceMotion])
 
   return (
     <div className="pf-page">
@@ -176,7 +175,7 @@ export default function Portfolio() {
       <section className="pf-cv-hero" aria-labelledby="portfolio-title">
         <div className="container">
           <motion.h1 className="pf-cv-title" id="portfolio-title" {...hero}>
-            {HERO_TITLE}
+            {HERO_TITLE_LEAD} <span className="hx-muted">{HERO_TITLE_TAIL}</span>
           </motion.h1>
 
           <div className="pf-cv-split">
@@ -219,7 +218,10 @@ export default function Portfolio() {
               </ol>
             </motion.div>
 
-            <motion.div className="pf-cv-visual" {...heroVisual}>
+            <motion.div className="pf-cv-visual pf-frame" {...heroVisual}>
+              <p className="hx-chip pf-frame-chip">
+                <i aria-hidden="true" /> Live view · {current.title}
+              </p>
               <HeroBoardStage
                 boardKey={SERVICE_BOARD[current.id] ?? 'automation'}
                 reduceMotion={reduceMotion}
@@ -242,56 +244,25 @@ export default function Portfolio() {
         </div>
       </section>
 
-      <section className="section band pf-path-section" id="process" aria-labelledby="portfolio-path-title">
-        <div className="container">
-          <motion.div className="section-head center" {...reveal}>
-            <p className="section-label">How we deliver</p>
-            <h2 className="section-title" id="portfolio-path-title">
-              Six stages between an idea and a working product.
-            </h2>
-            <p className="section-lead">
-              Most software problems aren't really about code — they're about what gets missed
-              along the way. So we test early, automate what's repeatable, and never ship something
-              we haven't checked ourselves.
-            </p>
-          </motion.div>
+      <Walkthrough
+        id="process"
+        label="How we deliver"
+        title={
+          <>
+            Six stages <span>between an idea and a working product.</span>
+          </>
+        }
+        lead="Most software problems aren't really about code — they're about what gets missed along the way. So we test early, automate what's repeatable, and never ship something we haven't checked ourselves."
+        steps={DELIVERY_STAGES.map((stage, index) => ({ ...stage, step: `0${index + 1}` }))}
+        alt
+      />
 
-          <div className="pf-path">
-            <div className="pf-path-plaque">
-              <span>SDLC</span>
-              <strong>Six-stage delivery</strong>
-            </div>
-
-            <motion.ol className="pf-path-gates pf-path-gates--six" {...list}>
-              {DELIVERY_STAGES.map((stage, index) => (
-                <motion.li
-                  key={stage.title}
-                  className={`pf-path-gate${index === pathGate ? ' is-active' : ''}`}
-                  variants={item}
-                >
-                  <p className="pf-path-stage">Stage 0{index + 1}</p>
-                  <h3>{stage.title}</h3>
-                  <p className="pf-path-copy">{stage.text}</p>
-                  {index < DELIVERY_STAGES.length - 1 && (
-                    <span className="pf-path-arrow" aria-hidden="true">
-                      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.2" strokeLinecap="round" strokeLinejoin="round">
-                        <path d="M5 12h14M13 6l6 6-6 6" />
-                      </svg>
-                    </span>
-                  )}
-                </motion.li>
-              ))}
-            </motion.ol>
-          </div>
-        </div>
-      </section>
-
-      <section className="section" id="work" aria-labelledby="portfolio-work-title">
+      <section className="section hx-section hx-section-alt" id="work" aria-labelledby="portfolio-work-title">
         <div className="container pf-ind-wrap">
           <motion.div className="section-head center" {...reveal}>
             <p className="section-label pf-ind-label">Where we've delivered</p>
-            <h2 className="section-title" id="portfolio-work-title">
-              Experience across industries where reliability matters.
+            <h2 className="section-title hx-duo" id="portfolio-work-title">
+              Experience across industries <span>where reliability matters.</span>
             </h2>
             <p className="section-lead">
               From healthcare and financial systems to commerce, workforce platforms, and mobility
@@ -306,7 +277,6 @@ export default function Portfolio() {
                 key={card.title}
                 className="pf-ind-card"
                 variants={item}
-                style={{ '--tone': card.tone } as CSSProperties}
               >
                 <span className="pf-ind-icon" aria-hidden="true">
                   <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round">
@@ -324,12 +294,12 @@ export default function Portfolio() {
         </div>
       </section>
 
-      <section className="section band" id="services" aria-labelledby="portfolio-services-title">
+      <section className="section hx-section" id="services" aria-labelledby="portfolio-services-title">
         <div className="container">
           <motion.div className="section-head center" {...reveal}>
             <p className="section-label">Services</p>
-            <h2 className="section-title" id="portfolio-services-title">
-              Choose where we plug in.
+            <h2 className="section-title hx-duo" id="portfolio-services-title">
+              Choose where <span>we plug in.</span>
             </h2>
             <p className="section-lead">
               QA and testing, AI automation, and full software delivery. Pick one, or lean on
@@ -337,25 +307,11 @@ export default function Portfolio() {
             </p>
           </motion.div>
 
-          <div className="pf-plug-grid">
-            {services.map((service, index) => (
-              <ServiceChartCard
-                key={service.id}
-                id={service.id}
-                index={index}
-                title={service.title}
-                summary={service.summary}
-                capabilities={service.stacks.slice(0, 4)}
-                chart={PLUG_CHARTS[service.id] ?? PLUG_CHARTS['ai-agents']}
-                exploreLabel={PLUG_EXPLORE[service.id] ?? service.title.toLowerCase()}
-                reduceMotion={reduceMotion}
-              />
-            ))}
-          </div>
+          <ServiceBento />
         </div>
       </section>
 
-      <section className="section" id="product" aria-labelledby="portfolio-product-title">
+      <section className="section hx-section" id="product" aria-labelledby="portfolio-product-title">
         <div className="container">
           <motion.div className="section-head center" {...reveal}>
             <p className="section-label">Our product</p>
@@ -399,7 +355,10 @@ export default function Portfolio() {
               </motion.ul>
             </motion.div>
 
-            <motion.div className="pf-product-visual" {...reveal}>
+            <motion.div className="pf-product-visual pf-frame" {...reveal}>
+              <p className="hx-chip pf-frame-chip">
+                <i aria-hidden="true" /> postit.ai · dashboard preview
+              </p>
               <PostitDashboard />
             </motion.div>
           </div>

@@ -28,7 +28,7 @@ export default function Careers() {
           >
             <p className="section-label">Careers</p>
             <h1 className="careers-hero-title" id="careers-title">
-              Own something real, from your first week.
+              Own something real, <span className="hx-muted">from your first week.</span>
             </h1>
             <p className="careers-hero-lead">
               We hire senior people and hand them real ownership: their own features, their own

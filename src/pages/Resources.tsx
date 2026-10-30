@@ -1,17 +1,24 @@
+import { useState } from 'react'
 import { motion } from 'framer-motion'
-import { Link } from 'react-router-dom'
 import { Seo } from '../components/Seo'
+import { ResourceCard } from '../components/ResourceCard'
+import { services } from '../data'
 import { usePageMotion } from '../hooks/usePageMotion'
-import { resources, readingMinutes } from '../resourcesData'
+import { resources } from '../resourcesData'
+
+// Only services that have at least one guide get a filter chip.
+const topics = services.filter((service) => resources.some((article) => article.service === service.id))
 
 export default function Resources() {
-  const { reveal, list, item, cardHover } = usePageMotion()
+  const { reveal } = usePageMotion()
+  const [topic, setTopic] = useState<string | null>(null)
+  const shown = topic ? resources.filter((article) => article.service === topic) : resources
 
   return (
     <div className="resources-page">
       <Seo
         title="Software Delivery Resources | Universal Technologies"
-        description="Practical guides to choosing a software development partner and planning your delivery team. Explore ownership, scope, quality, and engagement models."
+        description="Practical guides on AI agents, workflow automation, QA, DevOps, SaaS and software project planning from the Universal Technologies delivery team."
         path="/resources"
         breadcrumbs={[{ name: 'Insights', path: '/resources' }]}
       />
@@ -20,35 +27,35 @@ export default function Resources() {
           <motion.div className="section-head center" {...reveal}>
             <p className="section-label">Insights</p>
             <h1 className="section-title" id="resources-title">
-              Make your next delivery decision with clarity.
+              Make your next delivery decision <span className="hx-muted">with clarity.</span>
             </h1>
             <p className="section-lead">
-              Practical questions and guides for teams planning a software project.
+              Practical guides on AI, automation, QA, DevOps, SaaS and planning a software project.
             </p>
           </motion.div>
 
-          <motion.div className="resource-grid" {...list}>
-            {resources.map((article) => (
-              <motion.article
-                className="resource-card"
-                key={article.slug}
-                variants={item}
-                whileHover={cardHover}
+          <div className="resource-filters" role="group" aria-label="Filter guides by service">
+            <button type="button" aria-pressed={topic === null} onClick={() => setTopic(null)}>
+              All guides <span>{resources.length}</span>
+            </button>
+            {topics.map((service) => (
+              <button
+                type="button"
+                key={service.id}
+                aria-pressed={topic === service.id}
+                onClick={() => setTopic(service.id)}
               >
-                <Link className="service-card-link" to={`/resources/${article.slug}`}>
-                  <div className="resource-card-top">
-                    <p className="section-label">{article.category}</p>
-                    <span className="resource-time">{readingMinutes(article)} min read</span>
-                  </div>
-                  <h2>{article.title}</h2>
-                  <p>{article.description}</p>
-                  <span className="card-affordance">
-                    Read the guide <span aria-hidden>→</span>
-                  </span>
-                </Link>
-              </motion.article>
+                {service.title}{' '}
+                <span>{resources.filter((article) => article.service === service.id).length}</span>
+              </button>
             ))}
-          </motion.div>
+          </div>
+
+          <div className="resource-grid resource-grid-3" aria-live="polite">
+            {shown.map((article) => (
+              <ResourceCard key={article.slug} article={article} as="h2" />
+            ))}
+          </div>
         </div>
       </section>
     </div>

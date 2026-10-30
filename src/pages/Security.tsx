@@ -78,7 +78,7 @@ export default function Security() {
           <motion.div className="section-head center" {...reveal}>
             <p className="section-label">Security &amp; Trust</p>
             <h1 className="section-title" id="security-title">
-              How we handle your code, access, and data.
+              How we handle your code, <span className="hx-muted">access, and data.</span>
             </h1>
             <p className="section-lead">
               What you can expect from a Universal Technologies engagement, and how to get what

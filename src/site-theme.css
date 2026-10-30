@@ -1,0 +1,497 @@
+/* Site-wide design language (matches the homepage sections):
+   dark base with a dotted grid and red glow, glass cards with red hover
+   borders, mono labels with a red dot, mono pills and red primary buttons.
+   Applied through the classes every page already uses, so pages keep their
+   own markup. Light theme first, dark overrides via [data-theme='dark']. */
+
+:root {
+  --hx-bg: var(--paper);
+  --hx-bg-alt: #f1f1ee;
+  --hx-dot: rgba(12, 15, 20, 0.09);
+  --hx-glow: rgba(227, 28, 35, 0.08);
+  --hx-card: linear-gradient(180deg, rgba(255, 255, 255, 0.96), rgba(255, 255, 255, 0.82));
+  --hx-card-line: rgba(12, 15, 20, 0.09);
+  --hx-card-shadow: 0 18px 40px rgba(12, 15, 20, 0.06);
+  --hx-soft: rgba(12, 15, 20, 0.04);
+  --hx-graph-line: rgba(12, 15, 20, 0.14);
+  --hx-graph-ink: rgba(12, 15, 20, 0.16);
+  --hx-mono: ui-monospace, 'SFMono-Regular', Menlo, Consolas, monospace;
+  --hx-hover-line: rgba(227, 28, 35, 0.42);
+}
+
+:root[data-theme='dark'] {
+  --hx-bg: #07080a;
+  --hx-bg-alt: #0b0c0f;
+  --hx-dot: rgba(255, 255, 255, 0.07);
+  --hx-glow: rgba(227, 28, 35, 0.16);
+  --hx-card: linear-gradient(180deg, rgba(255, 255, 255, 0.05), rgba(255, 255, 255, 0.015));
+  --hx-card-line: rgba(255, 255, 255, 0.09);
+  --hx-card-shadow: 0 24px 60px rgba(0, 0, 0, 0.45);
+  --hx-soft: rgba(255, 255, 255, 0.04);
+  --hx-graph-line: rgba(255, 255, 255, 0.14);
+  --hx-graph-ink: rgba(255, 255, 255, 0.14);
+}
+
+/* ---------- Sections: dotted grid on every content section ---------- */
+
+main .section:not(.hx-section),
+main .svc-section {
+  background-color: var(--hx-bg);
+  background-image: radial-gradient(var(--hx-dot) 1px, transparent 1.2px);
+  background-size: 22px 22px;
+}
+
+main .section.band:not(.hx-section),
+main .svc-section.svc-band-alt {
+  background-color: var(--hx-bg-alt);
+}
+
+/* Page heroes (first section on a page) get the red glow from above. */
+main .about-hero,
+main .careers-hero,
+main .svc-hero,
+main .pf-hero,
+main .resources-hero,
+main > .section:first-child,
+main > div > .section:first-child,
+main > article.section:first-child {
+  background-image:
+    radial-gradient(60rem 26rem at 50% -6rem, var(--hx-glow), transparent 70%),
+    radial-gradient(var(--hx-dot) 1px, transparent 1.2px);
+  background-size: auto, 22px 22px;
+  background-repeat: no-repeat, repeat;
+}
+
+/* The page-specific glows were for the old light layout; the shared glow replaces them. */
+.svc-hero::before,
+.about-hero::before,
+.resources-hero::before {
+  display: none;
+}
+
+/* Services pages draw their own surfaces; point them at the shared tokens. */
+.svc-page {
+  --svc-surface: var(--hx-bg-alt);
+  --svc-line: var(--hx-card-line);
+}
+
+/* ---------- Two-tone headings ---------- */
+
+.section-title span.hx-muted,
+.svc-title span.hx-muted,
+.svc-hero-title span.hx-muted,
+.careers-hero-title span.hx-muted {
+  display: block;
+  color: var(--muted);
+}
+
+/* ---------- Labels: mono with a glowing red dot ---------- */
+
+.section-label,
+.svc-eyebrow {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  font-family: var(--hx-mono);
+  font-size: 0.72rem;
+  letter-spacing: 0.16em;
+}
+
+.section-label::before,
+.svc-eyebrow::before {
+  content: '';
+  flex: none;
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  background: var(--brand);
+  box-shadow: 0 0 10px var(--brand);
+}
+
+/* Labels inside cards and breadcrumbs stay quiet: no dot. */
+.resource-card .section-label::before,
+.product-card .section-label::before,
+.service-card .section-label::before,
+.article-page .section-label::before,
+.pf-ind-label::before {
+  display: none;
+}
+
+.section-head.center .section-label,
+.svc-head-center .svc-eyebrow {
+  justify-content: center;
+}
+
+/* ---------- Glass cards ---------- */
+
+.service-card,
+.engage-card,
+.outcome-card,
+.product-card,
+.resource-card,
+.perk-card,
+.job-card,
+.related-job-card,
+.svc-why-card,
+.svc-related-card,
+.work-teaser,
+.contact-success {
+  border: 1px solid var(--hx-card-line);
+  border-radius: 20px;
+  background: var(--hx-card);
+  box-shadow: var(--hx-card-shadow);
+  transition: border-color 0.3s ease, box-shadow 0.3s ease, transform 0.3s ease;
+}
+
+.service-card:hover,
+.engage-card:hover,
+.outcome-card:hover,
+.product-card:hover,
+.resource-card:hover,
+.perk-card:hover,
+.job-card:hover,
+.related-job-card:hover,
+.svc-why-card:hover,
+.svc-related-card:hover {
+  border-color: var(--hx-hover-line);
+  box-shadow: var(--hx-card-shadow), 0 0 0 1px rgba(227, 28, 35, 0.12);
+}
+
+/* FAQ rows and long-form blocks share the same surface. */
+.svc-faq details {
+  border-color: var(--hx-card-line);
+  background: var(--hx-card);
+}
+
+.svc-faq details[open] {
+  border-color: var(--hx-hover-line);
+}
+
+/* ---------- Pills: tech stacks, tags, capabilities ---------- */
+
+.stack-row span,
+.svc-stack-row span,
+.product-caps li,
+.resource-time,
+.job-featured-meta span {
+  border: 1px solid var(--hx-card-line);
+  background: var(--hx-soft);
+  font-family: var(--hx-mono);
+  font-size: 0.7rem;
+  font-weight: 600;
+  color: var(--muted);
+}
+
+/* ---------- Buttons: primary actions are red and glow ---------- */
+
+.btn-ink {
+  background: var(--brand);
+  color: #fff;
+  box-shadow: 0 10px 30px rgba(227, 28, 35, 0.32);
+}
+
+.btn-ink:hover {
+  background: #c8141b;
+  box-shadow: 0 14px 38px rgba(227, 28, 35, 0.48);
+}
+
+.btn-ghost-ink {
+  border-color: var(--hx-card-line);
+  background: var(--hx-soft);
+}
+
+.btn-ghost-ink:hover {
+  border-color: var(--hx-hover-line);
+}
+
+/* ---------- Long-form pages (articles, legal, product detail) ---------- */
+
+.article-page .legal-doc section,
+.legal-doc > section {
+  padding: 1.25rem 0;
+  border-top: 1px solid var(--hx-card-line);
+}
+
+.article-page h2 {
+  font-family: var(--font-display);
+  letter-spacing: -0.02em;
+}
+
+.related-reading {
+  padding: 1.25rem 1.4rem;
+  border: 1px solid var(--hx-card-line);
+  border-radius: 20px;
+  background: var(--hx-card);
+}
+
+.related-reading a {
+  color: var(--text);
+  font-weight: 600;
+  text-decoration: none;
+}
+
+.related-reading a:hover {
+  color: var(--brand);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .service-card,
+  .engage-card,
+  .outcome-card,
+  .product-card,
+  .resource-card,
+  .perk-card,
+  .job-card,
+  .related-job-card,
+  .svc-why-card,
+  .svc-related-card {
+    transition: none;
+  }
+}
+
+/* ---------- Portfolio ---------- */
+
+/* Charts and dashboards on this page use the brand palette. */
+.pf-page {
+  --data-blue: var(--brand);
+  --data-purple: #ff6b70;
+  --data-amber: #f59e0b;
+}
+
+/* Hero: the old square grid gives way to the shared dotted grid + glow. */
+.pf-cv-hero {
+  background-color: var(--hx-bg);
+  background-image:
+    radial-gradient(60rem 26rem at 50% -6rem, var(--hx-glow), transparent 70%),
+    radial-gradient(var(--hx-dot) 1px, transparent 1.2px);
+  background-size: auto, 22px 22px;
+  background-repeat: no-repeat, repeat;
+}
+
+.pf-cv-hero::before {
+  display: none;
+}
+
+.pf-cv-title {
+  font-weight: 800;
+}
+
+.pf-cv-title .hx-muted {
+  display: block;
+  color: var(--muted);
+}
+
+.pf-cv-name span {
+  color: var(--brand);
+}
+
+.pf-cv-pill {
+  font-family: var(--hx-mono);
+  border-color: var(--hx-card-line);
+  background: var(--hx-soft);
+}
+
+.pf-cv-pill.is-active {
+  border-color: var(--brand);
+  background: var(--brand);
+  color: #fff;
+  box-shadow: 0 0 16px rgba(227, 28, 35, 0.45);
+}
+
+.pf-cv-primary {
+  box-shadow: 0 10px 30px rgba(227, 28, 35, 0.32);
+}
+
+/* Glowing glass frame around a live dashboard */
+.pf-frame {
+  position: relative;
+  padding: 0.9rem;
+  border: 1px solid var(--hx-card-line);
+  border-radius: 22px;
+  background: var(--hx-card);
+  box-shadow: var(--hx-card-shadow);
+}
+
+.pf-frame::before {
+  content: '';
+  position: absolute;
+  inset: -1px;
+  z-index: -1;
+  border-radius: inherit;
+  background: radial-gradient(60% 50% at 50% 0%, rgba(227, 28, 35, 0.25), transparent 70%);
+  filter: blur(26px);
+  pointer-events: none;
+}
+
+.pf-frame-chip {
+  margin: 0 0 0.75rem 0.25rem;
+}
+
+.pf-frame .hb-card,
+.pf-frame .pd-shell {
+  box-shadow: none;
+}
+
+.pf-cv-dashes span.is-on {
+  background: var(--brand);
+}
+
+/* Six stages: pipeline rail above glass stage cards */
+.pf-path {
+  border-color: var(--hx-card-line);
+  background: var(--hx-card);
+  box-shadow: var(--hx-card-shadow);
+}
+
+.pf-path-head {
+  display: grid;
+  gap: 1.4rem;
+  margin: 0.2rem 0.3rem 1.4rem;
+}
+
+.pf-path-rail {
+  position: relative;
+  height: 2px;
+  margin: 0 0.5rem;
+  border-radius: 2px;
+  background: var(--hx-card-line);
+}
+
+.pf-path-rail-fill {
+  position: absolute;
+  inset: 0 auto 0 0;
+  border-radius: inherit;
+  background: var(--brand);
+  box-shadow: 0 0 12px var(--brand);
+  transition: width 0.8s cubic-bezier(0.22, 1, 0.36, 1);
+}
+
+.pf-path-node {
+  position: absolute;
+  top: 50%;
+  width: 12px;
+  height: 12px;
+  border-radius: 50%;
+  border: 2px solid var(--hx-card-line);
+  background: var(--hx-bg);
+  transform: translate(-50%, -50%);
+  transition: border-color 0.4s ease, background 0.4s ease, box-shadow 0.4s ease;
+}
+
+.pf-path-node.is-on {
+  border-color: var(--brand);
+  background: var(--brand);
+  box-shadow: 0 0 0 4px rgba(227, 28, 35, 0.18), 0 0 14px var(--brand);
+}
+
+.pf-path-gate {
+  border-color: var(--hx-card-line);
+  background: var(--hx-soft);
+}
+
+.pf-path-gate.is-active {
+  border-color: rgba(227, 28, 35, 0.55);
+  background: var(--hx-card);
+  box-shadow: 0 0 0 1px rgba(227, 28, 35, 0.2), 0 20px 50px rgba(227, 28, 35, 0.14);
+}
+
+.pf-path-stage {
+  font-family: var(--hx-mono);
+  font-weight: 700;
+}
+
+.pf-path-arrow {
+  border-color: var(--hx-card-line);
+  background: var(--hx-bg);
+}
+
+/* Industries: one brand accent instead of a different colour per card */
+.pf-ind-card {
+  border-color: var(--hx-card-line);
+  border-radius: 20px;
+  background: var(--hx-card);
+  box-shadow: var(--hx-card-shadow);
+}
+
+.pf-ind-card:hover {
+  border-color: var(--hx-hover-line);
+}
+
+.pf-ind-icon {
+  color: var(--brand);
+  background: rgba(227, 28, 35, 0.1);
+  border: 1px solid rgba(227, 28, 35, 0.22);
+  box-shadow: 0 0 22px rgba(227, 28, 35, 0.12);
+}
+
+.pf-ind-card strong {
+  color: var(--text);
+}
+
+/* Section label on the industries block had its own decoration */
+.pf-ind-label::after {
+  display: none;
+}
+
+/* postit.ai feature icons */
+.pf-pf-icon {
+  color: var(--brand);
+  background: rgba(227, 28, 35, 0.1);
+  border-color: rgba(227, 28, 35, 0.22);
+}
+
+/* postit.ai dashboard mock: neutral dark surfaces with brand accents
+   (it shipped with a navy/blue palette of its own). */
+.pf-frame .pd-window {
+  --pd-bg: #111216;
+  --pd-card: #16181d;
+  --pd-mute: #9aa1ac;
+  background: #0b0c0f;
+  box-shadow: none;
+}
+
+.pf-frame .pd-side span.is-on,
+.pf-frame .pd-create,
+.pf-frame .pd-img b {
+  background: var(--brand);
+}
+
+.pf-frame .pd-card h4 em,
+.pf-frame .pd-stats small {
+  color: #ff6b70;
+}
+
+.pf-frame .pd-trend svg {
+  fill: var(--brand);
+}
+
+.pf-frame .pd-idea u {
+  background: rgba(227, 28, 35, 0.22);
+}
+
+/* ---------- Products ---------- */
+
+.pr-grid {
+  margin-top: 0.5rem;
+}
+
+.pd-hero-visual {
+  margin: 1.75rem 0 2rem;
+}
+
+.pd-hero-visual .hx-outcome-visual {
+  margin: 0;
+}
+
+/* Portfolio industries: same container width and heading size as every other section. */
+.pf-ind-wrap {
+  width: min(1120px, calc(100% - 2.5rem));
+}
+
+.pf-ind-wrap .section-head.center {
+  max-width: 42rem;
+}
+
+.pf-ind-wrap .section-title {
+  font-size: clamp(2rem, 4.2vw, 3.15rem);
+}

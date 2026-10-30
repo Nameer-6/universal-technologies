@@ -2,6 +2,7 @@ import { motion } from 'framer-motion'
 import { Link } from 'react-router-dom'
 import { Seo } from '../components/Seo'
 import { BookCallWizard } from '../components/BookCallWizard'
+import { SocialLinks } from '../components/SocialLinks'
 import { CONTACT_EMAIL, RESPONSE_PROMISE } from '../data'
 import { companyFacts } from '../companyFacts'
 import { usePageMotion } from '../hooks/usePageMotion'
@@ -31,6 +32,8 @@ export default function Contact() {
           <motion.div {...heroFollow}>
             <BookCallWizard />
           </motion.div>
+
+          <SocialLinks className="contact-social" />
 
           <div className="bc-foot">
             <span>

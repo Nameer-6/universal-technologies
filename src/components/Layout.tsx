@@ -4,11 +4,11 @@ import { motion, useReducedMotion, useScroll, useSpring, useTransform } from 'fr
 import { Helmet } from 'react-helmet-async'
 import { CONTACT_EMAIL, PRIMARY_CTA, services } from '../data'
 import { companyFacts } from '../companyFacts'
-import { resources } from '../resourcesData'
 import { useTheme } from '../hooks/useTheme'
 import { SITE_URL } from './Seo'
+import { SocialLinks, socialProfiles } from './SocialLinks'
 
-const { legalEntity, foundedYear, headquarters } = companyFacts
+const { legalEntity, foundedYear, headquarters, profiles, telephone } = companyFacts
 
 const organizationJsonLd = {
   '@context': 'https://schema.org',
@@ -18,7 +18,27 @@ const organizationJsonLd = {
   url: SITE_URL,
   logo: `${SITE_URL}/logo.png`,
   email: CONTACT_EMAIL,
+  ...(telephone && { telephone }),
+  contactPoint: {
+    '@type': 'ContactPoint',
+    contactType: 'sales',
+    email: CONTACT_EMAIL,
+    ...(telephone && { telephone }),
+    url: `${SITE_URL}/contact`,
+    availableLanguage: 'English',
+  },
+  ...(profiles.length > 0 && { sameAs: profiles }),
   ...(foundedYear && { foundingDate: String(foundedYear) }),
+  // headquarters is "City, Region, Country" (see companyFacts.ts).
+  ...(headquarters && {
+    address: (([addressLocality, addressRegion, addressCountry]) => ({
+      '@type': 'PostalAddress',
+      addressLocality,
+      ...(addressRegion && { addressRegion }),
+      ...(addressCountry && { addressCountry }),
+    }))(headquarters.split(',').map(part => part.trim())),
+  }),
+  knowsAbout: services.map((service) => service.title),
   description:
     'Remote-first delivery partner for AI agents, workflow automation, QA & test automation, DevOps & infrastructure, SaaS applications, and end-to-end software development.',
 }
@@ -199,6 +219,7 @@ export function Layout() {
           <div className="footer-brand">
             <img src="/logo-dark.png" alt="Universal Technologies" width={451} height={164} />
             <p>Product engineering, quality, cloud, and growth — staffed as one delivery team.</p>
+            <SocialLinks variant="icons" />
           </div>
           <div className="footer-grid">
             <div>
@@ -218,12 +239,7 @@ export function Layout() {
             </div>
             <div>
               <h4>Resources</h4>
-              <Link to="/resources">Insights</Link>
-              {resources.map((article) => (
-                <Link key={article.slug} to={`/resources/${article.slug}`}>
-                  {article.title}
-                </Link>
-              ))}
+              <Link to="/resources">Insights &amp; guides</Link>
               <Link to="/privacy-policy">Privacy</Link>
               <Link to="/terms">Terms</Link>
             </div>
@@ -231,6 +247,11 @@ export function Layout() {
               <h4>Connect</h4>
               <Link to="/contact">Contact</Link>
               <a href={`mailto:${CONTACT_EMAIL}`}>{CONTACT_EMAIL}</a>
+              {socialProfiles.map((profile) => (
+                <a key={profile.url} href={profile.url} target="_blank" rel="noopener noreferrer">
+                  {profile.label}
+                </a>
+              ))}
             </div>
           </div>
         </div>

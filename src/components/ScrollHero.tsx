@@ -269,7 +269,7 @@ function StaticHero() {
           <div className="scroll-hero-copy">
             <p className="eyebrow">Software · Automation · AI</p>
             <h1>
-              Build it right. Automate what's manual.
+              Build it right. Automate what's manual.{' '}
               <br />
               Let AI carry the busywork.
             </h1>
@@ -368,7 +368,7 @@ function FullScrollHero() {
           <motion.div className="scroll-hero-copy" style={{ opacity: copyOpacity, y: copyY }}>
             <p className="eyebrow">Software · Automation · AI</p>
             <h1>
-              Build it right. Automate what's manual.
+              Build it right. Automate what's manual.{' '}
               <br />
               Let AI carry the busywork.
             </h1>

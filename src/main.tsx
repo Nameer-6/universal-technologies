@@ -7,6 +7,7 @@ import '@fontsource-variable/dm-sans/opsz.css'
 import '@fontsource-variable/dm-sans/opsz-italic.css'
 import '@fontsource-variable/outfit/index.css'
 import './index.css'
+import './site-theme.css'
 import App from './App.tsx'
 
 // The prerendered/static HTML ships its own title, description, canonical,

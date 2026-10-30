@@ -10,6 +10,7 @@ try {
   const shell = (await readFile('dist/index.html', 'utf8'))
     .replace(/<title>[\s\S]*?<\/title>/g, '')
     .replace(/<meta\s+name="description"[\s\S]*?\/>/g, '')
+  const pages = []
   for (const path of [...paths, '/404']) {
     let body = await render(path)
     const head = []
@@ -30,7 +31,50 @@ try {
     await mkdir(dirname(target), { recursive: true })
     await writeFile(target, html)
     console.log(`Rendered ${path}`)
+    if (path !== '/404') pages.push({ path, ...pageSummary(head) })
   }
+  await writeFile('dist/llms.txt', llmsTxt(pages))
+  console.log('Wrote llms.txt')
 } finally {
   await server.close()
+}
+
+function decode(text) {
+  return text.replace(/&#x27;/g, "'").replace(/&quot;/g, '"').replace(/&lt;/g, '<').replace(/&gt;/g, '>').replace(/&amp;/g, '&')
+}
+
+function pageSummary(head) {
+  const title = decode(head.find(tag => tag.startsWith('<title'))?.replace(/<[^>]+>/g, '') ?? '')
+  const description = decode(head.join('\n').match(/name="description" content="([^"]*)"/)?.[1] ?? '')
+  return { title: title.replace(/\s*[|—–-]\s*Universal Technologies$/, ''), description }
+}
+
+// llms.txt (https://llmstxt.org): a Markdown index of the site for AI assistants,
+// built from the same rendered titles/descriptions so it never drifts from the pages.
+function llmsTxt(pages) {
+  const site = 'https://universal-technologies.com'
+  const home = pages.find(page => page.path === '/')
+  const sections = [
+    ['Services', path => path.startsWith('/services')],
+    ['Products', path => path.startsWith('/products')],
+    ['Work and insights', path => path.startsWith('/portfolio') || path.startsWith('/resources')],
+    ['Company', path => path === '/' || /^\/(about|contact|careers|security)/.test(path)],
+    ['Optional', path => /^\/(privacy-policy|terms)/.test(path)],
+  ]
+  const lines = [
+    '# Universal Technologies',
+    '',
+    `> ${home?.description ?? ''}`,
+    '',
+    'Universal Technologies is a remote-first software delivery partner. One accountable team covers AI agents, workflow automation, QA and test automation, DevOps and infrastructure, SaaS applications, and end-to-end software development.',
+    '',
+  ]
+  for (const [name, match] of sections) {
+    const items = pages.filter(page => match(page.path))
+    if (!items.length) continue
+    lines.push(`## ${name}`, '')
+    for (const page of items) lines.push(`- [${page.title}](${site}${page.path}): ${page.description}`)
+    lines.push('')
+  }
+  return lines.join('\n')
 }

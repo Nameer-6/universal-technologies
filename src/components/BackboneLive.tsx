@@ -1,54 +1,111 @@
-import { motion } from 'framer-motion'
+import { useEffect, useState } from 'react'
+import { AnimatePresence, motion } from 'framer-motion'
 import { Link } from 'react-router-dom'
 import { services } from '../data'
 import { usePageMotion } from '../hooks/usePageMotion'
 import { HeroBoardStage } from './HeroBoards'
 import { SERVICE_BOARD } from './boardMap'
+import './HomeSections.css'
 
-// Sits directly after the scroll-driven hero. It is a separate section, so it
-// never touches that animation: one live dashboard per service line, laid out
-// as a grid. Hover a chart to read it, or grab a dashboard and move it.
+const ROTATE_MS = 5500
+
+// Sits directly after the scroll-driven hero, as its own section, so it never
+// touches that animation. One "service console": pick a line on the left,
+// its live dashboard shows on the right. It advances on its own until the
+// visitor hovers or picks a line.
 export function BackboneLive() {
-  const { reduceMotion, reveal, list, item } = usePageMotion()
+  const { reduceMotion, reveal } = usePageMotion()
+  const [active, setActive] = useState(0)
+  const [paused, setPaused] = useState(false)
+  const service = services[active]
+
+  useEffect(() => {
+    if (reduceMotion || paused) return
+    const timer = window.setTimeout(() => setActive((index) => (index + 1) % services.length), ROTATE_MS)
+    return () => window.clearTimeout(timer)
+  }, [active, paused, reduceMotion])
 
   return (
-    <section className="section bb-live" id="backbone-live" aria-labelledby="bb-live-title">
+    <section className="section hx-section bb-live" id="backbone-live" aria-labelledby="bb-live-title">
       <div className="container">
         <motion.div className="section-head center" {...reveal}>
           <p className="section-label">In motion</p>
-          <h2 className="section-title" id="bb-live-title">
-            Six service lines, all in motion.
+          <h2 className="section-title hx-duo" id="bb-live-title">
+            Six service lines. <span>One delivery rhythm.</span>
           </h2>
           <p className="section-lead">
-            Every line runs on the same delivery rhythm. Hover any chart to read it, or grab a
-            dashboard and move it around.
+            Pick a line to see the kind of dashboard we set up for it. Hover a chart to read it, or grab
+            the dashboard and move it.
           </p>
         </motion.div>
 
-        <motion.div className="bb-grid" {...list}>
-          {services.map((service) => (
-            <motion.article key={service.id} className="bb-cell" variants={item}>
-              <Link to={`/services/${service.id}`} className="bb-cell-head">
-                <span className="bb-cell-mark">{service.mark}</span>
-                <h3>{service.title}</h3>
-                <span className="bb-cell-arrow" aria-hidden>
-                  →
-                </span>
+        <motion.div
+          className="bb-console"
+          {...reveal}
+          onMouseEnter={() => setPaused(true)}
+          onMouseLeave={() => setPaused(false)}
+          onFocus={() => setPaused(true)}
+          onBlur={() => setPaused(false)}
+        >
+          <div className="bb-tabs" role="tablist" aria-label="Service lines" aria-orientation="vertical">
+            {services.map((item, index) => {
+              const selected = index === active
+              return (
+                <button
+                  key={item.id}
+                  type="button"
+                  role="tab"
+                  id={`bb-tab-${item.id}`}
+                  aria-selected={selected}
+                  aria-controls="bb-panel"
+                  className={`bb-tab${selected ? ' is-active' : ''}`}
+                  onClick={() => setActive(index)}
+                >
+                  <span className="bb-tab-mark">{item.mark}</span>
+                  <span className="bb-tab-body">
+                    <span className="bb-tab-title">{item.title}</span>
+                    {selected && <span className="bb-tab-summary">{item.summary}</span>}
+                  </span>
+                </button>
+              )
+            })}
+          </div>
+
+          <div className="bb-stage hx-card" id="bb-panel" role="tabpanel" aria-labelledby={`bb-tab-${service.id}`}>
+            <div className="bb-stage-head">
+              <span className="hx-chip">
+                <i aria-hidden="true" /> Live view · {service.title}
+              </span>
+              <Link className="bb-stage-link" to={`/services/${service.id}`}>
+                Explore {service.title} <span aria-hidden>→</span>
               </Link>
-              <div className="bb-cell-board">
-                <HeroBoardStage
-                  boardKey={SERVICE_BOARD[service.id] ?? 'automation'}
-                  reduceMotion={reduceMotion}
-                  float={false}
-                />
-              </div>
-            </motion.article>
-          ))}
+            </div>
+            <div className="bb-stage-board">
+              <AnimatePresence mode="wait" initial={false}>
+                <motion.div
+                  key={service.id}
+                  initial={reduceMotion ? false : { opacity: 0, y: 16, filter: 'blur(6px)' }}
+                  animate={{ opacity: 1, y: 0, filter: 'blur(0px)' }}
+                  exit={reduceMotion ? undefined : { opacity: 0, y: -12, filter: 'blur(6px)' }}
+                  transition={{ duration: 0.45, ease: [0.22, 1, 0.36, 1] }}
+                >
+                  <HeroBoardStage
+                    boardKey={SERVICE_BOARD[service.id] ?? 'automation'}
+                    reduceMotion={reduceMotion}
+                    float={false}
+                  />
+                </motion.div>
+              </AnimatePresence>
+            </div>
+            <ul className="bb-stack" aria-label={`${service.title} stack`}>
+              {service.stacks.map((stack) => (
+                <li key={stack}>{stack}</li>
+              ))}
+            </ul>
+          </div>
         </motion.div>
 
-        <p className="bb-note">
-          Illustrative dashboards showing the kind of tooling we set up — not client data.
-        </p>
+        <p className="bb-note">Illustrative dashboards showing the kind of tooling we set up. Not client data.</p>
       </div>
     </section>
   )

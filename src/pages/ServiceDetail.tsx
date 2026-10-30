@@ -6,6 +6,8 @@ import { TypedCode } from '../components/CodeTyper'
 import { RELATED_SERVICES } from '../components/ServiceFlow'
 import { pageMetadata } from '../seoData'
 import { serviceContent } from '../serviceContent'
+import { resources } from '../resourcesData'
+import { ResourceCard } from '../components/ResourceCard'
 import { PRIMARY_CTA, outcomes as sharedOutcomes, serviceDetails, services } from '../data'
 
 const ease = [0.22, 1, 0.36, 1] as const
@@ -72,6 +74,7 @@ export default function ServiceDetail() {
     .map((relatedId) => services.find((item) => item.id === relatedId))
     .filter((item): item is (typeof services)[number] => Boolean(item))
   const content = serviceContent[service.id]
+  const guides = resources.filter((article) => article.service === service.id)
   const outcomes = content?.outcomes ?? sharedOutcomes
   const meta = pageMetadata[`/services/${service.id}`]
 
@@ -381,6 +384,32 @@ export default function ServiceDetail() {
                   <p>{faq.answer}</p>
                 </details>
               ))}
+            </div>
+          </div>
+        </section>
+      )}
+
+      {guides.length > 0 && (
+        <section className="svc-section svc-guides" aria-labelledby="service-guides-title">
+          <div className="container">
+            <motion.div className="svc-head svc-head-center" {...reveal}>
+              <p className="svc-eyebrow">Guides</p>
+              <h2 className="svc-title" id="service-guides-title">
+                Read before you start
+              </h2>
+              <p className="svc-lede">
+                Practical guides on {service.title.toLowerCase()} from the team that delivers it.
+              </p>
+            </motion.div>
+            <div className="resource-grid resource-grid-3">
+              {guides.map((article) => (
+                <ResourceCard key={article.slug} article={article} />
+              ))}
+            </div>
+            <div className="section-more">
+              <Link className="btn btn-ghost-ink" to="/resources">
+                All guides <span aria-hidden>→</span>
+              </Link>
             </div>
           </div>
         </section>

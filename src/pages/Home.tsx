@@ -7,12 +7,17 @@ import { ClientMarquee } from '../components/ClientMarquee'
 import { ContactForm } from '../components/ContactForm'
 import { usePageMotion } from '../hooks/usePageMotion'
 import { pageMetadata } from '../seoData'
-import { CONTACT_EMAIL, PRIMARY_CTA, engagements, howItWorks, outcomes, services } from '../data'
-import { products } from '../pagesData'
+import { CONTACT_EMAIL, PRIMARY_CTA } from '../data'
 import { resources } from '../resourcesData'
+import { ResourceCard } from '../components/ResourceCard'
+import { SocialLinks } from '../components/SocialLinks'
+import { ServiceBento } from '../components/ServiceBento'
+import { EngageSection, GatesSection, OutcomesSection, ProductsSection } from '../components/HomeSections'
 
-const featuredProducts = products.slice(0, 3)
-const featuredGuides = resources.slice(0, 2)
+// One guide each from AI, DevOps and SaaS so the homepage shows the range.
+const featuredGuides = ['ai-agent-vs-workflow-automation', 'ci-cd-pipeline-checklist', 'planning-a-saas-mvp']
+  .map((slug) => resources.find((article) => article.slug === slug))
+  .filter((article) => article !== undefined)
 
 const trustNotes = [
   {
@@ -30,7 +35,7 @@ const trustNotes = [
 ]
 
 export default function Home() {
-  const { reveal, list, item: itemVariants, cardHover, inView, ease } = usePageMotion()
+  const { reveal, list, item: itemVariants, inView } = usePageMotion()
 
   return (
     <>
@@ -56,51 +61,20 @@ export default function Home() {
         </div>
       </section>
 
-      <section className="section services" id="services" aria-labelledby="services-title">
+      <section className="section hx-section services" id="services" aria-labelledby="services-title">
         <div className="container">
-          <motion.div className="section-head split" {...reveal}>
-            <div>
-              <p className="section-label">Capabilities</p>
-              <h2 className="section-title" id="services-title">
-                Six lines. One release team.
-              </h2>
-            </div>
+          <motion.div className="section-head center" {...reveal}>
+            <p className="section-label">Capabilities</p>
+            <h2 className="section-title hx-duo" id="services-title">
+              Six lines. <span>One release team.</span>
+            </h2>
             <p className="section-lead">
               Pick the lanes you need — we keep architecture, quality, and launch in the same
               conversation.
             </p>
           </motion.div>
 
-          <motion.div
-            className="service-grid"
-            {...list}
-          >
-            {services.map((service) => (
-              <motion.article
-                key={service.id}
-                className="service-card"
-                variants={itemVariants}
-                transition={{ duration: 0.55, ease }}
-                whileHover={cardHover}
-              >
-                <Link to={`/services/${service.id}`} className="service-card-link">
-                  <div className="service-top">
-                    <span>{service.mark}</span>
-                    <h3>{service.title}</h3>
-                  </div>
-                  <p>{service.summary}</p>
-                  <div className="stack-row">
-                    {service.stacks.map((tech) => (
-                      <span key={tech}>{tech}</span>
-                    ))}
-                  </div>
-                  <span className="card-affordance">
-                    Explore {service.title} <span aria-hidden>→</span>
-                  </span>
-                </Link>
-              </motion.article>
-            ))}
-          </motion.div>
+          <ServiceBento />
         </div>
       </section>
 
@@ -130,142 +104,20 @@ export default function Home() {
         </div>
       </section>
 
-      <section className="section how" id="how" aria-labelledby="how-title">
-        <div className="container">
-          <motion.div className="section-head center" {...reveal}>
-            <p className="section-label">How it works</p>
-            <h2 className="section-title" id="how-title">
-              Align. Prioritize. Ship. Steady.
-            </h2>
-            <p className="section-lead">
-              A repeatable operating rhythm for product work: shared scope, short loops, visible progress.
-            </p>
-          </motion.div>
+      <GatesSection />
 
-          <ol className="pf-process">
-            {howItWorks.map((item) => (
-              <motion.li key={item.step} {...reveal}>
-                <span className="pf-process-index">{item.step}</span>
-                <div>
-                  <div className="pf-process-head">
-                    <h3>{item.title}</h3>
-                  </div>
-                  <p>{item.text}</p>
-                </div>
-              </motion.li>
-            ))}
-          </ol>
-        </div>
-      </section>
+      <OutcomesSection />
 
-      <section className="section band" id="outcomes" aria-labelledby="outcomes-title">
-        <div className="container">
-          <motion.div className="section-head split" {...reveal}>
-            <div>
-              <p className="section-label">What changes</p>
-              <h2 className="section-title" id="outcomes-title">
-                Results you can feel in the next release
-              </h2>
-            </div>
-            <p className="section-lead">
-              Less coordination overhead. Clearer ownership. Software that stays operable after
-              launch.
-            </p>
-          </motion.div>
+      <EngageSection />
 
-          <motion.div className="outcome-grid" {...list}>
-            {outcomes.map((outcome, index) => (
-              <motion.div
-                key={outcome.title}
-                className="outcome-card"
-                variants={itemVariants}
-                whileHover={cardHover}
-              >
-                <span className="outcome-index">0{index + 1}</span>
-                <h3>{outcome.title}</h3>
-                <p>{outcome.text}</p>
-              </motion.div>
-            ))}
-          </motion.div>
-        </div>
-      </section>
+      <ProductsSection />
 
-      <section className="section" id="engage" aria-labelledby="engage-title">
-        <div className="container">
-          <motion.div className="section-head center" {...reveal}>
-            <p className="section-label">Ways to engage</p>
-            <h2 className="section-title" id="engage-title">
-              Choose the shape that fits this quarter
-            </h2>
-            <p className="section-lead">
-              Same standards either way — different staffing and ownership models.
-            </p>
-          </motion.div>
-
-          <motion.div className="engage-grid" {...list}>
-            {engagements.map((engagement) => (
-              <motion.article
-                key={engagement.step}
-                className="engage-card"
-                variants={itemVariants}
-                whileHover={cardHover}
-              >
-                <span className="engage-mark">{engagement.step}</span>
-                <h3>{engagement.title}</h3>
-                <p>{engagement.text}</p>
-                <em>{engagement.detail}</em>
-              </motion.article>
-            ))}
-          </motion.div>
-        </div>
-      </section>
-
-      <section className="section band" id="products" aria-labelledby="home-products-title">
-        <div className="container">
-          <motion.div className="section-head split" {...reveal}>
-            <div>
-              <p className="section-label">Products</p>
-              <h2 className="section-title" id="home-products-title">
-                Tools we built, then kept running
-              </h2>
-            </div>
-            <p className="section-lead">Internal accelerators used on client work, then productized.</p>
-          </motion.div>
-          <motion.div
-            className="service-grid"
-            {...list}
-          >
-            {featuredProducts.map((product) => (
-              <motion.article
-                key={product.id}
-                className="service-card"
-                variants={itemVariants}
-              >
-                <Link to={`/products/${product.id}`} className="service-card-link">
-                  <p className="section-label">{product.status}</p>
-                  <div className="service-top">
-                    <span>{product.mark}</span>
-                    <h3>{product.name}</h3>
-                  </div>
-                  <p>
-                    <strong>{product.tagline}.</strong> {product.description}
-                  </p>
-                  <span className="card-affordance">
-                    Explore product <span aria-hidden>→</span>
-                  </span>
-                </Link>
-              </motion.article>
-            ))}
-          </motion.div>
-        </div>
-      </section>
-
-      <section className="section" id="trust-strip" aria-labelledby="trust-strip-title">
+      <section className="section hx-section hx-checks" id="trust-strip" aria-labelledby="trust-strip-title">
         <div className="container">
           <motion.div className="section-head center" {...reveal}>
             <p className="section-label">How we reduce risk</p>
-            <h2 className="section-title" id="trust-strip-title">
-              Delivery habits you can inspect
+            <h2 className="section-title hx-duo" id="trust-strip-title">
+              Delivery habits <span>you can inspect.</span>
             </h2>
           </motion.div>
           <motion.div className="outcome-grid" {...list}>
@@ -280,6 +132,7 @@ export default function Home() {
               </motion.article>
             ))}
           </motion.div>
+          <SocialLinks className="trust-social" />
           <p className="trust-more">
             <Link className="contact-email" to="/security">
               How we handle ownership, access, and data <span aria-hidden>→</span>
@@ -297,21 +150,20 @@ export default function Home() {
                 Guides for the decision in front of you
               </h2>
             </div>
-            <p className="section-lead">Short reading for teams choosing a partner or an engagement model.</p>
+            <p className="section-lead">
+              Practical guides on AI agents, automation, QA, DevOps, SaaS and delivery planning,
+              written by the team that does the work.
+            </p>
           </motion.div>
-          <div className="service-grid">
+          <div className="resource-grid resource-grid-3">
             {featuredGuides.map((article) => (
-              <article className="service-card" key={article.slug}>
-                <Link className="service-card-link" to={`/resources/${article.slug}`}>
-                  <p className="section-label">{article.category}</p>
-                  <h3>{article.title}</h3>
-                  <p>{article.description}</p>
-                  <span className="card-affordance">
-                    Read the guide <span aria-hidden>→</span>
-                  </span>
-                </Link>
-              </article>
+              <ResourceCard key={article.slug} article={article} />
             ))}
+          </div>
+          <div className="section-more">
+            <Link className="btn btn-ghost-ink" to="/resources">
+              See all {resources.length} guides <span aria-hidden>→</span>
+            </Link>
           </div>
         </div>
       </section>

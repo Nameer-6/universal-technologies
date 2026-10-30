@@ -55,7 +55,7 @@ export default function About() {
               <motion.div className="section-head center" {...reveal}>
                 <p className="section-label">About us</p>
                 <h1 className="section-title" id="about-title">
-                  We got tired of watching good ideas die in handoffs.
+                  We got tired of watching good ideas <span className="hx-muted">die in handoffs.</span>
                 </h1>
                 <p className="section-lead">
                   Most software problems aren't technical, they're organizational: the designer

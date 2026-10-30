@@ -44,6 +44,13 @@ export type CompanyFacts = {
   certifications: string[]
   /** Verified company/team milestones, oldest first. */
   timeline: TimelineEntry[]
+  /**
+   * Official company profiles, used as Organization `sameAs` in structured data.
+   * Full URLs only, e.g. 'https://www.linkedin.com/company/<slug>/', Clutch, GitHub.
+   */
+  profiles: string[]
+  /** Public business phone in international format, e.g. '+1-281-555-0100'. */
+  telephone: string | null
 }
 
 export const companyFacts: CompanyFacts = {
@@ -90,6 +97,11 @@ export const companyFacts: CompanyFacts = {
     },
   ],
   certifications: [],
+  profiles: [
+    'https://www.linkedin.com/company/universaltechnologies/',
+    'https://clutch.co/profile/universal-technologies-0',
+  ],
+  telephone: null,
   timeline: [
     {
       year: '2022',

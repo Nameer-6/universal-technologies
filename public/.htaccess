@@ -1,56 +1,81 @@
-# Single Page App routing — send requests for known app routes to
-# index.html so React Router can handle the path client-side. Fixes
-# "This page does not exist" / 404 on reload or direct link for routes
-# like /services/web or /careers/senior-bidder.
-#
-# Unknown paths fall through to a real 404 status instead of silently
-# returning 200 for every URL — ErrorDocument still serves index.html as
-# the body so React Router's own not-found page renders, but the status
-# code search engines see is correct.
+# Hostinger / Apache rules for the prerendered site in dist/.
+# Every sitemap route is a real file at <route>/index.html, so no SPA fallback is
+# needed. These rules mirror scripts/serve.mjs (see docs/seo-delivery.md).
 
 Options -MultiViews -Indexes
 
-ErrorDocument 404 /index.html
+# Serve /about from about/index.html without first redirecting to /about/ —
+# the canonical URLs have no trailing slash.
+DirectorySlash Off
+DirectoryIndex index.html
+
+# Unknown paths get the real 404 page with a 404 status.
+ErrorDocument 404 /404.html
+ErrorDocument 410 /404.html
+
+AddType application/manifest+json .webmanifest
+AddType text/plain .txt
+AddDefaultCharset utf-8
 
 <IfModule mod_rewrite.c>
   RewriteEngine On
   RewriteBase /
 
-  # Canonical host: redirect www to the bare domain.
+  # Canonical host: www -> apex. (Hostinger already forces HTTPS; HSTS below
+  # makes browsers skip the http hop entirely.)
   RewriteCond %{HTTP_HOST} ^www\.universal-technologies\.com$ [NC]
-  RewriteRule ^ https://universal-technologies.com%{REQUEST_URI} [L,R=301]
+  RewriteRule ^ https://universal-technologies.com%{REQUEST_URI} [L,R=301,NE]
 
-  # Let requests for real files/directories pass through untouched.
-  RewriteCond %{REQUEST_FILENAME} -f [OR]
-  RewriteCond %{REQUEST_FILENAME} -d
+  # Retired service URLs.
+  RewriteRule ^services/ai/?$ /services/ai-agents [L,R=301]
+  RewriteRule ^services/(software-development|ui-ux)/?$ /services/end-to-end-development [L,R=301]
+  RewriteRule ^services/cybersecurity/?$ - [G,L]
+
+  # /path/index.html and /path/ -> /path (only for what the client asked for,
+  # so the internal rewrite below cannot loop).
+  RewriteCond %{THE_REQUEST} \s/+(.*?)/?index\.html[\s?] [NC]
+  RewriteRule ^ /%1 [L,R=301,NE]
+  RewriteCond %{REQUEST_URI} ^/(.+)/$
+  RewriteRule ^ /%1 [L,R=301,NE]
+
+  # Real files (assets, images, robots.txt, llms.txt …) are served as-is.
+  RewriteCond %{REQUEST_FILENAME} -f
   RewriteRule ^ - [L]
 
-  # Known app routes fall back to the SPA shell.
-  RewriteRule ^(about|careers|services|products|contact|privacy-policy|terms)(/.*)?$ index.html [L]
-  RewriteRule ^$ index.html [L]
+  # Clean route -> its prerendered page.
+  RewriteCond %{REQUEST_FILENAME}/index.html -f
+  RewriteRule ^(.+)$ $1/index.html [L]
 
-  # Anything else is a real 404, not a silent 200.
-  RewriteRule ^ - [R=404,L]
+  # Everything else falls through to ErrorDocument 404.
 </IfModule>
 
-# Never cache the app shell — it references the current hashed asset
-# filenames, so a stale copy would point at files that no longer exist.
 <IfModule mod_headers.c>
-  <FilesMatch "^index\.html$">
-    Header set Cache-Control "no-cache, no-store, must-revalidate"
+  # Security headers (HSTS, clickjacking, MIME sniffing, referrer leakage).
+  Header always set Strict-Transport-Security "max-age=31536000; includeSubDomains"
+  Header always set X-Frame-Options "SAMEORIGIN"
+  Header always set X-Content-Type-Options "nosniff"
+  Header always set Referrer-Policy "strict-origin-when-cross-origin"
+  Header always set Permissions-Policy "camera=(), microphone=(), geolocation=()"
+
+  # HTML: cacheable but always revalidated (ETag/304), so a deploy shows up at
+  # once and pages never point at deleted hashed assets. (Was: never cache at all.)
+  <FilesMatch "\.html$">
+    Header set Cache-Control "public, max-age=0, must-revalidate"
+  </FilesMatch>
+
+  # Un-hashed public files (logos, og-image, favicons, robots/llms/sitemap)
+  # can change between deploys, so keep their cache short.
+  <FilesMatch "\.(png|jpe?g|webp|svg|ico|webmanifest|txt|xml)$">
+    Header set Cache-Control "public, max-age=86400"
+  </FilesMatch>
+
+  # JS/CSS/fonts only exist in /assets/ with a content hash in the filename,
+  # so they are safe to cache forever.
+  <FilesMatch "\.(js|css|woff2?)$">
+    Header set Cache-Control "public, max-age=31536000, immutable"
   </FilesMatch>
 </IfModule>
 
-# Hashed build output in /assets/ is safe to cache for a long time since
-# every new build ships under a new filename.
-<IfModule mod_expires.c>
-  ExpiresActive On
-  ExpiresByType text/css "access plus 1 year"
-  ExpiresByType application/javascript "access plus 1 year"
-  ExpiresByType image/png "access plus 1 year"
-  ExpiresByType image/svg+xml "access plus 1 year"
-</IfModule>
-
 <IfModule mod_deflate.c>
-  AddOutputFilterByType DEFLATE text/html text/css application/javascript application/json image/svg+xml
+  AddOutputFilterByType DEFLATE text/html text/plain text/css text/javascript application/javascript application/json application/manifest+json application/xml image/svg+xml
 </IfModule>

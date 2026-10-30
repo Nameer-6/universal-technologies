@@ -3,10 +3,20 @@ import { Link } from 'react-router-dom'
 import { Seo } from '../components/Seo'
 import { usePageMotion } from '../hooks/usePageMotion'
 import { pageMetadata } from '../seoData'
-import { productStatusInfo, products } from '../pagesData'
+import { products } from '../pagesData'
+import { ProductCard } from '../components/ProductArt'
 
 export default function Products() {
-  const { reveal, list, item, cardHover, inView } = usePageMotion()
+  const { reveal, inView, reduceMotion } = usePageMotion()
+  const stagger = (index: number) =>
+    reduceMotion
+      ? {}
+      : {
+          initial: { opacity: 0, y: 28 },
+          whileInView: { opacity: 1, y: 0 },
+          viewport: { once: true, amount: 0.2 },
+          transition: { duration: 0.6, delay: index * 0.08 },
+        }
 
   return (
     <>
@@ -22,7 +32,7 @@ export default function Products() {
           <motion.div className="section-head center" {...reveal}>
             <p className="section-label">Products</p>
             <h1 className="section-title" id="products-title">
-              A few things we've built and kept running
+              A few things we've built <span className="hx-muted">and kept running</span>
             </h1>
             <p className="section-lead">
               Internal tools we built to solve real problems on client engagements, then
@@ -30,40 +40,11 @@ export default function Products() {
             </p>
           </motion.div>
 
-          <motion.div
-            className="product-grid"
-            {...list}
-          >
-            {products.map((product) => (
-              <motion.article
-                key={product.id}
-                className="product-card"
-                variants={item}
-                whileHover={cardHover}
-              >
-                <Link to={`/products/${product.id}`} className="service-card-link">
-                  <p className="product-status">{product.status}</p>
-                  <p className="product-audience">{productStatusInfo[product.status].meaning}</p>
-                  <div className="service-top">
-                    <span>{product.mark}</span>
-                    <h2>{product.name}</h2>
-                  </div>
-                  <p>
-                    <strong>{product.tagline}.</strong> {product.description}
-                  </p>
-                  <p className="product-audience">{product.audience}</p>
-                  <ul className="product-caps">
-                    {product.tags.map((tag) => (
-                      <li key={tag}>{tag}</li>
-                    ))}
-                  </ul>
-                  <span className="card-affordance">
-                    Explore product <span aria-hidden>→</span>
-                  </span>
-                </Link>
-              </motion.article>
+          <div className="hx-products pr-grid">
+            {products.map((product, index) => (
+              <ProductCard key={product.id} product={product} as="h2" motionProps={stagger(index)} />
             ))}
-          </motion.div>
+          </div>
         </div>
       </section>
 

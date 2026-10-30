@@ -1,0 +1,12 @@
+{
+  "name": "Universal Technologies",
+  "short_name": "Universal Tech",
+  "description": "Engineering, automation, and AI, delivered as one accountable team.",
+  "start_url": "/",
+  "display": "browser",
+  "background_color": "#0c0f14",
+  "theme_color": "#0c0f14",
+  "icons": [
+    { "src": "/favicon-192.png", "sizes": "192x192", "type": "image/png" }
+  ]
+}

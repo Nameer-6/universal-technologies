@@ -26,7 +26,7 @@ for (const path of paths) {
   assert(description.length <= 165, `${path}: description length ${description.length}`)
   assert.equal([...head.matchAll(/rel="canonical"/g)].length, 1)
   assert(head.includes(`href="https://universal-technologies.com${path}"`), `${path}: canonical`)
-  for (const name of ['og:title', 'og:description', 'og:url', 'og:image', 'twitter:card']) assert(head.includes(`"${name}"`), `${path}: ${name}`)
+  for (const name of ['og:title', 'og:description', 'og:url', 'og:image', 'og:image:alt', 'twitter:card', 'twitter:image']) assert(head.includes(`"${name}"`), `${path}: ${name}`)
   assert.equal([...body.matchAll(/<h1(?:\s|>)/g)].length, 1, `${path}: one visible H1`)
   // Scroll-reveal sections intentionally start at opacity:0 in the markup (framer-motion
   // animates them in on scroll) — that's a rendering detail, not missing content. What
@@ -43,6 +43,15 @@ for (const path of paths) {
       assert(decode(body).includes(question.acceptedAnswer.text))
     }
   }
+  if (path.startsWith('/products/')) {
+    assert(schemas.some(schema => schema['@type'] === 'SoftwareApplication'), `${path}: SoftwareApplication schema`)
+    const faq = schemas.find(schema => schema['@type'] === 'FAQPage')
+    assert(faq && faq.mainEntity.length >= 2, `${path}: FAQPage schema`)
+    for (const question of faq.mainEntity) assert(decode(body).includes(question.acceptedAnswer.text), `${path}: visible FAQ answer`)
+    const words = decode(body.replace(/<header[\s\S]*?<\/header>|<footer[\s\S]*?<\/footer>/g, '').replace(/<[^>]+>/g, ' ')).split(/\s+/).filter(Boolean).length
+    assert(words >= 500, `${path}: ${words} words, expected 500+`)
+  }
+  if (path === '/') assert(!/manual\.<br/.test(body), '/: H1 sentences separated by a space')
   if (path.startsWith('/careers/')) assert(schemas.some(schema => schema['@type'] === 'JobPosting' && schema.description.startsWith('<p>')))
   for (const match of body.matchAll(/href="(\/[^"#?]*)/g)) {
     const link = match[1]
@@ -75,7 +84,24 @@ async function request(path, host = 'universal-technologies.com', method = 'GET'
   })
   return result
 }
-for (const path of paths) assert.equal((await request(path)).status, 200)
+for (const path of paths) {
+  const result = await request(path)
+  assert.equal(result.status, 200)
+  for (const header of ['Strict-Transport-Security', 'X-Frame-Options', 'X-Content-Type-Options']) assert(result.headers[header], `${path}: ${header}`)
+}
+// llms.txt lists every sitemap page.
+{
+  const llms = await readFile('dist/llms.txt', 'utf8')
+  assert(llms.startsWith('# Universal Technologies\n'), 'llms.txt H1')
+  for (const path of paths) assert(llms.includes(`(https://universal-technologies.com${path})`), `llms.txt lists ${path}`)
+}
+// .htaccess (Hostinger) keeps the security headers and does not send no-store for HTML.
+{
+  const htaccess = await readFile('dist/.htaccess', 'utf8')
+  for (const header of ['Strict-Transport-Security', 'X-Frame-Options', 'X-Content-Type-Options']) assert(htaccess.includes(header), `.htaccess: ${header}`)
+  assert(!htaccess.includes('no-store'), '.htaccess: HTML is not no-store')
+  assert(htaccess.includes('DirectorySlash Off'), '.htaccess: no /route -> /route/ redirect')
+}
 assert.equal((await request('/not-a-real-page')).status, 404)
 assert.equal((await request('/%2fevil.example/')).status, 400)
 assert.equal((await request('/%2e%2e%2fpackage.json')).status, 400)

@@ -1,7 +1,9 @@
 import { Helmet } from 'react-helmet-async'
 
 export const SITE_URL = 'https://universal-technologies.com'
-const DEFAULT_OG_IMAGE = `${SITE_URL}/logo.png`
+// 1200×630 social card; regenerate with `node scripts/generate-og-image.mjs`.
+const DEFAULT_OG_IMAGE = `${SITE_URL}/og-image.png`
+const DEFAULT_OG_IMAGE_ALT = 'Universal Technologies — AI agents, automation & software delivery'
 const SITE_NAME = 'Universal Technologies'
 
 type SeoProps = {
@@ -9,6 +11,7 @@ type SeoProps = {
   description: string
   path: string
   image?: string
+  imageAlt?: string
   type?: 'website' | 'article'
   noindex?: boolean
   jsonLd?: object | object[]
@@ -21,6 +24,7 @@ export function Seo({
   description,
   path,
   image = DEFAULT_OG_IMAGE,
+  imageAlt = DEFAULT_OG_IMAGE_ALT,
   type = 'website',
   noindex = false,
   jsonLd,
@@ -53,12 +57,17 @@ export function Seo({
       <meta property="og:title" content={title} />
       <meta property="og:description" content={description} />
       <meta property="og:url" content={url} />
+      <meta property="og:locale" content="en_US" />
       <meta property="og:image" content={image} />
+      <meta property="og:image:alt" content={imageAlt} />
+      {image === DEFAULT_OG_IMAGE && <meta property="og:image:width" content="1200" />}
+      {image === DEFAULT_OG_IMAGE && <meta property="og:image:height" content="630" />}
 
       <meta name="twitter:card" content="summary_large_image" />
       <meta name="twitter:title" content={title} />
       <meta name="twitter:description" content={description} />
       <meta name="twitter:image" content={image} />
+      <meta name="twitter:image:alt" content={imageAlt} />
 
       {structuredData.map((entry, index) => (
         <script key={index} type="application/ld+json">

@@ -10,7 +10,12 @@ export default function ResourceDetail() {
   if (!article) return <NotFound />
   const path = `/resources/${article.slug}`
   const minutes = readingMinutes(article)
-  const related = resources.filter((item) => item.slug !== article.slug)
+  // Same-service articles first, then the rest; three is enough to keep readers moving.
+  const others = resources.filter((item) => item.slug !== article.slug)
+  const related = [
+    ...others.filter((item) => item.service === article.service),
+    ...others.filter((item) => item.service !== article.service),
+  ].slice(0, 3)
 
   return (
     <>

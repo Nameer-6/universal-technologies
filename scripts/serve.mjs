@@ -9,7 +9,15 @@ const redirects = new Map([
   ['/services/software-development', '/services/end-to-end-development'],
   ['/services/ui-ux', '/services/end-to-end-development'],
 ])
-const types = { '.html': 'text/html; charset=utf-8', '.js': 'text/javascript; charset=utf-8', '.css': 'text/css; charset=utf-8', '.json': 'application/json', '.xml': 'application/xml', '.txt': 'text/plain; charset=utf-8', '.png': 'image/png', '.svg': 'image/svg+xml', '.woff2': 'font/woff2', '.webp': 'image/webp' }
+const types = { '.html': 'text/html; charset=utf-8', '.js': 'text/javascript; charset=utf-8', '.css': 'text/css; charset=utf-8', '.json': 'application/json', '.xml': 'application/xml', '.txt': 'text/plain; charset=utf-8', '.png': 'image/png', '.svg': 'image/svg+xml', '.woff2': 'font/woff2', '.webp': 'image/webp', '.webmanifest': 'application/manifest+json' }
+// Same security headers as public/.htaccess.
+export const securityHeaders = {
+  'Strict-Transport-Security': 'max-age=31536000; includeSubDomains',
+  'X-Frame-Options': 'SAMEORIGIN',
+  'X-Content-Type-Options': 'nosniff',
+  'Referrer-Policy': 'strict-origin-when-cross-origin',
+  'Permissions-Policy': 'camera=(), microphone=(), geolocation=()',
+}
 
 export async function handleRequest(req, res) {
   if (!['GET', 'HEAD'].includes(req.method)) {
@@ -20,7 +28,7 @@ export async function handleRequest(req, res) {
   let path
   try { path = decodeURIComponent(url.pathname) } catch { res.writeHead(400).end(); return }
   if (path.startsWith('//') || path.includes('\\') || path.includes('\0')) { res.writeHead(400).end(); return }
-  const redirect = target => res.writeHead(301, { Location: target }).end()
+  const redirect = target => res.writeHead(301, { ...securityHeaders, Location: target }).end()
   const host = (req.headers.host || '').split(':')[0].toLowerCase()
   // A TLS-terminating proxy reports the original scheme in X-Forwarded-Proto.
   const insecure = String(req.headers['x-forwarded-proto'] || '').split(',')[0].trim().toLowerCase() === 'http'
@@ -40,12 +48,12 @@ export async function handleRequest(req, res) {
     if (status === 410) throw new Error('Retired service')
     if ((await stat(target)).isDirectory()) target = resolve(target, 'index.html')
     const body = await readFile(target)
-    res.writeHead(200, { 'Content-Type': types[extname(target)] || 'application/octet-stream', 'Cache-Control': target.includes(`${sep}assets${sep}`) ? 'public, max-age=31536000, immutable' : 'no-cache' })
+    res.writeHead(200, { ...securityHeaders, 'Content-Type': types[extname(target)] || 'application/octet-stream', 'Cache-Control': target.includes(`${sep}assets${sep}`) ? 'public, max-age=31536000, immutable' : 'no-cache' })
     res.end(req.method === 'HEAD' ? undefined : body)
   } catch {
     status = status === 410 ? 410 : 404
     const body = await readFile(resolve(root, '404.html'))
-    res.writeHead(status, { 'Content-Type': types['.html'], 'X-Robots-Tag': 'noindex', 'Cache-Control': 'no-cache' })
+    res.writeHead(status, { ...securityHeaders, 'Content-Type': types['.html'], 'X-Robots-Tag': 'noindex', 'Cache-Control': 'no-cache' })
     res.end(req.method === 'HEAD' ? undefined : body)
   }
 }

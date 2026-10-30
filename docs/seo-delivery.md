@@ -11,6 +11,22 @@
 - Landing page has a responsive hero, direct service navigation, prominent CTA, and delivery principles. It no longer requires scrolling through a pinned 420vh hero to reach the page.
 - Placeholder leadership names, founding year, company metrics, and office locations are kept out of public copy until verified. They now live in `src/companyFacts.ts` (empty by default; pages render a fact only when it is set). See `docs/audit-remediation.md` for the full audit tracker and claims register. Existing product, hiring, client-list, and benefit claims still need the business owner's confirmation.
 - Fonts are self-hosted (`@fontsource-variable/*`), so there is no Google Fonts request. Privacy text discloses the theme storage and FormSubmit. Existing contact/application disclosures describe FormSubmit. This code review cannot verify inbox retention or company data practices outside the repository.
+- Social previews use a dedicated 1200×630 card (`public/og-image.png`, built by `node scripts/generate-og-image.mjs`) with `og:image:width/height/alt`, `og:locale`, and `twitter:image:alt`. The old default was the 449×164 logo, which LinkedIn/Facebook/Slack crop badly. Pages can pass their own `image`/`imageAlt` to `<Seo>`.
+- Organization JSON-LD includes a `PostalAddress` built from `companyFacts.headquarters`, and it's left out if that value is empty.
+- `<meta charset>` is the first tag in `<head>`, and the page includes a web app manifest (`public/site.webmanifest`) and light/dark `theme-color`.
+
+## October 2026 audit fixes (Claude SEO audit, score 73)
+
+- **Security headers**: `public/.htaccess` (Hostinger) and `scripts/serve.mjs` send HSTS, `X-Frame-Options: SAMEORIGIN`, `nosniff`, `Referrer-Policy` and `Permissions-Policy`.
+- **HTML caching**: HTML is now `public, max-age=0, must-revalidate` (ETag revalidation) instead of `no-cache, no-store`. Hashed JS/CSS/fonts are cached for a year; other public files for a day.
+- **Trailing slash**: `.htaccess` was the old SPA version and Apache redirected `/about` → `/about/`, the opposite of the canonical URL. It now uses `DirectorySlash Off`, serves `<route>/index.html` directly, 301s `/route/` and `/index.html` to the clean URL, and uses `404.html` for real 404s.
+- **llms.txt**: `npm run build` writes `dist/llms.txt` from the rendered titles/descriptions of every sitemap page.
+- **Homepage H1**: a space now separates the two sentences in the text content.
+- **Products**: each product page has problem, how it works, use cases, fit, engagement and FAQ sections (500+ words), plus `SoftwareApplication` and `FAQPage` JSON-LD. Copy only restates what the existing descriptions claim; the business owner should still review it.
+- **Organization schema**: adds `contactPoint`, `knowsAbout`, and `sameAs`/`telephone` from `companyFacts.profiles` / `companyFacts.telephone` (empty until supplied).
+- `check:seo` covers all of the above.
+
+Still needs owner/tooling: company LinkedIn and review-profile URLs (`sameAs`), a public phone number, a Google PageSpeed API key for Core Web Vitals, more resource articles, and backlinks.
 
 ## Deploying
 

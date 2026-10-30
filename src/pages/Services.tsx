@@ -3,13 +3,11 @@ import { Link } from 'react-router-dom'
 import { AboutJourney } from '../components/AboutJourney'
 import { DELIVERY_ECOSYSTEM } from '../components/ServiceFlow'
 import { Seo } from '../components/Seo'
+import { ServiceBento } from '../components/ServiceBento'
 import { ServicesLive } from '../components/ServicesLive'
-import { Bars, Sparkline } from '../components/chartPrimitives'
-import { dataVar } from '../components/chartTokens'
-import { PLUG_CHARTS } from '../components/serviceCharts'
 import { usePageMotion } from '../hooks/usePageMotion'
 import { pageMetadata } from '../seoData'
-import { PRIMARY_CTA, howItWorks, industries, outcomes, services } from '../data'
+import { PRIMARY_CTA, howItWorks, industries, outcomes } from '../data'
 
 const WHY_US = [
   {
@@ -30,7 +28,7 @@ const WHY_US = [
 ]
 
 export default function Services() {
-  const { reduceMotion, reveal, hero, heroFollow, list, item, inView } = usePageMotion()
+  const { reveal, hero, heroFollow, list, item, inView } = usePageMotion()
 
   return (
     <div className="svc-page">
@@ -50,7 +48,7 @@ export default function Services() {
           >
             <p className="svc-eyebrow">Services</p>
             <h1 className="svc-hero-title" id="services-title">
-              Six specialties. One team that talks to itself.
+              Six specialties. <span className="hx-muted">One team that talks to itself.</span>
             </h1>
             <p className="svc-hero-subtitle">
               Every line is staffed by senior specialists and run through the same delivery
@@ -99,59 +97,14 @@ export default function Services() {
           <motion.div className="svc-head svc-head-center" {...reveal}>
             <p className="svc-eyebrow">Capabilities</p>
             <h2 className="svc-title" id="services-grid-title">
-              Pick the lines you need
+              Pick the lines <span className="hx-muted">you need.</span>
             </h2>
             <p className="svc-lede">
               Every line ships from the same delivery process — align, prioritize, ship, steady.
             </p>
           </motion.div>
 
-          <motion.div
-            className="svc-list-grid"
-            {...list}
-          >
-            {services.map((service) => (
-              <motion.div
-                key={service.id}
-                id={service.id}
-                className="svc-list-item"
-                variants={item}
-              >
-                <Link to={`/services/${service.id}`} className="svc-list-card">
-                  <div className="svc-list-top">
-                    <span>{service.mark}</span>
-                    <h3>{service.title}</h3>
-                  </div>
-                  <p>{service.summary}</p>
-                  <div className="svc-stack-row">
-                    {service.stacks.map((tech) => (
-                      <span key={tech}>{tech}</span>
-                    ))}
-                  </div>
-                  {PLUG_CHARTS[service.id] ? (
-                    <div className="svc-list-chart">
-                      {PLUG_CHARTS[service.id].kind === 'spark' ? (
-                        <Sparkline
-                          points={PLUG_CHARTS[service.id].points}
-                          color={PLUG_CHARTS[service.id].color}
-                          animate={!reduceMotion}
-                        />
-                      ) : (
-                        <Bars
-                          values={PLUG_CHARTS[service.id].points}
-                          colors={[dataVar('slate'), dataVar('slate'), dataVar('slate'), dataVar(PLUG_CHARTS[service.id].color)]}
-                          animate={!reduceMotion}
-                        />
-                      )}
-                    </div>
-                  ) : null}
-                  <span className="svc-list-more">
-                    Explore {service.title.toLowerCase()} <span aria-hidden>→</span>
-                  </span>
-                </Link>
-              </motion.div>
-            ))}
-          </motion.div>
+          <ServiceBento anchors />
         </div>
       </section>
 
@@ -160,7 +113,7 @@ export default function Services() {
           <motion.div className="svc-head svc-head-center" {...reveal}>
             <p className="svc-eyebrow">Why teams choose us</p>
             <h2 className="svc-title" id="services-why-title">
-              Six capabilities. One accountable team.
+              Six capabilities. <span className="hx-muted">One accountable team.</span>
             </h2>
             <p className="svc-lede">
               Every handoff between vendors loses context. We carry a project from the first sketch
