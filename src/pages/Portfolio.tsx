@@ -140,8 +140,8 @@ export default function Portfolio() {
   const heroVisual = reduceMotion
     ? {}
     : {
-        initial: { opacity: 0, y: 40, filter: 'blur(16px)' },
-        animate: { opacity: 1, y: 0, filter: 'blur(0px)' },
+        initial: { opacity: 0, y: 40 },
+        animate: { opacity: 1, y: 0 },
         transition: { duration: 1.2, delay: 0.2, ease: SWAP },
       }
 
@@ -187,9 +187,9 @@ export default function Portfolio() {
                   <AnimatePresence mode="wait">
                     <motion.span
                       key={current.title}
-                      initial={{ opacity: 0, y: 34, filter: 'blur(12px)' }}
-                      animate={{ opacity: 1, y: 0, filter: 'blur(0px)' }}
-                      exit={{ opacity: 0, y: -34, filter: 'blur(12px)' }}
+                      initial={{ opacity: 0, y: 24 }}
+                      animate={{ opacity: 1, y: 0 }}
+                      exit={{ opacity: 0, y: -24 }}
                       transition={{ duration: 0.7, ease: SWAP }}
                     >
                       {current.title}

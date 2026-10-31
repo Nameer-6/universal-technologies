@@ -32,6 +32,12 @@
   --hx-graph-ink: rgba(255, 255, 255, 0.14);
 }
 
+/* ---------- Page width ---------- */
+
+.container {
+  width: min(1320px, calc(100% - 3rem));
+}
+
 /* ---------- Sections: dotted grid on every content section ---------- */
 
 main .section:not(.hx-section),
@@ -485,7 +491,7 @@ main > article.section:first-child {
 
 /* Portfolio industries: same container width and heading size as every other section. */
 .pf-ind-wrap {
-  width: min(1120px, calc(100% - 2.5rem));
+  width: min(1320px, calc(100% - 3rem));
 }
 
 .pf-ind-wrap .section-head.center {
@@ -494,4 +500,10 @@ main > article.section:first-child {
 
 .pf-ind-wrap .section-title {
   font-size: clamp(2rem, 4.2vw, 3.15rem);
+}
+
+/* Portfolio hero: the rotating dashboards differ in height (about 360–480px);
+   reserve the tallest so the page below never moves. */
+.pf-cv-visual {
+  min-height: 480px;
 }

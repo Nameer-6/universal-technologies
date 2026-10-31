@@ -49,7 +49,7 @@ function useAutoAdvance(count: number, ms: number) {
 /* step opens a large panel with its deliverables and an illustration. */
 /* ------------------------------------------------------------------ */
 
-const STEP_MS = 6000
+const STEP_MS = 3500
 
 export type WalkthroughStep = {
   step: string
@@ -131,8 +131,9 @@ export function Walkthrough({
                 role="tabpanel"
                 id={`${id}-panel-${item.step}`}
                 aria-labelledby={`${id}-tab-${item.step}`}
-                hidden={index !== active}
-                className="hw-panel"
+                aria-hidden={index !== active}
+                inert={index !== active}
+                className={`hw-panel${index === active ? ' is-active' : ''}`}
               >
                 <div className="hw-copy">
                   <p className="hx-chip">
@@ -160,16 +161,19 @@ export function Walkthrough({
                   )}
                 </div>
                 <div className="hw-visual">
-                  {index === active && (
-                    <motion.div
-                      className="hw-visual-inner"
-                      initial={reduce ? false : { opacity: 0, scale: 0.96, filter: 'blur(6px)' }}
-                      animate={{ opacity: 1, scale: 1, filter: 'blur(0px)' }}
-                      transition={{ duration: 0.55, ease }}
-                    >
-                      {item.art}
-                    </motion.div>
-                  )}
+                  {/* Fixed-ratio box: holds its size even while the art is not mounted. */}
+                  <div className="hw-visual-inner">
+                    {index === active && (
+                      <motion.div
+                        className="hw-visual-art"
+                        initial={reduce ? false : { opacity: 0, scale: 0.97 }}
+                        animate={{ opacity: 1, scale: 1 }}
+                        transition={{ duration: 0.3, ease }}
+                      >
+                        {item.art}
+                      </motion.div>
+                    )}
+                  </div>
                 </div>
               </div>
             ))}
@@ -396,7 +400,7 @@ const engagementTerms: Record<string, { label: string; value: string }[]> = {
   ],
 }
 
-const ENGAGE_MS = 5000
+const ENGAGE_MS = 3500
 
 export function EngageSection() {
   const { active, setActive, pauseProps } = useAutoAdvance(engagements.length, ENGAGE_MS)
@@ -443,8 +447,9 @@ export function EngageSection() {
                 role="tabpanel"
                 id={`engage-panel-${engagement.step}`}
                 aria-labelledby={`engage-tab-${engagement.step}`}
-                hidden={selected !== engagement.step}
-                className="hx-terms-body"
+                aria-hidden={selected !== engagement.step}
+                inert={selected !== engagement.step}
+                className={`hx-terms-body${selected === engagement.step ? ' is-active' : ''}`}
               >
                 <dl>
                   {engagementTerms[engagement.step]?.map((row) => (

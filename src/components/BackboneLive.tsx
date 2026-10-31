@@ -7,7 +7,7 @@ import { HeroBoardStage } from './HeroBoards'
 import { SERVICE_BOARD } from './boardMap'
 import './HomeSections.css'
 
-const ROTATE_MS = 5500
+const ROTATE_MS = 3500
 
 // Sits directly after the scroll-driven hero, as its own section, so it never
 // touches that animation. One "service console": pick a line on the left,
@@ -81,13 +81,14 @@ export function BackboneLive() {
               </Link>
             </div>
             <div className="bb-stage-board">
-              <AnimatePresence mode="wait" initial={false}>
+              <AnimatePresence initial={false}>
                 <motion.div
                   key={service.id}
-                  initial={reduceMotion ? false : { opacity: 0, y: 16, filter: 'blur(6px)' }}
-                  animate={{ opacity: 1, y: 0, filter: 'blur(0px)' }}
-                  exit={reduceMotion ? undefined : { opacity: 0, y: -12, filter: 'blur(6px)' }}
-                  transition={{ duration: 0.45, ease: [0.22, 1, 0.36, 1] }}
+                  className="bb-board-layer"
+                  initial={reduceMotion ? false : { opacity: 0 }}
+                  animate={{ opacity: 1 }}
+                  exit={reduceMotion ? undefined : { opacity: 0 }}
+                  transition={{ duration: 0.25, ease: 'easeOut' }}
                 >
                   <HeroBoardStage
                     boardKey={SERVICE_BOARD[service.id] ?? 'automation'}
