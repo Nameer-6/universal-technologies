@@ -234,6 +234,8 @@ export type Product = {
   /** How the accelerator shows up on a client engagement. */
   onEngagements: string
   faqs: { question: string; answer: string }[]
+  /** Live product site. When set, the product card opens it instead of the detail page. */
+  url?: string
 }
 
 export const products: Product[] = [
@@ -380,7 +382,8 @@ export const products: Product[] = [
   {
     id: 'postit-ai',
     mark: '05',
-    name: 'postit.ai',
+    name: 'Spact.io',
+    url: 'https://spact.io/',
     tagline: 'One window, every channel',
     description:
       'An AI scheduling tool that plans and publishes company posts to LinkedIn, Instagram, and Facebook from a single dashboard — draft once, tailor per platform, and queue it all on one shared calendar.',
@@ -395,7 +398,7 @@ export const products: Product[] = [
     ],
     howItWorks: [
       { title: 'Draft once', text: 'Write a post a single time in one dashboard instead of starting from scratch on each platform.' },
-      { title: 'Tailor per platform with AI', text: 'postit.ai helps adapt the draft for LinkedIn, Instagram and Facebook, so each version fits the platform without a full rewrite.' },
+      { title: 'Tailor per platform with AI', text: 'Spact.io helps adapt the draft for LinkedIn, Instagram and Facebook, so each version fits the platform without a full rewrite.' },
       { title: 'Queue it on one calendar', text: 'Every post for every channel sits on one shared calendar, so the whole team can see and adjust what is scheduled.' },
     ],
     useCases: [
@@ -404,12 +407,12 @@ export const products: Product[] = [
       'Letting several teammates review scheduled posts in one place.',
       'Keeping a consistent company voice across channels.',
     ],
-    fit: 'postit.ai is for marketing teams and founders who publish company posts on LinkedIn, Instagram and Facebook and are tired of rewriting the same announcement three times. It works best for teams that plan posts ahead and want one calendar everyone can see. If you post rarely or only on one platform, the native scheduler on that platform may be enough.',
-    onEngagements: 'postit.ai also shows how we approach AI features on client products: the AI helps with the repetitive part, adapting copy for each platform, while people stay in charge of what gets published. On AI agent engagements we use the same pattern of drafting with AI, reviewing as a human and publishing on a schedule, wherever a workflow repeats the same content across channels.',
+    fit: 'Spact.io is for marketing teams and founders who publish company posts on LinkedIn, Instagram and Facebook and are tired of rewriting the same announcement three times. It works best for teams that plan posts ahead and want one calendar everyone can see. If you post rarely or only on one platform, the native scheduler on that platform may be enough.',
+    onEngagements: 'Spact.io also shows how we approach AI features on client products: the AI helps with the repetitive part, adapting copy for each platform, while people stay in charge of what gets published. On AI agent engagements we use the same pattern of drafting with AI, reviewing as a human and publishing on a schedule, wherever a workflow repeats the same content across channels.',
     faqs: [
-      { question: 'Which platforms does postit.ai publish to?', answer: 'postit.ai plans and publishes company posts to LinkedIn, Instagram and Facebook from a single dashboard.' },
-      { question: 'Does postit.ai write posts for us?', answer: 'You write the post once. postit.ai helps tailor it for each platform, and your team reviews everything before it is queued.' },
-      { question: 'How can we try postit.ai?', answer: 'postit.ai is an internal accelerator. Request a walkthrough to see it live and talk through how your team schedules posts today.' },
+      { question: 'Which platforms does Spact.io publish to?', answer: 'Spact.io plans and publishes company posts to LinkedIn, Instagram and Facebook from a single dashboard.' },
+      { question: 'Does Spact.io write posts for us?', answer: 'You write the post once. Spact.io helps tailor it for each platform, and your team reviews everything before it is queued.' },
+      { question: 'How can we try Spact.io?', answer: 'Spact.io is an internal accelerator. Request a walkthrough to see it live and talk through how your team schedules posts today.' },
     ],
   },
 ]

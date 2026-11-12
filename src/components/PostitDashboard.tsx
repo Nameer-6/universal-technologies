@@ -1,4 +1,4 @@
-// Static, decorative mock of the postit.ai dashboard (no real data).
+// Static, decorative mock of the Spact.io dashboard (no real data).
 const NAV = ['Dashboard', 'Discover', 'Create', 'Calendar', 'Analytics', 'Ads', 'Brand', 'Settings']
 
 const TRENDS = [
@@ -42,7 +42,7 @@ export function PostitDashboard() {
 
       <div className="pd-layout">
         <aside className="pd-side">
-          <b className="pd-logo">postit.ai</b>
+          <b className="pd-logo">Spact.io</b>
           {NAV.map((label, index) => (
             <span key={label} className={index === 0 ? 'is-on' : undefined}>
               <i />

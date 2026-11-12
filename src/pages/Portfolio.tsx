@@ -316,7 +316,7 @@ export default function Portfolio() {
           <motion.div className="section-head center" {...reveal}>
             <p className="section-label">Our product</p>
             <h2 className="section-title" id="portfolio-product-title">
-              postit.ai
+              Spact.io
             </h2>
             <p className="section-lead">
               Your AI autopilot for content — trends, writing, visuals, and scheduling, in one place.
@@ -327,18 +327,18 @@ export default function Portfolio() {
             <motion.div className="pf-product-copy" {...reveal}>
               <h3>Never run out of what to post.</h3>
               <p>
-                postit.ai watches for what's trending in your industry, generates platform-ready
+                Spact.io watches for what's trending in your industry, generates platform-ready
                 posts in the right tone and format, creates stunning visuals, and organizes your
                 weekly calendar — so your team stays consistent and your brand keeps growing.
               </p>
-              <p>Accounts that post consistently with postit.ai see roughly 3.4x more impressions on average.</p>
+              <p>Accounts that post consistently with Spact.io see roughly 3.4x more impressions on average.</p>
               <a
                 className="btn pf-cv-primary"
-                href="https://post-it.universal-technologies.com/dashboard"
+                href="https://spact.io/"
                 target="_blank"
                 rel="noopener noreferrer"
               >
-                Explore postit.ai <span aria-hidden>→</span>
+                Explore Spact.io <span aria-hidden>→</span>
               </a>
 
               <motion.ul className="pf-product-features" {...list}>
@@ -357,7 +357,7 @@ export default function Portfolio() {
 
             <motion.div className="pf-product-visual pf-frame" {...reveal}>
               <p className="hx-chip pf-frame-chip">
-                <i aria-hidden="true" /> postit.ai · dashboard preview
+                <i aria-hidden="true" /> Spact.io · dashboard preview
               </p>
               <PostitDashboard />
             </motion.div>

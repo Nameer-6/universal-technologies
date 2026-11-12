@@ -56,7 +56,7 @@ export const pageMetadata: Record<string, { title: string; description: string }
     "description": "An offline-first mobile app for field crews — jobs sync the moment a signal comes back."
   },
   "/products/postit-ai": {
-    "title": "postit.ai | Universal Technologies",
+    "title": "Spact.io | Universal Technologies",
     "description": "Plan and publish company posts to LinkedIn, Instagram, and Facebook from one shared calendar."
   },
   "/portfolio": {

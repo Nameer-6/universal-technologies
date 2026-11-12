@@ -439,14 +439,14 @@ main > article.section:first-child {
   display: none;
 }
 
-/* postit.ai feature icons */
+/* Spact.io feature icons */
 .pf-pf-icon {
   color: var(--brand);
   background: rgba(227, 28, 35, 0.1);
   border-color: rgba(227, 28, 35, 0.22);
 }
 
-/* postit.ai dashboard mock: neutral dark surfaces with brand accents
+/* Spact.io dashboard mock: neutral dark surfaces with brand accents
    (it shipped with a navy/blue palette of its own). */
 .pf-frame .pd-window {
   --pd-bg: #111216;

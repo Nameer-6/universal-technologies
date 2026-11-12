@@ -134,29 +134,40 @@ export function ProductCard({
   motionProps?: Record<string, unknown>
 }) {
   const Visual = productVisuals[product.id]
+  const content = (
+    <>
+      {Visual && (
+        <div className="hx-outcome-visual">
+          <Visual />
+        </div>
+      )}
+      <p className="hx-chip">
+        <i aria-hidden="true" /> {product.status}
+      </p>
+      <Heading>{product.name}</Heading>
+      <p className="hx-product-tagline">{product.tagline}</p>
+      <p>{product.description}</p>
+      <ul className="hx-tags">
+        {product.tags.map((tag) => (
+          <li key={tag}>{tag}</li>
+        ))}
+      </ul>
+      <span className="hx-more">
+        Explore {product.name} <span aria-hidden>→</span>
+      </span>
+    </>
+  )
   return (
     <motion.article className="hx-card hx-product" {...motionProps}>
-      <Link to={`/products/${product.id}`} className="hx-product-link">
-        {Visual && (
-          <div className="hx-outcome-visual">
-            <Visual />
-          </div>
-        )}
-        <p className="hx-chip">
-          <i aria-hidden="true" /> {product.status}
-        </p>
-        <Heading>{product.name}</Heading>
-        <p className="hx-product-tagline">{product.tagline}</p>
-        <p>{product.description}</p>
-        <ul className="hx-tags">
-          {product.tags.map((tag) => (
-            <li key={tag}>{tag}</li>
-          ))}
-        </ul>
-        <span className="hx-more">
-          Explore {product.name} <span aria-hidden>→</span>
-        </span>
-      </Link>
+      {product.url ? (
+        <a href={product.url} target="_blank" rel="noopener noreferrer" className="hx-product-link">
+          {content}
+        </a>
+      ) : (
+        <Link to={`/products/${product.id}`} className="hx-product-link">
+          {content}
+        </Link>
+      )}
     </motion.article>
   )
 }
